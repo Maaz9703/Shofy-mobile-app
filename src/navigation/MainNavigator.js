@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { Home, ShoppingBag, ReceiptText, User } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 
@@ -83,18 +83,18 @@ const MainNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let IconComponent;
           switch (route.name) {
-            case 'Home': iconName = 'home'; break;
-            case 'Cart': iconName = 'cart'; break;
-            case 'Orders': iconName = 'receipt'; break;
-            case 'Profile': iconName = 'person'; break;
-            default: iconName = 'ellipse';
+            case 'Home': IconComponent = Home; break;
+            case 'Cart': IconComponent = ShoppingBag; break;
+            case 'Orders': IconComponent = ReceiptText; break;
+            case 'Profile': IconComponent = User; break;
+            default: IconComponent = Home;
           }
           return (
             <View style={styles.iconContainer}>
               {focused && <View style={[styles.activeIndicator, { backgroundColor: theme.primary + '15' }]} />}
-              <Ionicons name={iconName} size={24} color={color} />
+              <IconComponent size={24} color={color} strokeWidth={focused ? 2.5 : 2} />
             </View>
           );
         },

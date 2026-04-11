@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import AnimatedPressable from '../components/AnimatedPressable';
 
 const LoginScreen = ({ navigation }) => {
@@ -88,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
                 { borderColor: focusedField === 'email' ? theme.primary : theme.border },
                 focusedField === 'email' && { backgroundColor: '#fcfcff' }
               ]}>
-                <Ionicons name="mail" size={20} color={focusedField === 'email' ? theme.primary : theme.textSecondary} />
+                <Mail size={20} color={focusedField === 'email' ? theme.primary : theme.textSecondary} />
                 <TextInput
                   style={[styles.input, { color: theme.text }]}
                   placeholder="name@example.com"
@@ -111,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
                 { borderColor: focusedField === 'pass' ? theme.primary : theme.border },
                 focusedField === 'pass' && { backgroundColor: '#fcfcff' }
               ]}>
-                <Ionicons name="lock-closed" size={20} color={focusedField === 'pass' ? theme.primary : theme.textSecondary} />
+                <Lock size={20} color={focusedField === 'pass' ? theme.primary : theme.textSecondary} />
                 <TextInput
                   style={[styles.input, { color: theme.text }]}
                   placeholder="••••••••"
@@ -123,7 +123,11 @@ const LoginScreen = ({ navigation }) => {
                   onBlur={() => setFocusedField(null)}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
+                  {showPassword ? (
+                    <EyeOff size={20} color={theme.textSecondary} />
+                  ) : (
+                    <Eye size={20} color={theme.textSecondary} />
+                  )}
                 </TouchableOpacity>
               </View>
             </View>

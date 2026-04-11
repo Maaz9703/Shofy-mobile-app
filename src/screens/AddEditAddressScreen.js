@@ -13,7 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const AddEditAddressScreen = ({ route, navigation }) => {
@@ -78,7 +78,7 @@ const AddEditAddressScreen = ({ route, navigation }) => {
 
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#0f172a" />
+          <ArrowLeft size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEdit ? 'Edit Address' : 'New Address'}</Text>
         <View style={{ width: 44 }} />

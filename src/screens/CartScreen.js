@@ -14,7 +14,7 @@ import Animated, { FadeInRight, FadeInDown, Layout } from 'react-native-reanimat
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
-import { Ionicons } from '@expo/vector-icons';
+import { X, Minus, Plus, ShoppingBag, ArrowRight, Heart } from 'lucide-react-native';
 import AnimatedPressable from '../components/AnimatedPressable';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -52,7 +52,7 @@ const CartScreen = ({ navigation }) => {
             onPress={() => removeFromCart(item.product._id)}
             style={styles.removeBtn}
           >
-            <Ionicons name="close" size={20} color={theme.textSecondary} />
+            <X size={20} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
         
@@ -67,14 +67,14 @@ const CartScreen = ({ navigation }) => {
               style={styles.qtyBtn}
               disabled={item.quantity <= 1}
             >
-              <Ionicons name="remove" size={18} color={item.quantity <= 1 ? theme.textSecondary : theme.text} />
+              <Minus size={18} color={item.quantity <= 1 ? theme.textSecondary : theme.text} />
             </TouchableOpacity>
             <Text style={[styles.qtyText, { color: theme.text }]}>{item.quantity}</Text>
             <TouchableOpacity 
               onPress={() => updateQuantity(item.product._id, item.quantity + 1)} 
               style={styles.qtyBtn}
             >
-              <Ionicons name="add" size={18} color={theme.text} />
+              <Plus size={18} color={theme.text} />
             </TouchableOpacity>
           </View>
           
@@ -92,7 +92,7 @@ const CartScreen = ({ navigation }) => {
         <StatusBar barStyle="dark-content" />
         <View style={[styles.emptyContainer, { paddingTop: insets.top }]}>
           <Animated.View entering={FadeInDown.springify()} style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-            <Ionicons name="cart" size={70} color={theme.primary} />
+            <ShoppingBag size={70} color={theme.primary} />
           </Animated.View>
           <Text style={[styles.emptyTitle, { color: theme.text }]}>Your cart is empty</Text>
           <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
@@ -101,7 +101,7 @@ const CartScreen = ({ navigation }) => {
           <AnimatedPressable onPress={() => navigation.navigate('Home')} style={styles.shopBtnContainer}>
             <View style={[styles.shopBtn, { backgroundColor: theme.primary }]}>
               <Text style={styles.shopBtnText}>Start Shopping</Text>
-              <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+              <ArrowRight size={18} color="#ffffff" />
             </View>
           </AnimatedPressable>
         </View>
@@ -120,7 +120,7 @@ const CartScreen = ({ navigation }) => {
         </View>
         <AnimatedPressable onPress={() => navigation.navigate('Wishlist')}>
           <View style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]}>
-            <Ionicons name="heart" size={22} color={theme.error} />
+            <Heart size={22} color={theme.error} fill={theme.error} />
           </View>
         </AnimatedPressable>
       </View>
@@ -149,7 +149,7 @@ const CartScreen = ({ navigation }) => {
             <View style={[styles.checkoutBtn, { backgroundColor: theme.primary, ...theme.shadows.medium }]}>
               <Text style={styles.checkoutBtnText}>Proceed to Checkout</Text>
               <View style={styles.checkoutIconBtn}>
-                <Ionicons name="arrow-forward" size={20} color={theme.primary} />
+                <ArrowRight size={20} color={theme.primary} />
               </View>
             </View>
           </AnimatedPressable>

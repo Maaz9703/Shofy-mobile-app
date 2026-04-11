@@ -12,7 +12,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, ReceiptText, RefreshCcw } from 'lucide-react-native';
 import ProductCard from '../components/ProductCard';
 
 const QuickReorderScreen = ({ navigation }) => {
@@ -83,7 +83,7 @@ const QuickReorderScreen = ({ navigation }) => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Ionicons name="arrow-back" size={24} color={theme.text} />
+            <ArrowLeft size={24} color={theme.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: theme.text }]}>Quick Reorder</Text>
           <View style={{ width: 40 }} />
@@ -102,7 +102,7 @@ const QuickReorderScreen = ({ navigation }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Quick Reorder</Text>
         <View style={{ width: 40 }} />
@@ -110,7 +110,7 @@ const QuickReorderScreen = ({ navigation }) => {
 
       {previousOrders.length === 0 ? (
         <View style={styles.emptyState}>
-          <Ionicons name="receipt" size={64} color={theme.textSecondary} />
+          <ReceiptText size={64} color={theme.textSecondary} />
           <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
             No previous orders found
           </Text>
@@ -160,7 +160,7 @@ const QuickReorderScreen = ({ navigation }) => {
                 style={[styles.reorderButton, { backgroundColor: theme.primary }]}
                 onPress={() => handleReorder(item)}
               >
-                <Ionicons name="repeat" size={20} color="#0f172a" />
+                <RefreshCcw size={20} color="#0f172a" />
                 <Text style={styles.reorderButtonText}>Reorder All Items</Text>
               </TouchableOpacity>
             </View>

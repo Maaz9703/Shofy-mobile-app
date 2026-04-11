@@ -14,7 +14,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Star, X, Pencil, MessageSquare } from 'lucide-react-native';
 
 const ProductReviewsScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
@@ -122,10 +122,10 @@ const ProductReviewsScreen = ({ route, navigation }) => {
             onPress={() => onRatingSelect?.(star)}
             activeOpacity={interactive ? 0.7 : 1}
           >
-            <Ionicons
-              name="star"
+            <Star
               size={size}
               color={star <= rating ? '#fbbf24' : theme.textSecondary + '40'}
+              fill={star <= rating ? '#fbbf24' : 'transparent'}
               style={{ marginRight: 2 }}
             />
           </TouchableOpacity>
@@ -153,7 +153,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Reviews</Text>
         <View style={{ width: 40 }} />
@@ -214,7 +214,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
             style={[styles.writeReviewBtn, { backgroundColor: theme.primary }]}
             onPress={() => setShowReviewForm(!showReviewForm)}
           >
-            <Ionicons name={showReviewForm ? 'close' : 'create'} size={20} color="#0f172a" />
+            {showReviewForm ? <X size={20} color="#0f172a" /> : <Pencil size={20} color="#0f172a" />}
             <Text style={styles.writeReviewText}>
               {showReviewForm ? 'Cancel' : userReview ? 'Edit Review' : 'Write a Review'}
             </Text>
@@ -276,7 +276,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
           </Text>
           {reviews.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="chatbubbles" size={48} color={theme.textSecondary} />
+              <MessageSquare size={48} color={theme.textSecondary} />
               <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                 No reviews yet. Be the first to review!
               </Text>

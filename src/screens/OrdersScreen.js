@@ -12,7 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
-import { Ionicons } from '@expo/vector-icons';
+import { ReceiptText, CheckCircle2, Truck, Clock, XCircle, ChevronRight, RefreshCcw } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -46,11 +46,11 @@ const OrdersScreen = ({ navigation }) => {
 
   const getStatusConfig = (status) => {
     switch (status) {
-      case 'Delivered': return { color: '#10b981', label: 'Delivered', icon: 'checkmark-circle' };
-      case 'Shipped': return { color: '#3b82f6', label: 'In Transit', icon: 'car' };
-      case 'Processing': return { color: '#f59e0b', label: 'Processing', icon: 'time' };
-      case 'Cancelled': return { color: '#ef4444', label: 'Cancelled', icon: 'close-circle' };
-      default: return { color: '#64748b', label: status, icon: 'receipt' };
+      case 'Delivered': return { color: '#10b981', label: 'Delivered', icon: CheckCircle2 };
+      case 'Shipped': return { color: '#3b82f6', label: 'In Transit', icon: Truck };
+      case 'Processing': return { color: '#f59e0b', label: 'Processing', icon: Clock };
+      case 'Cancelled': return { color: '#ef4444', label: 'Cancelled', icon: XCircle };
+      default: return { color: '#64748b', label: status, icon: ReceiptText };
     }
   };
 
@@ -69,14 +69,14 @@ const OrdersScreen = ({ navigation }) => {
           <View style={styles.cardHeader}>
             <View style={styles.orderIdent}>
               <View style={[styles.orderIconBg, { backgroundColor: theme.primary + '10' }]}>
-                <Ionicons name="receipt" size={18} color={theme.primary} />
+                <ReceiptText size={18} color={theme.primary} />
               </View>
               <Text style={[styles.orderId, { color: theme.text }]}>
                 #{item._id.slice(-8).toUpperCase()}
               </Text>
             </View>
             <View style={[styles.statusBadge, { backgroundColor: config.color }]}>
-              <Ionicons name={config.icon} size={14} color="#ffffff" />
+              <config.icon size={14} color="#ffffff" strokeWidth={2.5} />
               <Text style={styles.statusText}>{config.label}</Text>
             </View>
           </View>
@@ -100,7 +100,7 @@ const OrdersScreen = ({ navigation }) => {
           
           <View style={styles.cardFooter}>
             <Text style={[styles.viewDetailsText, { color: theme.textSecondary }]}>View Order Details</Text>
-            <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} />
+            <ChevronRight size={16} color={theme.textSecondary} />
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -118,7 +118,7 @@ const OrdersScreen = ({ navigation }) => {
         </View>
         <AnimatedPressable onPress={() => navigation.navigate('QuickReorder')}>
           <View style={[styles.reorderBtn, { backgroundColor: theme.primary }]}>
-            <Ionicons name="repeat" size={20} color="#ffffff" />
+            <RefreshCcw size={20} color="#ffffff" />
           </View>
         </AnimatedPressable>
       </View>
@@ -140,7 +140,7 @@ const OrdersScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-                <Ionicons name="receipt" size={60} color={theme.primary} />
+                <ReceiptText size={60} color={theme.primary} />
               </View>
               <Text style={[styles.emptyTitle, { color: theme.text }]}>No orders yet</Text>
               <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>

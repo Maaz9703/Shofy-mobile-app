@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
+import { Heart } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
 import { getQuantityDiscount } from '../utils/price';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -42,10 +42,10 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <View style={[styles.wishlistIconBg, { backgroundColor: '#ffffff', ...theme.shadows.small }]}>
-              <Ionicons
-                name={isInWishlist ? 'heart' : 'heart'}
+              <Heart
                 size={20}
                 color={isInWishlist ? theme.error : theme.textSecondary}
+                fill={isInWishlist ? theme.error : 'transparent'}
               />
             </View>
           </TouchableOpacity>

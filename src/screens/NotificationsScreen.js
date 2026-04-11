@@ -12,7 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, CheckCircle2, Truck, Clock, XCircle, Bell, BellOff } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -62,11 +62,11 @@ const NotificationsScreen = ({ navigation }) => {
 
   const getNotificationConfig = (status) => {
     switch (status) {
-      case 'Delivered': return { color: '#10b981', icon: 'checkmark-circle' };
-      case 'Shipped': return { color: '#3b82f6', icon: 'car' };
-      case 'Processing': return { color: '#f59e0b', icon: 'time' };
-      case 'Cancelled': return { color: '#ef4444', icon: 'close-circle' };
-      default: return { color: theme.primary, icon: 'notifications' };
+      case 'Delivered': return { color: '#10b981', icon: CheckCircle2 };
+      case 'Shipped': return { color: '#3b82f6', icon: Truck };
+      case 'Processing': return { color: '#f59e0b', icon: Clock };
+      case 'Cancelled': return { color: '#ef4444', icon: XCircle };
+      default: return { color: theme.primary, icon: Bell };
     }
   };
 
@@ -92,7 +92,7 @@ const NotificationsScreen = ({ navigation }) => {
           activeOpacity={0.7}
         >
           <View style={[styles.iconBg, { backgroundColor: config.color + '15' }]}>
-            <Ionicons name={config.icon} size={22} color={config.color} />
+            <config.icon size={22} color={config.color} />
           </View>
           <View style={styles.content}>
             <View style={styles.contentTop}>
@@ -120,7 +120,7 @@ const NotificationsScreen = ({ navigation }) => {
           style={[styles.backBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <View style={styles.headerText}>
           <Text style={[styles.headerTitle, { color: theme.text }]}>Notifications</Text>
@@ -148,7 +148,7 @@ const NotificationsScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-                <Ionicons name="notifications-off" size={60} color={theme.primary} />
+                <BellOff size={60} color={theme.primary} />
               </View>
               <Text style={[styles.emptyTitle, { color: theme.text }]}>No alerts yet</Text>
               <Text style={[styles.emptySub, { color: theme.textSecondary }]}>

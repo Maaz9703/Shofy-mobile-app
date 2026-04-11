@@ -19,7 +19,7 @@ import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import LoadingShimmer from '../components/LoadingShimmer';
 import api from '../config/api';
-import { Ionicons } from '@expo/vector-icons';
+import { Bell, Search, SlidersHorizontal, X, CheckCircle2 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
@@ -201,7 +201,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
               <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
-                <Ionicons name="notifications" size={22} color={theme.text} />
+                <Bell size={22} color={theme.text} />
                 <View style={[styles.bellBadge, { backgroundColor: theme.error }]} />
               </View>
             </AnimatedPressable>
@@ -210,7 +210,7 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.searchRow}>
             <View style={styles.searchContainer}>
               <View style={[styles.searchBox, { backgroundColor: '#ffffff', ...theme.shadows.small, borderWidth: 1, borderColor: theme.border }]}>
-                <Ionicons name="search" size={18} color={theme.textSecondary} />
+                <Search size={18} color={theme.textSecondary} />
                 <TextInput
                   style={[styles.searchInput, { color: theme.text }]}
                   placeholder="What are you looking for?"
@@ -229,7 +229,7 @@ const HomeScreen = ({ navigation }) => {
               ]}
               onPress={() => setCategoryModalVisible(true)}
             >
-              <Ionicons name="options" size={20} color={category ? '#ffffff' : theme.text} />
+              <SlidersHorizontal size={20} color={category ? '#ffffff' : theme.text} />
             </AnimatedPressable>
           </View>
         </View>
@@ -258,7 +258,7 @@ const HomeScreen = ({ navigation }) => {
           }
           ListEmptyComponent={
             <View style={styles.empty}>
-              <Ionicons name="search" size={64} color={theme.textSecondary} style={{ marginBottom: 16 }} />
+              <Search size={64} color={theme.textSecondary} style={{ marginBottom: 16 }} />
               <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                 {search || category ? 'No products found matching your search' : 'No products found'}
               </Text>
@@ -279,7 +279,7 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.modalHeader}>
               <Text style={{ fontSize: 20, fontWeight: '900', color: theme.text }}>Filter by Category</Text>
               <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
-                <Ionicons name="close" size={24} color={theme.textSecondary} />
+                <X size={24} color={theme.textSecondary} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll} showsVerticalScrollIndicator={false}>
@@ -288,7 +288,7 @@ const HomeScreen = ({ navigation }) => {
                 onPress={() => { setCategory(''); setCategoryModalVisible(false); }}
               >
                 <Text style={{ fontSize: 16, color: !category ? theme.primary : theme.text, fontWeight: '700' }}>All Categories</Text>
-                {!category && <Ionicons name="checkmark-circle" size={22} color={theme.primary} />}
+                {!category && <CheckCircle2 size={22} color={theme.primary} />}
               </TouchableOpacity>
               {categories.map((cat) => (
                 <TouchableOpacity
@@ -297,7 +297,7 @@ const HomeScreen = ({ navigation }) => {
                   onPress={() => { setCategory(cat); setCategoryModalVisible(false); }}
                 >
                   <Text style={{ fontSize: 16, color: cat === category ? theme.primary : theme.text, fontWeight: '700' }}>{cat}</Text>
-                  {cat === category && <Ionicons name="checkmark-circle" size={22} color={theme.primary} />}
+                  {cat === category && <CheckCircle2 size={22} color={theme.primary} />}
                 </TouchableOpacity>
               ))}
             </ScrollView>

@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import ProductCard from '../components/ProductCard';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Trash2, Eye } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -32,7 +32,7 @@ const RecentlyViewedScreen = ({ navigation }) => {
           style={[styles.backBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Recently Viewed</Text>
         {recentlyViewed.length > 0 ? (
@@ -40,7 +40,7 @@ const RecentlyViewedScreen = ({ navigation }) => {
             style={[styles.clearBtn, { backgroundColor: theme.error + '10' }]} 
             onPress={() => clearRecentlyViewed()}
           >
-            <Ionicons name="trash" size={20} color={theme.error} />
+            <Trash2 size={20} color={theme.error} />
           </TouchableOpacity>
         ) : (
           <View style={{ width: 44 }} />
@@ -50,7 +50,7 @@ const RecentlyViewedScreen = ({ navigation }) => {
       {recentlyViewed.length === 0 ? (
         <View style={styles.empty}>
           <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-            <Ionicons name="eye" size={60} color={theme.primary} />
+            <Eye size={60} color={theme.primary} />
           </View>
           <Text style={[styles.emptyTitle, { color: theme.text }]}>Your history is empty</Text>
           <Text style={[styles.emptySub, { color: theme.textSecondary }]}>Products you view while browsing will appear here for easy access later.</Text>

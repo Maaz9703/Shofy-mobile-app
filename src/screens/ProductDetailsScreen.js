@@ -16,7 +16,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Tag, Minus, Plus, ArrowRight } from 'lucide-react-native';
 import { getQuantityDiscount } from '../utils/price';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -74,7 +74,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       {/* Back button */}
       <Animated.View entering={FadeInUp.delay(100)} style={[styles.backBtnWrap, { top: insets.top + 10 }]}>
         <AnimatedPressable style={[styles.backBtn, { ...theme.shadows.small, backgroundColor: theme.card }]} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </AnimatedPressable>
       </Animated.View>
 
@@ -95,7 +95,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         <Animated.View entering={FadeInDown.delay(300).springify().damping(18)} style={[styles.content, { backgroundColor: theme.background }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <View style={[styles.categoryPill, { backgroundColor: theme.primary + '15' }]}>
-              <Ionicons name="pricetag" size={13} color={theme.primary} />
+              <Tag size={13} color={theme.primary} />
               <Text style={[styles.categoryPillText, { color: theme.primary }]}>{product.category}</Text>
             </View>
             <View style={[styles.stockPill, { backgroundColor: product.stock > 0 ? '#dcfce7' : '#fee2e2' }]}>
@@ -132,11 +132,11 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
           <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
             <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
-              <Ionicons name="remove" size={24} color={theme.text} />
+              <Minus size={24} color={theme.text} />
             </AnimatedPressable>
             <Text style={[styles.qtyText, { color: theme.text }]}>{quantity}</Text>
             <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
-              <Ionicons name="add" size={24} color={theme.text} />
+              <Plus size={24} color={theme.text} />
             </AnimatedPressable>
           </View>
         </Animated.View>
@@ -168,7 +168,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                   <View style={styles.btnContent}>
                     <Text style={styles.addBtnText}>Checkout Now</Text>
                     <View style={styles.btnIconBox}>
-                      <Ionicons name="arrow-forward" size={18} color={theme.primary} />
+                      <ArrowRight size={18} color={theme.primary} />
                     </View>
                   </View>
                 )}

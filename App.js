@@ -8,7 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+
 
 import { AuthProvider } from './src/context/AuthContext';
 import { CartProvider } from './src/context/CartContext';
@@ -25,20 +25,17 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        // Pre-load fonts, make any API calls you need to do here
-        await Font.loadAsync(Ionicons.font);
-        // Artificially delay for for aesthetic purposes if needed
-        // await new Promise(resolve => setTimeout(resolve, 2000));
+        // SVG icons don't need manual font loading
+        await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the application to render
         setAppIsReady(true);
       }
     }
-
     prepare();
   }, []);
+
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {

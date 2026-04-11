@@ -19,7 +19,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { User, Mail, Lock, ShieldCheck, Eye, EyeOff } from 'lucide-react-native';
 import AnimatedPressable from '../components/AnimatedPressable';
 
 const RegisterScreen = ({ navigation }) => {
@@ -32,6 +32,7 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -57,7 +58,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const renderInput = (label, icon, placeholder, value, onChange, secure = false) => (
+  const renderInput = (label, Icon, placeholder, value, onChange, secure = false) => (
     <View style={styles.fieldWrap}>
       <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
       <View style={[
@@ -65,7 +66,7 @@ const RegisterScreen = ({ navigation }) => {
         { borderColor: focusedField === label ? theme.primary : theme.border },
         focusedField === label && { backgroundColor: '#fcfcff' }
       ]}>
-        <Ionicons name={icon} size={20} color={focusedField === label ? theme.primary : theme.textSecondary} />
+        <Icon size={20} color={focusedField === label ? theme.primary : theme.textSecondary} />
         <TextInput
           style={[styles.input, { color: theme.text }]}
           placeholder={placeholder}
@@ -78,7 +79,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         {secure && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
+            {showPassword ? (
+              <EyeOff size={20} color={theme.textSecondary} />
+            ) : (
+              <Eye size={20} color={theme.textSecondary} />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -104,10 +109,10 @@ const RegisterScreen = ({ navigation }) => {
             entering={FadeInDown.delay(200).duration(600).springify()}
             style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.medium, borderColor: theme.border }]}
           >
-            {renderInput('Full Name', 'person', 'John Doe', name, setName)}
-            {renderInput('Email Address', 'mail', 'john@example.com', email, setEmail)}
-            {renderInput('Password', 'lock-closed', '••••••••', password, setPassword, true)}
-            {renderInput('Confirm Password', 'shield-checkmark', '••••••••', confirmPassword, setConfirmPassword, true)}
+            {renderInput('Full Name', User, 'John Doe', name, setName)}
+            {renderInput('Email Address', Mail, 'john@example.com', email, setEmail)}
+            {renderInput('Password', Lock, '••••••••', password, setPassword, true)}
+            {renderInput('Confirm Password', ShieldCheck, '••••••••', confirmPassword, setConfirmPassword, true)}
 
             <AnimatedPressable
               onPress={handleRegister}

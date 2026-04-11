@@ -11,7 +11,18 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  MapPin, 
+  Heart, 
+  Eye, 
+  Bell, 
+  RefreshCcw, 
+  ArrowLeftRight, 
+  X, 
+  Camera, 
+  ChevronRight, 
+  LogOut 
+} from 'lucide-react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -23,12 +34,12 @@ const ProfileScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
 
   const menuItems = [
-    { icon: 'location', label: 'Address Management', onPress: () => navigation.navigate('AddressManagement'), color: '#3b82f6' },
-    { icon: 'heart', label: 'My Wishlist', onPress: () => navigation.navigate('Wishlist'), color: '#ef4444' },
-    { icon: 'eye', label: 'Recently Viewed', onPress: () => navigation.navigate('RecentlyViewed'), color: '#6366f1' },
-    { icon: 'notifications', label: 'Notifications', onPress: () => navigation.navigate('Notifications'), color: '#f59e0b' },
-    { icon: 'repeat', label: 'Quick Reorder', onPress: () => navigation.navigate('Orders', { screen: 'QuickReorder' }), color: '#10b981' },
-    { icon: 'git-compare', label: 'Compare Products', onPress: () => navigation.navigate('Home', { screen: 'ProductComparison' }), color: '#8b5cf6' },
+    { icon: MapPin, label: 'Address Management', onPress: () => navigation.navigate('AddressManagement'), color: '#3b82f6' },
+    { icon: Heart, label: 'My Wishlist', onPress: () => navigation.navigate('Wishlist'), color: '#ef4444' },
+    { icon: Eye, label: 'Recently Viewed', onPress: () => navigation.navigate('RecentlyViewed'), color: '#6366f1' },
+    { icon: Bell, label: 'Notifications', onPress: () => navigation.navigate('Notifications'), color: '#f59e0b' },
+    { icon: RefreshCcw, label: 'Quick Reorder', onPress: () => navigation.navigate('Orders', { screen: 'QuickReorder' }), color: '#10b981' },
+    { icon: ArrowLeftRight, label: 'Compare Products', onPress: () => navigation.navigate('Home', { screen: 'ProductComparison' }), color: '#8b5cf6' },
   ];
 
   return (
@@ -44,7 +55,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={[styles.headerTitle, { color: theme.text }]}>Settings</Text>
             <AnimatedPressable onPress={() => navigation.navigate('Home')}>
               <View style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]}>
-                <Ionicons name="close" size={24} color={theme.text} />
+                <X size={24} color={theme.text} />
               </View>
             </AnimatedPressable>
           </View>
@@ -55,7 +66,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.avatarText}>{user?.name?.charAt(0)?.toUpperCase() || 'U'}</Text>
               </View>
               <TouchableOpacity style={[styles.editBadge, { backgroundColor: theme.primary }]}>
-                <Ionicons name="camera" size={14} color="#ffffff" />
+                <Camera size={14} color="#ffffff" />
               </TouchableOpacity>
             </View>
             
@@ -93,10 +104,10 @@ const ProfileScreen = ({ navigation }) => {
                 activeOpacity={0.7}
               >
                 <View style={[styles.menuIconBg, { backgroundColor: item.color + '15' }]}>
-                  <Ionicons name={item.icon} size={20} color={item.color} />
+                  <item.icon size={20} color={item.color} />
                 </View>
                 <Text style={[styles.menuLabel, { color: theme.text }]}>{item.label}</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
+                <ChevronRight size={18} color={theme.textSecondary} />
               </TouchableOpacity>
             </Animated.View>
           ))}
@@ -108,7 +119,7 @@ const ProfileScreen = ({ navigation }) => {
             activeOpacity={0.8} 
             style={[styles.logoutBtn, { borderColor: theme.error + '40' }]}
           >
-            <Ionicons name="log-out" size={22} color={theme.error} />
+            <LogOut size={22} color={theme.error} />
             <Text style={[styles.logoutText, { color: theme.error }]}>Sign Out</Text>
           </TouchableOpacity>
           <Text style={[styles.versionText, { color: theme.textSecondary }]}>Version 1.0.4.Premium</Text>

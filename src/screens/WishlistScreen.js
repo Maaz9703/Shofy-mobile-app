@@ -14,7 +14,7 @@ import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { X, ShoppingBag, ArrowLeft, Heart } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -64,7 +64,7 @@ const WishlistScreen = ({ navigation }) => {
           style={[styles.removeBadge, { backgroundColor: '#ffffff', ...theme.shadows.small }]} 
           onPress={() => removeFromWishlist(item)}
         >
-          <Ionicons name="close" size={16} color={theme.error} />
+          <X size={16} color={theme.error} />
         </TouchableOpacity>
         {item.discount > 0 && (
           <View style={[styles.discountBadge, { backgroundColor: theme.error }]}>
@@ -79,7 +79,7 @@ const WishlistScreen = ({ navigation }) => {
           <Text style={[styles.price, { color: theme.primary }]}>PKR {item.price?.toLocaleString()}</Text>
           <AnimatedPressable onPress={() => { addToCart(item); Toast.show({ type: 'success', text1: 'Added to cart! 🛒' }); }}>
             <View style={[styles.addBtn, { backgroundColor: theme.primary }]}>
-              <Ionicons name="cart" size={18} color="#ffffff" />
+              <ShoppingBag size={18} color="#ffffff" />
             </View>
           </AnimatedPressable>
         </View>
@@ -96,7 +96,7 @@ const WishlistScreen = ({ navigation }) => {
           style={[styles.backBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>My Wishlist</Text>
         <View style={{ width: 44 }} />
@@ -118,7 +118,7 @@ const WishlistScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-                <Ionicons name="heart" size={60} color={theme.primary} />
+                <Heart size={60} color={theme.primary} fill={theme.primary} />
               </View>
               <Text style={[styles.emptyTitle, { color: theme.text }]}>Wishlist is empty</Text>
               <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>

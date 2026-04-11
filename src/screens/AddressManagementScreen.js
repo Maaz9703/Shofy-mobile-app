@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { MapPin, Phone, Pencil, Trash2, ArrowLeft, Plus } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -72,7 +72,7 @@ const AddressManagementScreen = ({ navigation }) => {
       <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border, ...theme.shadows.small }]}>
         <View style={styles.cardHeader}>
           <View style={[styles.iconBox, { backgroundColor: theme.primary + '10' }]}>
-            <Ionicons name="location" size={20} color={theme.primary} />
+            <MapPin size={20} color={theme.primary} />
           </View>
           <View style={styles.headerInfo}>
             <Text style={[styles.name, { color: theme.text }]}>{item.fullName}</Text>
@@ -88,7 +88,7 @@ const AddressManagementScreen = ({ navigation }) => {
           {item.address}, {item.city}, {item.state} {item.zipCode}
         </Text>
         <Text style={[styles.phone, { color: theme.textSecondary }]}>
-          <Ionicons name="call" size={12} /> {item.phone}
+          <Phone size={12} /> {item.phone}
         </Text>
 
         <View style={[styles.divider, { backgroundColor: theme.border }]} />
@@ -106,14 +106,14 @@ const AddressManagementScreen = ({ navigation }) => {
             style={[styles.actionBtn, { backgroundColor: theme.background, borderColor: theme.border }]} 
             onPress={() => navigation.navigate('AddEditAddress', { address: item })}
           >
-            <Ionicons name="create" size={16} color={theme.text} />
+            <Pencil size={16} color={theme.text} />
             <Text style={[styles.actionText, { color: theme.text }]}>Edit</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.deleteBtn, { backgroundColor: theme.error + '10' }]}
             onPress={() => deleteAddress(item._id)}
           >
-            <Ionicons name="trash" size={18} color={theme.error} />
+            <Trash2 size={18} color={theme.error} />
           </TouchableOpacity>
         </View>
       </View>
@@ -129,12 +129,12 @@ const AddressManagementScreen = ({ navigation }) => {
           style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Address Book</Text>
         <AnimatedPressable onPress={() => navigation.navigate('AddEditAddress')}>
           <View style={[styles.addBtn, { backgroundColor: theme.primary }]}>
-            <Ionicons name="add" size={26} color="#ffffff" />
+            <Plus size={26} color="#ffffff" />
           </View>
         </AnimatedPressable>
       </View>
@@ -154,7 +154,7 @@ const AddressManagementScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-                <Ionicons name="location" size={60} color={theme.primary} />
+                <MapPin size={60} color={theme.primary} />
               </View>
               <Text style={[styles.emptyTitle, { color: theme.text }]}>No addresses yet</Text>
               <Text style={[styles.emptySub, { color: theme.textSecondary }]}>

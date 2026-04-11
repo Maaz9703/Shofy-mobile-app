@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, MapPin, CreditCard } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -50,7 +50,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           style={[styles.backBtn, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border }]}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </AnimatedPressable>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Order Details</Text>
         <View style={{ width: 44 }} />
@@ -113,7 +113,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         {order.shippingAddress && (
           <Animated.View entering={FadeInDown.delay(500)} style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <Ionicons name="location" size={20} color={theme.primary} />
+              <MapPin size={20} color={theme.primary} />
               <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>Shipping Address</Text>
             </View>
             <View style={styles.addressBox}>
@@ -152,7 +152,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
             );
           })()}
           <View style={[styles.paymentBadge, { backgroundColor: theme.background }]}>
-            <Ionicons name="card" size={16} color={theme.textSecondary} />
+            <CreditCard size={16} color={theme.textSecondary} />
             <Text style={[styles.paymentText, { color: theme.textSecondary }]}>
               Paid via {order.paymentMethod || 'COD'}
             </Text>

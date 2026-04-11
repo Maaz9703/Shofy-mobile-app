@@ -14,7 +14,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import api from '../config/api';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Search, XCircle, SlidersHorizontal, X } from 'lucide-react-native';
 
 const AdvancedSearchScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
@@ -126,11 +126,11 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color={theme.textSecondary} style={styles.searchIcon} />
+          <Search size={20} color={theme.textSecondary} style={styles.searchIcon} />
           <TextInput
             style={[styles.searchInput, { color: theme.text }]}
             placeholder="Search products..."
@@ -141,7 +141,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
+              <XCircle size={20} color={theme.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -150,8 +150,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
           style={styles.filterButton}
           onPress={() => setShowFilters(!showFilters)}
         >
-          <Ionicons 
-            name="options" 
+          <SlidersHorizontal
             size={24} 
             color={showFilters ? theme.primary : theme.text} 
           />
@@ -294,7 +293,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
               style={[styles.clearButton, { backgroundColor: theme.error }]}
               onPress={clearFilters}
             >
-              <Ionicons name="close" size={16} color="#0f172a" />
+              <X size={16} color="#0f172a" />
               <Text style={styles.clearButtonText}>Clear All</Text>
             </TouchableOpacity>
           )}
@@ -309,7 +308,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
           </View>
         ) : products.length === 0 && (searchQuery || selectedCategory) ? (
           <View style={styles.emptyState}>
-            <Ionicons name="search" size={64} color={theme.textSecondary} />
+            <Search size={64} color={theme.textSecondary} />
             <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
               No products found
             </Text>
@@ -354,7 +353,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
           </>
         ) : (
           <View style={styles.emptyState}>
-            <Ionicons name="search" size={64} color={theme.textSecondary} />
+            <Search size={64} color={theme.textSecondary} />
             <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
               Start searching for products
             </Text>

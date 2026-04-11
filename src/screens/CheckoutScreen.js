@@ -15,7 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { Check, ArrowLeft, MapPin, Circle, CircleCheck, CheckSquare, Square, Wallet, CreditCard, ArrowRight } from 'lucide-react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -85,7 +85,7 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={styles.successWrapper}>
           <Animated.View entering={FadeInDown.delay(200).springify()}>
             <View style={[styles.successBadge, { backgroundColor: '#10b981' }]}>
-              <Ionicons name="checkmark" size={60} color="#ffffff" />
+              <Check size={60} color="#ffffff" strokeWidth={3} />
             </View>
           </Animated.View>
           <Animated.View entering={FadeInDown.delay(400).springify()}>
@@ -118,7 +118,7 @@ const CheckoutScreen = ({ navigation }) => {
           style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Checkout</Text>
         <View style={{ width: 44 }} />
@@ -140,7 +140,7 @@ const CheckoutScreen = ({ navigation }) => {
             style={[styles.emptyAddr, { borderColor: theme.border, backgroundColor: theme.card }]} 
             onPress={() => navigation.navigate('Profile', { screen: 'AddressManagement' })}
           >
-            <Ionicons name="location" size={32} color={theme.textSecondary} />
+            <MapPin size={32} color={theme.textSecondary} />
             <Text style={[styles.emptyAddrText, { color: theme.textSecondary }]}>Add a shipping address</Text>
           </TouchableOpacity>
         ) : (
@@ -156,11 +156,11 @@ const CheckoutScreen = ({ navigation }) => {
                 ]}
               >
                 <View style={styles.optionHeader}>
-                  <Ionicons 
-                    name={selectedAddress?._id === addr._id ? "radio-button-on" : "radio-button-off"} 
-                    size={22} 
-                    color={selectedAddress?._id === addr._id ? theme.primary : theme.textSecondary} 
-                  />
+                  {selectedAddress?._id === addr._id ? (
+                    <CircleCheck size={22} color={theme.primary} fill={theme.primary + '20'} />
+                  ) : (
+                    <Circle size={22} color={theme.textSecondary} />
+                  )}
                   <Text style={[styles.optionTitle, { color: theme.text }]}>{addr.fullName}</Text>
                 </View>
                 <Text style={[styles.optionSub, { color: theme.textSecondary }]}>
@@ -189,16 +189,16 @@ const CheckoutScreen = ({ navigation }) => {
             ]}
           >
             <View style={styles.optionHeader}>
-              <Ionicons 
-                name={paymentMethod === pm.key ? "checkbox" : "square"} 
-                size={22} 
-                color={paymentMethod === pm.key ? theme.primary : theme.textSecondary} 
-              />
+              {paymentMethod === pm.key ? (
+                <CheckSquare size={22} color={theme.primary} />
+              ) : (
+                <Square size={22} color={theme.textSecondary} />
+              )}
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={[styles.optionTitle, { color: theme.text }]}>{pm.label}</Text>
                 {pm.disabled && <Text style={{ fontSize: 10, fontWeight: '700', color: theme.textSecondary }}>COMING SOON</Text>}
               </View>
-              <Ionicons name={pm.icon} size={22} color={theme.textSecondary} />
+              {pm.key === 'COD' ? <Wallet size={22} color={theme.textSecondary} /> : <CreditCard size={22} color={theme.textSecondary} />}
             </View>
           </TouchableOpacity>
         ))}
@@ -234,7 +234,7 @@ const CheckoutScreen = ({ navigation }) => {
             {placing ? <ActivityIndicator color="#ffffff" /> : (
               <>
                 <Text style={styles.primaryBtnText}>Confirm Order</Text>
-                <Ionicons name="arrow-forward" size={20} color="#ffffff" style={{ marginLeft: 8 }} />
+                <ArrowRight size={20} color="#ffffff" style={{ marginLeft: 8 }} />
               </>
             )}
           </View>

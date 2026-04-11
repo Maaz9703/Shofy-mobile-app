@@ -15,7 +15,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Plus, ArrowLeftRight, XCircle, ShoppingBag } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeInRight, Layout } from 'react-native-reanimated';
 import AnimatedPressable from '../components/AnimatedPressable';
 
@@ -79,7 +79,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
         style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={24} color={theme.text} />
+        <ArrowLeft size={24} color={theme.text} />
       </TouchableOpacity>
       <View style={styles.headerTitleContainer}>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Comparison</Text>
@@ -87,7 +87,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
       </View>
       {comparisonProducts.length < 4 ? (
         <TouchableOpacity style={[styles.addBtnHeader, { backgroundColor: theme.primary }]} onPress={addProduct}>
-          <Ionicons name="add" size={22} color="#ffffff" />
+          <Plus size={22} color="#ffffff" />
         </TouchableOpacity>
       ) : <View style={{ width: 44 }} />}
     </View>
@@ -98,9 +98,8 @@ const ProductComparisonScreen = ({ route, navigation }) => {
       <View style={[styles.container, { backgroundColor: theme.background }]}>
         <StatusBar barStyle="dark-content" />
         {renderHeader()}
-        <View style={styles.emptyState}>
           <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
-            <Ionicons name="git-compare" size={60} color={theme.primary} />
+            <ArrowLeftRight size={60} color={theme.primary} />
           </View>
           <Text style={[styles.emptyTitle, { color: theme.text }]}>Select Products</Text>
           <Text style={[styles.emptySub, { color: theme.textSecondary }]}>Add products to compare their specs and pricing side-by-side.</Text>
@@ -133,7 +132,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
                   style={[styles.productColumn, { backgroundColor: theme.card, borderColor: theme.border, ...theme.shadows.small }]}
                 >
                   <TouchableOpacity style={styles.removeIcon} onPress={() => removeProduct(product._id)}>
-                    <Ionicons name="close-circle" size={22} color={theme.error} />
+                    <XCircle size={22} color={theme.error} />
                   </TouchableOpacity>
                   <Image source={{ uri: product.image || 'https://via.placeholder.com/150' }} style={styles.productImage} />
                   <Text style={[styles.colProductTitle, { color: theme.text }]} numberOfLines={2}>{product.title}</Text>
@@ -171,7 +170,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
                     style={[styles.cartBtn, { backgroundColor: theme.primary }]}
                     onPress={() => { addToCart(product); Toast.show({ type: 'success', text1: 'Added to cart! 🛒' }); }}
                   >
-                    <Ionicons name="cart" size={18} color="#ffffff" />
+                    <ShoppingBag size={18} color="#ffffff" />
                   </TouchableOpacity>
                 </View>
               ))}
