@@ -8,10 +8,12 @@ import {
   StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSettings } from '../context/SettingsContext';
 
 const { width } = Dimensions.get('window');
 
 const SplashScreen = () => {
+  const { settings } = useSettings();
   const pulse = useRef(new Animated.Value(0.8)).current;
   const logoScale = useRef(new Animated.Value(0)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -123,13 +125,13 @@ const SplashScreen = () => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          <Text style={styles.logoLetter}>S</Text>
+          <Text style={styles.logoLetter}>{(settings.mobileAppName || 'Shofy')[0]}</Text>
         </LinearGradient>
       </Animated.View>
 
       {/* Text */}
       <Animated.View style={{ opacity: textOpacity, alignItems: 'center', marginTop: 20 }}>
-        <Text style={styles.appName}>Shofy</Text>
+        <Text style={styles.appName}>{settings.mobileAppName || 'Shofy'}</Text>
         <Text style={styles.tagline}>Premium Shopping Experience</Text>
       </Animated.View>
 

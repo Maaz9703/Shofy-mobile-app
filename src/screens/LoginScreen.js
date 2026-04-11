@@ -21,12 +21,14 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Toast from 'react-native-toast-message';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
+import { useSettings } from '../context/SettingsContext';
 import AnimatedPressable from '../components/AnimatedPressable';
 
 const LoginScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { login } = useAuth();
+  const { settings } = useSettings();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -69,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
           {/* Brand Identity */}
           <Animated.View entering={FadeInDown.duration(600).springify()}>
             <View style={[styles.logoIcon, { backgroundColor: theme.primary, ...theme.shadows.medium }]}>
-              <Text style={styles.logoText}>S</Text>
+              <Text style={styles.logoText}>{(settings.mobileAppName || 'Shofy')[0]}</Text>
             </View>
             <Text style={[styles.title, { color: theme.text }]}>Welcome Back</Text>
             <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Enter your credentials to continue shopping</Text>
@@ -157,7 +159,7 @@ const LoginScreen = ({ navigation }) => {
             style={styles.footer}
           >
             <Text style={[styles.footerText, { color: theme.textSecondary }]}>
-              New to Shofy?{' '}
+              New to {settings.mobileAppName || 'Shofy'}?{' '}
               <Text 
                 onPress={() => navigation.navigate('Register')}
                 style={[styles.footerLink, { color: theme.primary }]}

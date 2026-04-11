@@ -16,6 +16,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
+import { useSettings } from '../context/SettingsContext';
 import ProductCard from '../components/ProductCard';
 import LoadingShimmer from '../components/LoadingShimmer';
 import api from '../config/api';
@@ -33,6 +34,7 @@ const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const { addToCart } = useCart();
+  const { settings } = useSettings();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,6 +75,9 @@ const HomeScreen = ({ navigation }) => {
       } else if (trimmedCategory) {
         params.category = trimmedCategory;
       }
+      
+      // Request all products by using a high limit
+      params.limit = 1000;
       
       const res = await api.get('/products', { params });
       setProducts(res.data.data || []);
@@ -180,6 +185,14 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
+
+      {settings.showPromoBanner && (
+        <View style={{ backgroundColor: theme.primary, paddingVertical: 8, paddingHorizontal: 20 }}>
+          <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700', textAlign: 'center' }}>
+            {settings.promoBannerText}
+          </Text>
+        </View>
+      )}
 
       {/* Premium Floating Header */}
       <View style={[styles.headerWrap, { paddingTop: insets.top + 12 }]}>
