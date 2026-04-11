@@ -112,16 +112,8 @@ const LoginScreen = ({ navigation }) => {
       />
 
       {/* Background Orbs */}
-      <Animated.View
-        style={[styles.orb, styles.orb1, { transform: [{ translateY: orb1Translate }] }]}
-      >
-        <LinearGradient colors={['rgba(124,58,237,0.45)', 'transparent']} style={StyleSheet.absoluteFill} start={{ x: 0.5, y: 0.5 }} end={{ x: 1, y: 1 }} />
-      </Animated.View>
-      <Animated.View
-        style={[styles.orb, styles.orb2, { transform: [{ translateY: orb2Translate }] }]}
-      >
-        <LinearGradient colors={['rgba(6,182,212,0.3)', 'transparent']} style={StyleSheet.absoluteFill} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
-      </Animated.View>
+      
+      
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

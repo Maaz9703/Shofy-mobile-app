@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   ring: {
     position: 'absolute',
     borderWidth: 1.5,
-    borderColor: 'rgba(0,0,0,0.1)',
+    borderColor: '#e2e8f0',
   },
   logo: {
     width: 90,

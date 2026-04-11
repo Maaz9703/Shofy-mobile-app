@@ -184,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={[styles.headerWrap, { paddingTop: insets.top + 8 }]}>
         <Animated.View style={[StyleSheet.absoluteFill, { opacity: headerOpacity }]}>
           <LinearGradient
-            colors={['rgba(248,250,252,0.95)', 'rgba(248,250,252,0.9)', 'rgba(248,250,252,0)']}
+            colors={['#f8fafc', '#f8fafc', '#f8fafc']}
             style={StyleSheet.absoluteFill}
           />
         </Animated.View>
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, paddingVertical: 10,
     borderRadius: 10, backgroundColor: '#ede9fe',
   },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'flex-end' },
+  modalOverlay: { flex: 1, backgroundColor: '#e2e8f0', justifyContent: 'flex-end' },
   modalContent: { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingBottom: 50, maxHeight: '75%' },
   modalHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',

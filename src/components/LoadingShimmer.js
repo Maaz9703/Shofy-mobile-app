@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   shimmer: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#e2e8f0',
     borderRadius: 8,
   },
   image: {

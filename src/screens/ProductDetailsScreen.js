@@ -88,7 +88,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             resizeMode="cover"
           />
           <LinearGradient
-            colors={['rgba(248,250,252,0)', '#f8fafc']}
+            colors={['#f8fafc', '#f8fafc']}
             style={styles.imageBottomGradient}
           />
         </View>
@@ -147,7 +147,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       {/* Floating Action Bar */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom || 24 }]}>
         <LinearGradient
-          colors={['rgba(248,250,252,0)', 'rgba(248,250,252,0.95)', '#f8fafc']}
+          colors={['#f8fafc', '#f8fafc', '#f8fafc']}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.bottomBarContent}>

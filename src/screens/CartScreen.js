@@ -100,7 +100,7 @@ const CartScreen = ({ navigation }) => {
       />
 
       <View style={[styles.footer, { paddingBottom: insets.bottom || 24 }]}>
-        <LinearGradient colors={['rgba(248,250,252,0)', 'rgba(248,250,252,0.95)', '#f8fafc']} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={['#f8fafc', '#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
         <View style={{ paddingHorizontal: 20, paddingTop: 16 }}>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Grand Total</Text>

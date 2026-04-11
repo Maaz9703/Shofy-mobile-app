@@ -14,7 +14,7 @@ export const useTheme = () => {
 const lightTheme = {
   background: '#f8fafc',
   card: '#ffffff',
-  cardGlass: 'rgba(0,0,0,0.03)',
+  cardGlass: '#f1f5f9',
   text: '#0f172a',
   textSecondary: '#64748b',
   primary: '#7c3aed',

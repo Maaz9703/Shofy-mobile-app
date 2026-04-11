@@ -126,7 +126,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
             activeOpacity={interactive ? 0.7 : 1}
           >
             <Ionicons
-              name={star <= rating ? 'star' : 'star-outline'}
+              name={star <= rating ? 'star' : 'star-'}
               size={size}
               color={star <= rating ? '#fbbf24' : theme.textSecondary}
             />

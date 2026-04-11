@@ -23,10 +23,7 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             resizeMode="cover"
           />
           {/* Subtle gradient overlay at bottom of image for blending */}
-          <LinearGradient
-            colors={['transparent', 'rgba(10,10,20,0.8)']}
-            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40 }}
-          />
+          
           
           <TouchableOpacity
             style={styles.wishlistBtn}
