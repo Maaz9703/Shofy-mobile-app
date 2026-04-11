@@ -98,6 +98,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
       <View style={[styles.container, { backgroundColor: theme.background }]}>
         <StatusBar barStyle="dark-content" />
         {renderHeader()}
+        <View style={styles.emptyState}>
           <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
             <ArrowLeftRight size={60} color={theme.primary} />
           </View>
