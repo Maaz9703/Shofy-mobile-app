@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
   clearBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#2a1020',
+    backgroundColor: '#ffffff',
+    borderWidth: 1, borderColor: '#e2e8f0',
     justifyContent: 'center', alignItems: 'center',
   },
   emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },

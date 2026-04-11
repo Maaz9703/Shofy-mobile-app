@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   cardContent: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   image: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#f1f5f9' },
   info: { flex: 1 },
-  productTitle: { fontSize: 15, fontWeight: '600', marginBottom: 6, color: '#e2e8f0' },
+  productTitle: { fontSize: 15, fontWeight: '600', marginBottom: 6, color: '#0f172a' },
   price: { fontSize: 17, fontWeight: '800', color: '#0f172a' },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   addBtn: {

@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e2e8f0',
     alignItems: 'center', justifyContent: 'center',
   },
-  menuLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: '#e2e8f0' },
+  menuLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: '#0f172a' },
   
   logoutBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',

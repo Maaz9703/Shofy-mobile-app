@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  orderId: { fontSize: 15, fontWeight: '700', color: '#e2e8f0' },
+  orderId: { fontSize: 15, fontWeight: '700', color: '#0f172a' },
   statusBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
     paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8,

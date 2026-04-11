@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center', marginRight: 12,
   },
   notificationContent: { flex: 1 },
-  notificationTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4, color: '#e2e8f0' },
+  notificationTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4, color: '#0f172a' },
   notificationMessage: { fontSize: 13, marginBottom: 4, color: '#64748b' },
   notificationDate: { fontSize: 11, color: '#94a3b8' },
   unreadDot: { width: 8, height: 8, borderRadius: 4, marginLeft: 8, backgroundColor: '#0f172a' },

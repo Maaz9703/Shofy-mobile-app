@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#334155',
+    borderTopColor: '#e2e8f0',
   },
   itemPreview: {
     flexDirection: 'row',
