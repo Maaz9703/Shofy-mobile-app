@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import HomeScreen from '../screens/HomeScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
@@ -27,12 +26,10 @@ import WishlistScreen from '../screens/WishlistScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Helper: returns tabBarStyle based on whether we're on the root screen
 const getTabBarVisibility = (route) => {
   const routeName = route.state
     ? route.state.routes[route.state.index]?.name
     : route.params?.screen || '';
-  // Only show tab bar on the main/root screen of each stack
   const rootScreens = ['HomeMain', 'CartMain', 'OrdersMain', 'ProfileMain'];
   if (route.state && !rootScreens.includes(routeName)) {
     return { display: 'none' };
@@ -41,7 +38,7 @@ const getTabBarVisibility = (route) => {
 };
 
 const HomeStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
     <Stack.Screen name="HomeMain" component={HomeScreen} />
     <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     <Stack.Screen name="ProductReviews" component={ProductReviewsScreen} />
@@ -52,14 +49,14 @@ const HomeStack = () => (
 );
 
 const CartStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
     <Stack.Screen name="CartMain" component={CartScreen} />
     <Stack.Screen name="Checkout" component={CheckoutScreen} />
   </Stack.Navigator>
 );
 
 const OrdersStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
     <Stack.Screen name="OrdersMain" component={OrdersScreen} />
     <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} />
     <Stack.Screen name="QuickReorder" component={QuickReorderScreen} />
@@ -67,7 +64,7 @@ const OrdersStack = () => (
 );
 
 const ProfileStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
     <Stack.Screen name="ProfileMain" component={ProfileScreen} />
     <Stack.Screen name="AddressManagement" component={AddressManagementScreen} />
     <Stack.Screen name="AddEditAddress" component={AddEditAddressScreen} />
@@ -75,14 +72,6 @@ const ProfileStack = () => (
     <Stack.Screen name="RecentlyViewed" component={RecentlyViewedScreen} />
     <Stack.Screen name="Notifications" component={NotificationsScreen} />
   </Stack.Navigator>
-);
-
-const CustomTabBarBackground = () => (
-  <View style={[StyleSheet.absoluteFill, { backgroundColor: '#f8fafc' }]}>
-    <View style={{
-      position: 'absolute', top: 0, left: 0, right: 0, height: 1, backgroundColor: '#e2e8f0'
-    }} />
-  </View>
 );
 
 const MainNavigator = () => {
@@ -103,26 +92,15 @@ const MainNavigator = () => {
             default: iconName = 'ellipse';
           }
           return (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused && (
-                <View style={{
-                  position: 'absolute', width: 36, height: 36, borderRadius: 18,
-                  backgroundColor: '#f1f5f9',
-                }} />
-              )}
-              <Ionicons name={iconName} size={size} color={color} />
+            <View style={styles.iconContainer}>
+              {focused && <View style={[styles.activeIndicator, { backgroundColor: theme.primary + '15' }]} />}
+              <Ionicons name={iconName} size={24} color={color} />
             </View>
           );
         },
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textSecondary,
-        tabBarStyle: {
-          borderTopWidth: 0,
-          elevation: 0,
-          height: 80,
-          backgroundColor: '#f8fafc',
-        },
-        tabBarBackground: () => <CustomTabBarBackground />,
+        tabBarStyle: [styles.tabBar, { borderTopColor: theme.border, backgroundColor: theme.card }],
         tabBarShowLabel: false,
       })}
     >
@@ -130,13 +108,7 @@ const MainNavigator = () => {
         name="Home"
         component={HomeStack}
         options={({ route }) => ({
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            height: 80,
-            backgroundColor: '#f8fafc',
-            ...getTabBarVisibility(route),
-          },
+          tabBarStyle: [styles.tabBar, { borderTopColor: theme.border, backgroundColor: theme.card }, getTabBarVisibility(route)],
         })}
       />
       <Tab.Screen
@@ -144,44 +116,52 @@ const MainNavigator = () => {
         component={CartStack}
         options={({ route }) => ({
           tabBarBadge: cartCount > 0 ? cartCount : undefined,
-          tabBarBadgeStyle: { backgroundColor: '#ef4444', color: '#0f172a' },
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            height: 80,
-            backgroundColor: '#f8fafc',
-            ...getTabBarVisibility(route),
-          },
+          tabBarBadgeStyle: { backgroundColor: theme.error, color: '#ffffff', fontSize: 10, fontWeight: 'bold' },
+          tabBarStyle: [styles.tabBar, { borderTopColor: theme.border, backgroundColor: theme.card }, getTabBarVisibility(route)],
         })}
       />
       <Tab.Screen
         name="Orders"
         component={OrdersStack}
         options={({ route }) => ({
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            height: 80,
-            backgroundColor: '#f8fafc',
-            ...getTabBarVisibility(route),
-          },
+          tabBarStyle: [styles.tabBar, { borderTopColor: theme.border, backgroundColor: theme.card }, getTabBarVisibility(route)],
         })}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
         options={({ route }) => ({
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            height: 80,
-            backgroundColor: '#f8fafc',
-            ...getTabBarVisibility(route),
-          },
+          tabBarStyle: [styles.tabBar, { borderTopColor: theme.border, backgroundColor: theme.card }, getTabBarVisibility(route)],
         })}
       />
     </Tab.Navigator>
   );
 };
 
+const styles = StyleSheet.create({
+  tabBar: {
+    height: 85,
+    borderTopWidth: 1,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    paddingTop: 10,
+  },
+  iconContainer: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeIndicator: {
+    position: 'absolute',
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+  },
+});
+
 export default MainNavigator;
+

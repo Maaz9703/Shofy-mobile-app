@@ -102,33 +102,31 @@ const ProductReviewsScreen = ({ route, navigation }) => {
             try {
               await api.delete(`/reviews/${userReview._id}`);
               Toast.show({ type: 'success', text1: 'Review deleted' });
-              setUserReview(null);
-              setRating(0);
-              setComment('');
               fetchReviews();
             } catch (error) {
               Toast.show({ type: 'error', text1: 'Failed to delete review' });
             }
-          },
-        },
+          }
+        }
       ]
     );
   };
 
-  const renderStars = (rating, size = 16, interactive = false, onPress = null) => {
+  const renderStars = (rating, size = 16, interactive = false, onRatingSelect) => {
     return (
-      <View style={styles.starsContainer}>
+      <View style={styles.starsRow}>
         {[1, 2, 3, 4, 5].map((star) => (
           <TouchableOpacity
             key={star}
             disabled={!interactive}
-            onPress={() => interactive && onPress && onPress(star)}
+            onPress={() => onRatingSelect?.(star)}
             activeOpacity={interactive ? 0.7 : 1}
           >
             <Ionicons
-              name={star <= rating ? 'star' : 'star-outline'}
+              name="star"
               size={size}
-              color={star <= rating ? '#fbbf24' : theme.textSecondary}
+              color={star <= rating ? '#fbbf24' : theme.textSecondary + '40'}
+              style={{ marginRight: 2 }}
             />
           </TouchableOpacity>
         ))}
@@ -136,13 +134,6 @@ const ProductReviewsScreen = ({ route, navigation }) => {
     );
   };
 
-  const getRatingDistribution = () => {
-    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    reviews.forEach((r) => {
-      distribution[r.rating] = (distribution[r.rating] || 0) + 1;
-    });
-    return distribution;
-  };
 
   const distribution = getRatingDistribution();
   const totalReviews = reviews.length;
@@ -353,118 +344,125 @@ const styles = StyleSheet.create({
   scrollView: { flex: 1 },
   scrollContent: { padding: 16, paddingBottom: 100 },
   summaryCard: {
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+    padding: 24,
+    borderRadius: 24,
+    marginBottom: 20,
+    borderWidth: 1,
   },
   summaryTop: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
   },
   ratingDisplay: {
     alignItems: 'center',
   },
   avgRating: {
-    fontSize: 48,
-    fontWeight: '700',
-    marginBottom: 8,
+    fontSize: 56,
+    fontWeight: '900',
+    letterSpacing: -2,
+    marginBottom: 4,
   },
   starsContainer: {
     flexDirection: 'row',
-    gap: 4,
-    marginBottom: 8,
+    gap: 6,
+    marginBottom: 10,
   },
   totalReviews: {
-    fontSize: 14,
-    marginTop: 4,
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 6,
   },
   distribution: {
-    gap: 12,
+    gap: 14,
   },
   distributionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 16,
   },
   distributionLabel: {
-    fontSize: 12,
-    width: 50,
+    fontSize: 13,
+    fontWeight: '700',
+    width: 60,
   },
   progressBar: {
     flex: 1,
-    height: 8,
-    borderRadius: 4,
+    height: 10,
+    borderRadius: 5,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: 5,
   },
   distributionCount: {
-    fontSize: 12,
-    width: 30,
+    fontSize: 13,
+    fontWeight: '700',
+    width: 35,
     textAlign: 'right',
   },
   writeReviewBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    gap: 8,
+    padding: 18,
+    borderRadius: 18,
+    marginBottom: 20,
+    gap: 10,
   },
   writeReviewText: {
     color: '#0f172a',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '800',
   },
   reviewForm: {
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+    padding: 24,
+    borderRadius: 24,
+    marginBottom: 20,
+    borderWidth: 1,
   },
   formTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
+    fontSize: 18,
+    fontWeight: '800',
+    marginBottom: 16,
   },
   commentInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    minHeight: 100,
+    borderWidth: 1.5,
+    borderRadius: 16,
+    padding: 16,
+    minHeight: 120,
     textAlignVertical: 'top',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '500',
   },
   formActions: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 16,
+    marginTop: 20,
   },
   deleteBtn: {
     flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
+    padding: 16,
+    borderRadius: 14,
+    borderWidth: 1.5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   deleteBtnText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '800',
   },
   submitBtn: {
     flex: 2,
-    padding: 12,
-    borderRadius: 8,
+    padding: 16,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   submitBtnText: {
     color: '#0f172a',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '800',
   },
   reviewsList: {
     marginTop: 8,

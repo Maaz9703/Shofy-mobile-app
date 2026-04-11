@@ -7,16 +7,20 @@ import {
   StyleSheet,
   ActivityIndicator,
   StatusBar,
+  Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const CheckoutScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { cartItems, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
@@ -48,7 +52,7 @@ const CheckoutScreen = ({ navigation }) => {
       Toast.show({ type: 'error', text1: 'Please select a shipping address' }); return;
     }
     if (addresses.length === 0) {
-      Toast.show({ type: 'error', text1: 'Please add a shipping address first' });
+      Toast.show({ type: 'info', text1: 'Add a shipping address to continue' });
       navigation.getParent()?.navigate('Profile', { screen: 'AddressManagement' }); return;
     }
     if (cartItems.length === 0) {
@@ -76,185 +80,214 @@ const CheckoutScreen = ({ navigation }) => {
 
   if (success) {
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
-        <View style={styles.successContainer}>
-          <View style={styles.successIconBg}>
-            <Ionicons name="checkmark-circle" size={80} color="#34d399" />
-          </View>
-          <Text style={styles.successTitle}>Order Placed! 🎉</Text>
-          <Text style={styles.successSubtitle}>
-            {paymentMethod === 'COD' ? 'Cash on Delivery — Pay when you receive' : 'Payment processing'}
-          </Text>
-          <TouchableOpacity onPress={() => { setSuccess(false); navigation.navigate('OrdersMain'); }}>
-            <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.successBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-              <Text style={styles.successBtnText}>View Orders</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <StatusBar barStyle="dark-content" />
+        <View style={styles.successWrapper}>
+          <Animated.View entering={FadeInDown.delay(200).springify()}>
+            <View style={[styles.successBadge, { backgroundColor: '#10b981' }]}>
+              <Ionicons name="checkmark" size={60} color="#ffffff" />
+            </View>
+          </Animated.View>
+          <Animated.View entering={FadeInDown.delay(400).springify()}>
+            <Text style={[styles.successTitle, { color: theme.text }]}>Order Placed Successfully!</Text>
+            <Text style={[styles.successSub, { color: theme.textSecondary }]}>
+              Your premium items are being prepared for delivery.
+            </Text>
+          </Animated.View>
+          <Animated.View entering={FadeInDown.delay(600).springify()} style={styles.successActions}>
+            <AnimatedPressable onPress={() => { setSuccess(false); navigation.navigate('Orders'); }} style={{ width: '100%' }}>
+              <View style={[styles.primaryBtn, { backgroundColor: theme.primary }]}>
+                <Text style={styles.primaryBtnText}>Check Order Status</Text>
+              </View>
+            </AnimatedPressable>
+            <TouchableOpacity onPress={() => { setSuccess(false); navigation.navigate('Home'); }} style={{ marginTop: 20 }}>
+              <Text style={[styles.secondaryActionText, { color: theme.textSecondary }]}>Return to Shopping</Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
+      
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+        <TouchableOpacity 
+          style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Checkout</Text>
+        <View style={{ width: 44 }} />
+      </View>
 
-      <TouchableOpacity style={[styles.backBtn, { top: insets.top + 10 }]} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="#0f172a" />
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {/* Shipping Section */}
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Delivery Address</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile', { screen: 'AddressManagement' })}>
+            <Text style={[styles.addText, { color: theme.primary }]}>Edit</Text>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 64 }]} showsVerticalScrollIndicator={false}>
-        <Text style={styles.pageTitle}>Checkout</Text>
-
-        {/* Shipping Address */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Shipping Address</Text>
-          {loading ? (
-            <ActivityIndicator color="#0f172a" />
-          ) : addresses.length === 0 ? (
-            <TouchableOpacity style={styles.addAddrBtn} onPress={() => navigation.navigate('ProfileMain')}>
-              <Ionicons name="add" size={24} color="#0f172a" />
-              <Text style={{ color: '#0f172a', fontSize: 15, fontWeight: '600' }}>Add Address</Text>
-            </TouchableOpacity>
-          ) : (
-            addresses.map((addr) => (
+        {loading ? (
+          <ActivityIndicator color={theme.primary} style={{ marginVertical: 20 }} />
+        ) : addresses.length === 0 ? (
+          <TouchableOpacity 
+            style={[styles.emptyAddr, { borderColor: theme.border, backgroundColor: theme.card }]} 
+            onPress={() => navigation.navigate('Profile', { screen: 'AddressManagement' })}
+          >
+            <Ionicons name="location" size={32} color={theme.textSecondary} />
+            <Text style={[styles.emptyAddrText, { color: theme.textSecondary }]}>Add a shipping address</Text>
+          </TouchableOpacity>
+        ) : (
+          <Animated.View layout={Layout.springify()}>
+            {addresses.map((addr) => (
               <TouchableOpacity
                 key={addr._id}
-                style={[
-                  styles.addressCard,
-                  selectedAddress?._id === addr._id && styles.addressCardSelected,
-                ]}
                 onPress={() => setSelectedAddress(addr)}
+                style={[
+                  styles.optionCard,
+                  { backgroundColor: theme.card, borderColor: theme.border },
+                  selectedAddress?._id === addr._id && { borderColor: theme.primary, borderWidth: 2 }
+                ]}
               >
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <Ionicons
-                    name={selectedAddress?._id === addr._id ? 'radio-button-on' : 'radio-button-off'}
-                    size={20}
-                    color={selectedAddress?._id === addr._id ? '#0f172a' : '#94a3b8'}
+                <View style={styles.optionHeader}>
+                  <Ionicons 
+                    name={selectedAddress?._id === addr._id ? "radio-button-on" : "radio-button-off"} 
+                    size={22} 
+                    color={selectedAddress?._id === addr._id ? theme.primary : theme.textSecondary} 
                   />
-                  <Text style={styles.addrName}>{addr.fullName}</Text>
+                  <Text style={[styles.optionTitle, { color: theme.text }]}>{addr.fullName}</Text>
                 </View>
-                <Text style={styles.addrText}>{addr.address}, {addr.city}, {addr.state} {addr.zipCode}</Text>
-                <Text style={styles.addrPhone}>{addr.phone}</Text>
+                <Text style={[styles.optionSub, { color: theme.textSecondary }]}>
+                  {addr.address}, {addr.city}
+                </Text>
               </TouchableOpacity>
-            ))
-          )}
-        </View>
+            ))}
+          </Animated.View>
+        )}
 
-        {/* Payment Method */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
-          {[
-            { key: 'COD', icon: 'cash', label: 'Cash on Delivery' },
-            { key: 'ONLINE', icon: 'card', label: 'Online Payment (Coming Soon)' },
-          ].map((pm) => (
-            <TouchableOpacity
-              key={pm.key}
-              style={[styles.paymentOption, paymentMethod === pm.key && styles.paymentOptionSelected]}
-              onPress={() => setPaymentMethod(pm.key)}
-            >
-              <Ionicons name={pm.icon} size={22} color={paymentMethod === pm.key ? '#0f172a' : '#64748b'} />
-              <Text style={[styles.paymentText, paymentMethod === pm.key && { color: '#0f172a' }]}>{pm.label}</Text>
-              {paymentMethod === pm.key && <Ionicons name="checkmark-circle" size={22} color="#0f172a" />}
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* Payment Section */}
+        <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24, marginBottom: 16 }]}>Payment Mode</Text>
+        {[
+          { key: 'COD', icon: 'cash', label: 'Cash on Delivery' },
+          { key: 'ONLINE', icon: 'card', label: 'Stripe / Credit Card', disabled: true },
+        ].map((pm) => (
+          <TouchableOpacity
+            key={pm.key}
+            disabled={pm.disabled}
+            onPress={() => setPaymentMethod(pm.key)}
+            style={[
+              styles.optionCard,
+              { backgroundColor: theme.card, borderColor: theme.border },
+              paymentMethod === pm.key && { borderColor: theme.primary, borderWidth: 2 },
+              pm.disabled && { opacity: 0.5 }
+            ]}
+          >
+            <View style={styles.optionHeader}>
+              <Ionicons 
+                name={paymentMethod === pm.key ? "checkbox" : "square"} 
+                size={22} 
+                color={paymentMethod === pm.key ? theme.primary : theme.textSecondary} 
+              />
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={[styles.optionTitle, { color: theme.text }]}>{pm.label}</Text>
+                {pm.disabled && <Text style={{ fontSize: 10, fontWeight: '700', color: theme.textSecondary }}>COMING SOON</Text>}
+              </View>
+              <Ionicons name={pm.icon} size={22} color={theme.textSecondary} />
+            </View>
+          </TouchableOpacity>
+        ))}
 
         {/* Order Summary */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Summary</Text>
+        <View style={[styles.summaryBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border }]}>
+          <Text style={[styles.summaryTitle, { color: theme.text }]}>Payment Summary</Text>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal:</Text>
-            <Text style={styles.summaryValue}>PKR {cartTotal.toLocaleString()}</Text>
+            <Text style={[styles.sumLabel, { color: theme.textSecondary }]}>Items Subtotal</Text>
+            <Text style={[styles.sumVal, { color: theme.text }]}>PKR {cartTotal.toLocaleString()}</Text>
           </View>
-          {paymentMethod === 'COD' && (
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Shipping:</Text>
-              <Text style={styles.summaryValue}>PKR 100</Text>
-            </View>
-          )}
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total:</Text>
-            <Text style={styles.totalValue}>
-              PKR {(cartTotal + (paymentMethod === 'COD' ? 100 : 0)).toLocaleString()}
-            </Text>
+          <View style={styles.summaryRow}>
+            <Text style={[styles.sumLabel, { color: theme.textSecondary }]}>Logistic Charges</Text>
+            <Text style={[styles.sumVal, { color: '#10b981' }]}>Free Delivery</Text>
+          </View>
+          <View style={[styles.divider, { backgroundColor: theme.border }]} />
+          <View style={styles.sumTotalRow}>
+            <Text style={[styles.totalLabel, { color: theme.text }]}>Grant Total</Text>
+            <Text style={[styles.totalValue, { color: theme.primary }]}>PKR {cartTotal.toLocaleString()}</Text>
           </View>
         </View>
 
-        {/* Place Order */}
-        <TouchableOpacity onPress={handlePlaceOrder} disabled={placing || addresses.length === 0}>
-          <LinearGradient
-            colors={placing || addresses.length === 0 ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
-            style={styles.placeBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-          >
-            {placing ? <ActivityIndicator color="#f8fafc" /> : <Text style={styles.placeBtnText}>Place Order</Text>}
-          </LinearGradient>
-        </TouchableOpacity>
+        <AnimatedPressable 
+          onPress={handlePlaceOrder} 
+          disabled={placing || addresses.length === 0}
+          style={styles.placeOrderBtnWrapper}
+        >
+          <View style={[
+            styles.primaryBtn, 
+            { backgroundColor: theme.primary },
+            (placing || addresses.length === 0) && { backgroundColor: theme.textSecondary }
+          ]}>
+            {placing ? <ActivityIndicator color="#ffffff" /> : (
+              <>
+                <Text style={styles.primaryBtnText}>Confirm Order</Text>
+                <Ionicons name="arrow-forward" size={20} color="#ffffff" style={{ marginLeft: 8 }} />
+              </>
+            )}
+          </View>
+        </AnimatedPressable>
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
-  backBtn: {
-    position: 'absolute', left: 20, zIndex: 10,
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e2e8f0',
-    justifyContent: 'center', alignItems: 'center',
+  container: { flex: 1 },
+  header: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 24, paddingBottom: 20,
   },
-  scroll: { padding: 16, paddingBottom: 40 },
-  pageTitle: { fontSize: 28, fontWeight: '900', color: '#0f172a', marginBottom: 20 },
-  section: {
-    padding: 18, borderRadius: 18, marginBottom: 16,
-    backgroundColor: '#ffffff',
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+  headerBtn: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { fontSize: 22, fontWeight: '800' },
+  scroll: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 100 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  sectionTitle: { fontSize: 18, fontWeight: '800' },
+  addText: { fontSize: 14, fontWeight: '700' },
+  emptyAddr: {
+    height: 120, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed',
+    alignItems: 'center', justifyContent: 'center', gap: 10,
   },
-  sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 14, color: '#0f172a' },
-  addressCard: {
-    padding: 14, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#ffffff',
+  emptyAddrText: { fontSize: 15, fontWeight: '600' },
+  optionCard: { padding: 16, borderRadius: 20, borderWidth: 1, marginBottom: 12 },
+  optionHeader: { flexDirection: 'row', alignItems: 'center' },
+  optionTitle: { fontSize: 16, fontWeight: '800', marginLeft: 12 },
+  optionSub: { fontSize: 13, fontWeight: '500', marginTop: 6, marginLeft: 34 },
+  summaryBox: { padding: 24, borderRadius: 24, marginTop: 32, borderWidth: 1 },
+  summaryTitle: { fontSize: 18, fontWeight: '800', marginBottom: 20 },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
+  sumLabel: { fontSize: 14, fontWeight: '600' },
+  sumVal: { fontSize: 14, fontWeight: '700' },
+  divider: { height: 1.5, width: '100%', marginVertical: 16, opacity: 0.1 },
+  sumTotalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  totalLabel: { fontSize: 18, fontWeight: '900' },
+  totalValue: { fontSize: 22, fontWeight: '900' },
+  placeOrderBtnWrapper: { marginTop: 32 },
+  primaryBtn: {
+    height: 56, borderRadius: 18,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
   },
-  addressCardSelected: { backgroundColor: '#e2e8f0', borderWidth: 1, borderColor: '#0f172a' },
-  addrName: { fontSize: 15, fontWeight: '600', color: '#0f172a' },
-  addrText: { fontSize: 13, color: '#64748b', marginLeft: 28 },
-  addrPhone: { fontSize: 12, color: '#64748b', marginLeft: 28, marginTop: 2 },
-  addAddrBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-    padding: 20, borderWidth: 1.5, borderRadius: 14,
-    borderColor: '#0f172a', borderStyle: 'dashed',
-  },
-  paymentOption: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    padding: 16, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#ffffff',
-  },
-  paymentOptionSelected: { backgroundColor: '#e2e8f0', borderWidth: 1, borderColor: '#0f172a' },
-  paymentText: { flex: 1, fontSize: 15, fontWeight: '500', color: '#64748b' },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  summaryLabel: { fontSize: 15, color: '#64748b' },
-  summaryValue: { fontSize: 15, color: '#0f172a' },
-  totalRow: {
-    flexDirection: 'row', justifyContent: 'space-between',
-    marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#e2e8f0',
-  },
-  totalLabel: { fontSize: 17, fontWeight: '700', color: '#0f172a' },
-  totalValue: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
-  placeBtn: { borderRadius: 16, height: 56, alignItems: 'center', justifyContent: 'center' },
-  placeBtnText: { color: '#f8fafc', fontSize: 18, fontWeight: '800' },
-  successContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  successIconBg: {
-    width: 120, height: 120, borderRadius: 60,
-    backgroundColor: '#dcfce7',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 24,
-  },
-  successTitle: { fontSize: 28, fontWeight: '800', color: '#0f172a', marginBottom: 8 },
-  successSubtitle: { fontSize: 15, color: '#64748b', textAlign: 'center', marginBottom: 32 },
-  successBtn: { paddingHorizontal: 36, height: 50, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  successBtnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
+  primaryBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
+  
+  successWrapper: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },
+  successBadge: { width: 120, height: 120, borderRadius: 60, alignItems: 'center', justifyContent: 'center', marginBottom: 32 },
+  successTitle: { fontSize: 32, fontWeight: '900', textAlign: 'center', lineHeight: 40, marginBottom: 16 },
+  successSub: { fontSize: 16, fontWeight: '500', textAlign: 'center', lineHeight: 24, marginBottom: 40 },
+  successActions: { width: '100%', alignItems: 'center' },
+  secondaryActionText: { fontSize: 15, fontWeight: '700' },
 });
 
 export default CheckoutScreen;
+

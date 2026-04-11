@@ -88,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
                 { borderColor: focusedField === 'email' ? theme.primary : theme.border },
                 focusedField === 'email' && { backgroundColor: '#fcfcff' }
               ]}>
-                <Ionicons name="mail-outline" size={20} color={focusedField === 'email' ? theme.primary : theme.textSecondary} />
+                <Ionicons name="mail" size={20} color={focusedField === 'email' ? theme.primary : theme.textSecondary} />
                 <TextInput
                   style={[styles.input, { color: theme.text }]}
                   placeholder="name@example.com"
@@ -111,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
                 { borderColor: focusedField === 'pass' ? theme.primary : theme.border },
                 focusedField === 'pass' && { backgroundColor: '#fcfcff' }
               ]}>
-                <Ionicons name="lock-closed-outline" size={20} color={focusedField === 'pass' ? theme.primary : theme.textSecondary} />
+                <Ionicons name="lock-closed" size={20} color={focusedField === 'pass' ? theme.primary : theme.textSecondary} />
                 <TextInput
                   style={[styles.input, { color: theme.text }]}
                   placeholder="••••••••"
@@ -123,7 +123,7 @@ const LoginScreen = ({ navigation }) => {
                   onBlur={() => setFocusedField(null)}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={theme.textSecondary} />
+                  <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
                 </TouchableOpacity>
               </View>
             </View>

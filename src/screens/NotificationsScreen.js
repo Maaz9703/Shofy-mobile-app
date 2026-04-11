@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,23 @@ import {
   StyleSheet,
   RefreshControl,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const NotificationsScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => { fetchNotifications(); }, []);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.get('/orders');
@@ -30,7 +32,7 @@ const NotificationsScreen = ({ navigation }) => {
         id: order._id,
         type: 'order',
         title: getOrderNotificationTitle(order.status),
-        message: `Order #${order._id.slice(-8).toUpperCase()} — ${order.status}`,
+        message: `Order #${order._id.slice(-8).toUpperCase()} is now ${order.status}`,
         date: order.updatedAt || order.createdAt,
         read: false,
         orderId: order._id,
@@ -44,35 +46,27 @@ const NotificationsScreen = ({ navigation }) => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
 
   const getOrderNotificationTitle = (status) => {
     switch (status) {
       case 'Delivered': return 'Order Delivered';
-      case 'Shipped': return 'Order Shipped';
-      case 'Processing': return 'Order Processing';
+      case 'Shipped': return 'On Its Way';
+      case 'Processing': return 'Payment Confirmed';
       case 'Cancelled': return 'Order Cancelled';
       default: return 'Order Update';
     }
   };
 
-  const getNotificationIcon = (status) => {
+  const getNotificationConfig = (status) => {
     switch (status) {
-      case 'Delivered': return 'checkmark-circle';
-      case 'Shipped': return 'car';
-      case 'Processing': return 'time';
-      case 'Cancelled': return 'close-circle';
-      default: return 'notifications';
-    }
-  };
-
-  const getNotificationColor = (status) => {
-    switch (status) {
-      case 'Delivered': return '#34d399';
-      case 'Shipped': return '#06b6d4';
-      case 'Processing': return '#f59e0b';
-      case 'Cancelled': return '#f87171';
-      default: return '#0f172a';
+      case 'Delivered': return { color: '#10b981', icon: 'checkmark-circle' };
+      case 'Shipped': return { color: '#3b82f6', icon: 'car' };
+      case 'Processing': return { color: '#f59e0b', icon: 'time' };
+      case 'Cancelled': return { color: '#ef4444', icon: 'close-circle' };
+      default: return { color: theme.primary, icon: 'notifications' };
     }
   };
 
@@ -80,54 +74,93 @@ const NotificationsScreen = ({ navigation }) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   };
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
-
-      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#0f172a" />
+  const renderItem = ({ item, index }) => {
+    const config = getNotificationConfig(item.status);
+    return (
+      <Animated.View 
+        entering={FadeInDown.delay(index * 100).springify()}
+        layout={Layout.springify()}
+      >
+        <TouchableOpacity
+          style={[
+            styles.card, 
+            { backgroundColor: theme.card, borderColor: theme.border },
+            !item.read && { ...theme.shadows.small },
+            item.read && { opacity: 0.6 }
+          ]}
+          onPress={() => { markAsRead(item.id); navigation.navigate('Orders', { screen: 'OrderDetails', params: { orderId: item.orderId } }); }}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.iconBg, { backgroundColor: config.color + '15' }]}>
+            <Ionicons name={config.icon} size={22} color={config.color} />
+          </View>
+          <View style={styles.content}>
+            <View style={styles.contentTop}>
+              <Text style={[styles.title, { color: theme.text }]}>{item.title}</Text>
+              {!item.read && <View style={[styles.unreadDot, { backgroundColor: theme.primary }]} />}
+            </View>
+            <Text style={[styles.message, { color: theme.textSecondary }]} numberOfLines={2}>
+              {item.message}
+            </Text>
+            <Text style={[styles.date, { color: theme.textSecondary }]}>
+              {new Date(item.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(item.date).toLocaleDateString()}
+            </Text>
+          </View>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifications</Text>
+      </Animated.View>
+    );
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
+
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+        <TouchableOpacity 
+          style={[styles.backBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </TouchableOpacity>
+        <View style={styles.headerText}>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Notifications</Text>
+          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>
+            {notifications.filter(n => !n.read).length} Unread alerts
+          </Text>
+        </View>
         <View style={{ width: 44 }} />
       </View>
 
-      {notifications.length === 0 && !loading ? (
-        <View style={styles.emptyState}>
-          <View style={styles.emptyIconBg}>
-            <Ionicons name="notifications-off" size={50} color="#0f172a" />
-          </View>
-          <Text style={styles.emptyText}>No notifications</Text>
-          <Text style={styles.emptySubtext}>You'll see order updates here</Text>
+      {loading && !refreshing ? (
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       ) : (
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            const iconColor = getNotificationColor(item.status);
-            return (
-              <TouchableOpacity
-                style={[styles.notificationCard, item.read && { opacity: 0.6 }]}
-                onPress={() => { markAsRead(item.id); }}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.iconContainer, { backgroundColor: iconColor + '15' }]}>
-                  <Ionicons name={getNotificationIcon(item.status)} size={22} color={iconColor} />
-                </View>
-                <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>{item.title}</Text>
-                  <Text style={styles.notificationMessage}>{item.message}</Text>
-                  <Text style={styles.notificationDate}>{new Date(item.date).toLocaleString()}</Text>
-                </View>
-                {!item.read && <View style={styles.unreadDot} />}
-              </TouchableOpacity>
-            );
-          }}
-          contentContainerStyle={styles.listContent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchNotifications(); }} tintColor="#0f172a" colors={['#0f172a']} />}
+          renderItem={renderItem}
+          contentContainerStyle={[styles.list, { paddingBottom: 100 }]}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchNotifications(); }} tintColor={theme.primary} />
+          }
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
+                <Ionicons name="notifications-off" size={60} color={theme.primary} />
+              </View>
+              <Text style={[styles.emptyTitle, { color: theme.text }]}>No alerts yet</Text>
+              <Text style={[styles.emptySub, { color: theme.textSecondary }]}>
+                Stay tuned! You'll receive updates about your orders and exclusive offers here.
+              </Text>
+              <AnimatedPressable onPress={() => navigation.navigate('Home')} style={styles.homeBtnContainer}>
+                <View style={[styles.homeBtn, { backgroundColor: theme.primary }]}>
+                  <Text style={styles.homeBtnText}>Go Shopping</Text>
+                </View>
+              </AnimatedPressable>
+            </View>
+          }
         />
       )}
     </View>
@@ -135,40 +168,45 @@ const NotificationsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1 },
   header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingBottom: 16,
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 24, paddingBottom: 20,
   },
-  backBtn: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center', alignItems: 'center',
+  backBtn: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  headerText: { flex: 1, alignItems: 'center' },
+  headerTitle: { fontSize: 22, fontWeight: '800' },
+  headerSub: { fontSize: 12, fontWeight: '600', marginTop: 2 },
+  loadingBox: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  list: { paddingHorizontal: 20, paddingTop: 10 },
+  card: {
+    flexDirection: 'row', padding: 16, borderRadius: 20, marginBottom: 16,
+    borderWidth: 1, alignItems: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
-  emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },
+  iconBg: {
+    width: 50, height: 50, borderRadius: 16,
+    justifyContent: 'center', alignItems: 'center', marginRight: 16,
+  },
+  content: { flex: 1 },
+  contentTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
+  title: { fontSize: 16, fontWeight: '800' },
+  message: { fontSize: 13, fontWeight: '500', lineHeight: 18, marginBottom: 6 },
+  date: { fontSize: 11, fontWeight: '600' },
+  unreadDot: { width: 8, height: 8, borderRadius: 4 },
+  empty: { flex: 1, alignItems: 'center', paddingTop: 100, paddingHorizontal: 40 },
   emptyIconBg: {
-    width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#ede9fe',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 20,
+    width: 120, height: 120, borderRadius: 60,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 24,
   },
-  emptyText: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
-  emptySubtext: { fontSize: 14, marginTop: 8, textAlign: 'center', color: '#64748b' },
-  listContent: { padding: 16 },
-  notificationCard: {
-    flexDirection: 'row', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center',
-    backgroundColor: '#ffffff',
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+  emptyTitle: { fontSize: 24, fontWeight: '800', marginBottom: 12 },
+  emptySub: { fontSize: 15, textAlign: 'center', lineHeight: 22 },
+  homeBtnContainer: { marginTop: 32, width: '100%' },
+  homeBtn: {
+    height: 54, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
   },
-  iconContainer: {
-    width: 44, height: 44, borderRadius: 14,
-    justifyContent: 'center', alignItems: 'center', marginRight: 12,
-  },
-  notificationContent: { flex: 1 },
-  notificationTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4, color: '#0f172a' },
-  notificationMessage: { fontSize: 13, marginBottom: 4, color: '#64748b' },
-  notificationDate: { fontSize: 11, color: '#94a3b8' },
-  unreadDot: { width: 8, height: 8, borderRadius: 4, marginLeft: 8, backgroundColor: '#0f172a' },
+  homeBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 });
 
 export default NotificationsScreen;
+

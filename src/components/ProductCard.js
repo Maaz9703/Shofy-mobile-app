@@ -43,9 +43,9 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
           >
             <View style={[styles.wishlistIconBg, { backgroundColor: '#ffffff', ...theme.shadows.small }]}>
               <Ionicons
-                name={isInWishlist ? 'heart' : 'heart-outline'}
-                size={18}
-                color={isInWishlist ? '#ef4444' : '#0f172a'}
+                name={isInWishlist ? 'heart' : 'heart'}
+                size={20}
+                color={isInWishlist ? theme.error : theme.textSecondary}
               />
             </View>
           </TouchableOpacity>

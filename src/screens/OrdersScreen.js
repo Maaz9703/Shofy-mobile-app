@@ -13,8 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const OrdersScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -44,130 +44,180 @@ const OrdersScreen = ({ navigation }) => {
     setRefreshing(false);
   }, [fetchOrders]);
 
-  const getStatusColor = (status) => {
+  const getStatusConfig = (status) => {
     switch (status) {
-      case 'Delivered': return '#34d399';
-      case 'Shipped': return '#06b6d4';
-      case 'Processing': return '#0f172a';
-      case 'Cancelled': return '#f87171';
-      default: return '#64748b';
+      case 'Delivered': return { color: '#10b981', label: 'Delivered', icon: 'checkmark-circle' };
+      case 'Shipped': return { color: '#3b82f6', label: 'In Transit', icon: 'car' };
+      case 'Processing': return { color: '#f59e0b', label: 'Processing', icon: 'time' };
+      case 'Cancelled': return { color: '#ef4444', label: 'Cancelled', icon: 'close-circle' };
+      default: return { color: '#64748b', label: status, icon: 'receipt' };
     }
   };
 
-  const renderOrder = ({ item, index }) => (
-    <Animated.View entering={FadeInDown.delay(index * 60).springify().damping(14)}>
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => navigation.navigate('OrderDetails', { order: item })}
-        activeOpacity={0.8}
-      >
-        <View style={styles.cardHeader}>
-          <Text style={styles.orderId}>
-            Order #{item._id.slice(-8).toUpperCase()}
-          </Text>
-          <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) + '20' }]}>
-            <View style={[styles.statusDot, { backgroundColor: getStatusColor(item.status) }]} />
-            <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>{item.status}</Text>
-          </View>
-        </View>
-        <Text style={styles.date}>
-          {new Date(item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-        </Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-          <Text style={styles.total}>PKR {item.total?.toLocaleString()}</Text>
-          <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-
-  if (loading) {
+  const renderOrder = ({ item, index }) => {
+    const config = getStatusConfig(item.status);
     return (
-      <View style={styles.container}>
-        <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0f172a" />
-        </View>
-      </View>
+      <Animated.View 
+        entering={FadeInDown.delay(index * 80).springify()}
+        layout={Layout.springify()}
+      >
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border }]}
+          onPress={() => navigation.navigate('OrderDetails', { order: item })}
+          activeOpacity={0.8}
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.orderIdent}>
+              <View style={[styles.orderIconBg, { backgroundColor: theme.primary + '10' }]}>
+                <Ionicons name="receipt" size={18} color={theme.primary} />
+              </View>
+              <Text style={[styles.orderId, { color: theme.text }]}>
+                #{item._id.slice(-8).toUpperCase()}
+              </Text>
+            </View>
+            <View style={[styles.statusBadge, { backgroundColor: config.color }]}>
+              <Ionicons name={config.icon} size={14} color="#ffffff" />
+              <Text style={styles.statusText}>{config.label}</Text>
+            </View>
+          </View>
+          
+          <View style={[styles.cardDivider, { backgroundColor: theme.border }]} />
+          
+          <View style={styles.cardBody}>
+            <View>
+              <Text style={[styles.date, { color: theme.textSecondary }]}>
+                {new Date(item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </Text>
+              <Text style={[styles.itemCount, { color: theme.textSecondary }]}>
+                {item.items?.length || 0} Products ordered
+              </Text>
+            </View>
+            <View style={styles.priceContainer}>
+              <Text style={[styles.totalLabel, { color: theme.textSecondary }]}>Grand Total</Text>
+              <Text style={[styles.total, { color: theme.primary }]}>PKR {item.total?.toLocaleString()}</Text>
+            </View>
+          </View>
+          
+          <View style={styles.cardFooter}>
+            <Text style={[styles.viewDetailsText, { color: theme.textSecondary }]}>View Order Details</Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} />
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
     );
-  }
+  };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
-
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
+      
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
-        <Text style={styles.headerTitle}>My Orders</Text>
-        <TouchableOpacity
-          style={styles.quickReorderBtn}
-          onPress={() => navigation.navigate('QuickReorder')}
-        >
-          <Ionicons name="repeat" size={18} color="#0f172a" />
-          <Text style={styles.quickReorderText}>Reorder</Text>
-        </TouchableOpacity>
+        <View>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Order History</Text>
+          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>Track and manage your orders</Text>
+        </View>
+        <AnimatedPressable onPress={() => navigation.navigate('QuickReorder')}>
+          <View style={[styles.reorderBtn, { backgroundColor: theme.primary }]}>
+            <Ionicons name="repeat" size={20} color="#ffffff" />
+          </View>
+        </AnimatedPressable>
       </View>
 
-      <FlatList
-        data={orders}
-        keyExtractor={(item) => item._id}
-        renderItem={renderOrder}
-        contentContainerStyle={styles.list}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} />
-        }
-        ListEmptyComponent={
-          <View style={styles.empty}>
-            <View style={styles.emptyIconBg}>
-              <Ionicons name="receipt" size={50} color="#0f172a" />
+      {loading && !refreshing ? (
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" color={theme.primary} />
+        </View>
+      ) : (
+        <FlatList
+          data={orders}
+          keyExtractor={(item) => item._id}
+          renderItem={renderOrder}
+          contentContainerStyle={[styles.list, { paddingBottom: 100 }]}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} colors={[theme.primary]} />
+          }
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
+                <Ionicons name="receipt" size={60} color={theme.primary} />
+              </View>
+              <Text style={[styles.emptyTitle, { color: theme.text }]}>No orders yet</Text>
+              <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
+                Once you place an order, it will appear here.
+              </Text>
+              <AnimatedPressable onPress={() => navigation.navigate('Home')} style={styles.shopBtnContainer}>
+                <View style={[styles.shopBtn, { backgroundColor: theme.primary }]}>
+                  <Text style={styles.shopBtnText}>Start Shopping</Text>
+                </View>
+              </AnimatedPressable>
             </View>
-            <Text style={styles.emptyTitle}>No orders yet</Text>
-            <Text style={styles.emptySubtitle}>Your orders will appear here</Text>
-          </View>
-        }
-      />
+          }
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1 },
   header: {
-    paddingHorizontal: 20, paddingBottom: 16,
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 24, paddingBottom: 20,
   },
-  headerTitle: { fontSize: 26, fontWeight: '900', color: '#0f172a' },
-  quickReorderBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    paddingHorizontal: 14, paddingVertical: 8,
-    borderRadius: 10, backgroundColor: '#ede9fe',
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+  headerTitle: { fontSize: 28, fontWeight: '900', letterSpacing: -1 },
+  headerSub: { fontSize: 13, fontWeight: '600', marginTop: 2 },
+  reorderBtn: {
+    width: 48, height: 48, borderRadius: 16,
+    justifyContent: 'center', alignItems: 'center',
   },
-  quickReorderText: { color: '#0f172a', fontSize: 13, fontWeight: '700' },
-  list: { padding: 16, paddingBottom: 20 },
+  loadingBox: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  list: { paddingHorizontal: 20, paddingTop: 10 },
   card: {
-    padding: 18, borderRadius: 16, marginBottom: 12,
-    backgroundColor: '#ffffff',
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+    padding: 20,
+    borderRadius: 24,
+    marginBottom: 16,
+    borderWidth: 1,
   },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  orderId: { fontSize: 15, fontWeight: '700', color: '#0f172a' },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  orderIdent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  orderIconBg: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  orderId: { fontSize: 16, fontWeight: '800' },
   statusBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8,
+    paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10,
   },
-  statusDot: { width: 6, height: 6, borderRadius: 3 },
-  statusText: { fontSize: 12, fontWeight: '700' },
-  date: { fontSize: 13, color: '#64748b' },
-  total: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
-  empty: { alignItems: 'center', justifyContent: 'center', paddingTop: 80 },
+  statusText: { fontSize: 11, fontWeight: '800', color: '#ffffff', textTransform: 'uppercase' },
+  cardDivider: { height: 1, width: '100%', marginBottom: 16, opacity: 0.1 },
+  cardBody: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 },
+  date: { fontSize: 14, fontWeight: '600', marginBottom: 4 },
+  itemCount: { fontSize: 12, fontWeight: '500' },
+  priceContainer: { alignItems: 'flex-end' },
+  totalLabel: { fontSize: 11, fontWeight: '600', textTransform: 'uppercase', marginBottom: 2 },
+  total: { fontSize: 22, fontWeight: '900' },
+  cardFooter: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+  },
+  viewDetailsText: { fontSize: 13, fontWeight: '600' },
+  empty: { flex: 1, alignItems: 'center', paddingTop: 100, paddingHorizontal: 40 },
   emptyIconBg: {
-    width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#ede9fe',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 20,
+    width: 120, height: 120, borderRadius: 60,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 24,
   },
-  emptyTitle: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
-  emptySubtitle: { fontSize: 14, color: '#64748b', marginTop: 6 },
+  emptyTitle: { fontSize: 24, fontWeight: '800', marginBottom: 12 },
+  emptySubtitle: { fontSize: 15, textAlign: 'center', lineHeight: 22 },
+  shopBtnContainer: { marginTop: 32, width: '100%' },
+  shopBtn: {
+    height: 54, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  shopBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 });
 
 export default OrdersScreen;
+

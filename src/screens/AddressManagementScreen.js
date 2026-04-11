@@ -10,13 +10,15 @@ import {
   StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../context/ThemeContext';
 import api from '../config/api';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const AddressManagementScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,27 +65,55 @@ const AddressManagementScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item, index }) => (
-    <Animated.View entering={FadeInDown.delay(index * 60).springify().damping(14)}>
-      <View style={styles.card}>
-        {item.isDefault && (
-          <View style={styles.defaultBadge}>
-            <Text style={styles.defaultText}>Default</Text>
+    <Animated.View 
+      entering={FadeInDown.delay(index * 100).springify()}
+      layout={Layout.springify()}
+    >
+      <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border, ...theme.shadows.small }]}>
+        <View style={styles.cardHeader}>
+          <View style={[styles.iconBox, { backgroundColor: theme.primary + '10' }]}>
+            <Ionicons name="location" size={20} color={theme.primary} />
           </View>
-        )}
-        <Text style={styles.name}>{item.fullName}</Text>
-        <Text style={styles.addrText}>{item.address}, {item.city}, {item.state} {item.zipCode}</Text>
-        <Text style={styles.phone}>{item.phone}</Text>
+          <View style={styles.headerInfo}>
+            <Text style={[styles.name, { color: theme.text }]}>{item.fullName}</Text>
+            {item.isDefault && (
+              <View style={[styles.defaultBadge, { backgroundColor: theme.primary }]}>
+                <Text style={styles.defaultText}>DEFAULT</Text>
+              </View>
+            )}
+          </View>
+        </View>
+
+        <Text style={[styles.addrText, { color: theme.textSecondary }]}>
+          {item.address}, {item.city}, {item.state} {item.zipCode}
+        </Text>
+        <Text style={[styles.phone, { color: theme.textSecondary }]}>
+          <Ionicons name="call" size={12} /> {item.phone}
+        </Text>
+
+        <View style={[styles.divider, { backgroundColor: theme.border }]} />
+
         <View style={styles.actions}>
           {!item.isDefault && (
-            <TouchableOpacity style={styles.actionBtn} onPress={() => setDefault(item._id)}>
-              <Text style={styles.actionText}>Set Default</Text>
+            <TouchableOpacity 
+              style={[styles.actionBtn, { backgroundColor: theme.background, borderColor: theme.border }]} 
+              onPress={() => setDefault(item._id)}
+            >
+              <Text style={[styles.actionText, { color: theme.text }]}>Set Default</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('AddEditAddress', { address: item })}>
-            <Text style={styles.actionText}>Edit</Text>
+          <TouchableOpacity 
+            style={[styles.actionBtn, { backgroundColor: theme.background, borderColor: theme.border }]} 
+            onPress={() => navigation.navigate('AddEditAddress', { address: item })}
+          >
+            <Ionicons name="create" size={16} color={theme.text} />
+            <Text style={[styles.actionText, { color: theme.text }]}>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => deleteAddress(item._id)}>
-            <Ionicons name="trash" size={22} color="#f87171" />
+          <TouchableOpacity 
+            style={[styles.deleteBtn, { backgroundColor: theme.error + '10' }]}
+            onPress={() => deleteAddress(item._id)}
+          >
+            <Ionicons name="trash" size={18} color={theme.error} />
           </TouchableOpacity>
         </View>
       </View>
@@ -91,44 +121,50 @@ const AddressManagementScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
 
-      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#0f172a" />
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+        <TouchableOpacity 
+          style={[styles.headerBtn, { backgroundColor: theme.card, ...theme.shadows.small }]} 
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Addresses</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('AddEditAddress')}>
-          <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.addBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-            <Ionicons name="add" size={22} color="#f8fafc" />
-          </LinearGradient>
-        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Address Book</Text>
+        <AnimatedPressable onPress={() => navigation.navigate('AddEditAddress')}>
+          <View style={[styles.addBtn, { backgroundColor: theme.primary }]}>
+            <Ionicons name="add" size={26} color="#ffffff" />
+          </View>
+        </AnimatedPressable>
       </View>
 
-      {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0f172a" />
+      {loading && !refreshing ? (
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       ) : (
         <FlatList
           data={addresses}
           keyExtractor={(item) => item._id}
           renderItem={renderItem}
-          contentContainerStyle={styles.list}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} />}
+          contentContainerStyle={[styles.list, { paddingBottom: 100 }]}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.empty}>
-              <View style={styles.emptyIconBg}>
-                <Ionicons name="location" size={50} color="#0f172a" />
+              <View style={[styles.emptyIconBg, { backgroundColor: theme.card, ...theme.shadows.medium }]}>
+                <Ionicons name="location" size={60} color={theme.primary} />
               </View>
-              <Text style={styles.emptyTitle}>No addresses yet</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('AddEditAddress')}>
-                <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.emptyBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-                  <Text style={styles.emptyBtnText}>Add your first address</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <Text style={[styles.emptyTitle, { color: theme.text }]}>No addresses yet</Text>
+              <Text style={[styles.emptySub, { color: theme.textSecondary }]}>
+                Please add your delivery address for a faster checkout experience.
+              </Text>
+              <AnimatedPressable onPress={() => navigation.navigate('AddEditAddress')} style={styles.addFirstBtnContainer}>
+                <View style={[styles.addFirstBtn, { backgroundColor: theme.primary }]}>
+                  <Text style={styles.addFirstBtnText}>Add Your First Address</Text>
+                </View>
+              </AnimatedPressable>
             </View>
           }
         />
@@ -138,48 +174,55 @@ const AddressManagementScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingBottom: 16,
+    paddingHorizontal: 24, paddingBottom: 20,
   },
-  backBtn: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center', alignItems: 'center',
-  },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
-  addBtn: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  list: { padding: 16, paddingBottom: 100 },
+  headerBtn: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { fontSize: 22, fontWeight: '800' },
+  addBtn: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  loadingBox: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  list: { paddingHorizontal: 20, paddingTop: 10 },
   card: {
-    padding: 18, borderRadius: 18, marginBottom: 12, position: 'relative',
-    backgroundColor: '#ffffff',
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
+    padding: 20, borderRadius: 24, marginBottom: 16,
+    borderWidth: 1,
   },
-  defaultBadge: {
-    position: 'absolute', top: 14, right: 14,
-    paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8,
-    backgroundColor: '#e2e8f0',
-  },
-  defaultText: { color: '#0f172a', fontSize: 11, fontWeight: '700' },
-  name: { fontSize: 17, fontWeight: '700', marginBottom: 6, color: '#0f172a' },
-  addrText: { fontSize: 14, marginBottom: 4, color: '#64748b' },
-  phone: { fontSize: 13, marginBottom: 14, color: '#64748b' },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  iconBox: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  headerInfo: { flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  name: { fontSize: 18, fontWeight: '800' },
+  defaultBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  defaultText: { color: '#ffffff', fontSize: 9, fontWeight: '900' },
+  addrText: { fontSize: 15, fontWeight: '500', lineHeight: 22, marginBottom: 8 },
+  phone: { fontSize: 14, fontWeight: '600' },
+  divider: { height: 1.5, width: '100%', marginVertical: 16, opacity: 0.1 },
   actions: { flexDirection: 'row', gap: 12, alignItems: 'center' },
   actionBtn: {
-    paddingHorizontal: 14, paddingVertical: 7, borderRadius: 8,
-    backgroundColor: '#e2e8f0',
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingHorizontal: 16, height: 40, borderRadius: 10,
+    borderWidth: 1,
   },
-  actionText: { fontSize: 13, fontWeight: '600', color: '#0f172a' },
-  empty: { alignItems: 'center', paddingTop: 80 },
+  actionText: { fontSize: 13, fontWeight: '700', color: '#0f172a' },
+  deleteBtn: {
+    width: 40, height: 40, borderRadius: 10,
+    justifyContent: 'center', alignItems: 'center',
+    marginLeft: 'auto',
+  },
+  empty: { flex: 1, alignItems: 'center', paddingTop: 100, paddingHorizontal: 40 },
   emptyIconBg: {
-    width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#ffffff',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 20,
+    width: 120, height: 120, borderRadius: 60,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 24,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#0f172a', marginBottom: 24 },
-  emptyBtn: { paddingHorizontal: 28, height: 48, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  emptyBtnText: { color: '#f8fafc', fontSize: 15, fontWeight: '700' },
+  emptyTitle: { fontSize: 24, fontWeight: '800', marginBottom: 12 },
+  emptySub: { fontSize: 15, textAlign: 'center', lineHeight: 22 },
+  addFirstBtnContainer: { marginTop: 32, width: '100%' },
+  addFirstBtn: {
+    height: 54, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  addFirstBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 });
 
 export default AddressManagementScreen;
+

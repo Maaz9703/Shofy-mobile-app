@@ -170,6 +170,12 @@ const HomeScreen = ({ navigation }) => {
   const keyExtractor = useCallback((item) => item._id, []);
 
   // Header background opacity based on scroll
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 50],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -195,7 +201,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
               <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
-                <Ionicons name="notifications-outline" size={22} color={theme.text} />
+                <Ionicons name="notifications" size={22} color={theme.text} />
                 <View style={[styles.bellBadge, { backgroundColor: theme.error }]} />
               </View>
             </AnimatedPressable>
@@ -223,7 +229,7 @@ const HomeScreen = ({ navigation }) => {
               ]}
               onPress={() => setCategoryModalVisible(true)}
             >
-              <Ionicons name="options-outline" size={20} color={category ? '#ffffff' : theme.text} />
+              <Ionicons name="options" size={20} color={category ? '#ffffff' : theme.text} />
             </AnimatedPressable>
           </View>
         </View>

@@ -57,7 +57,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const renderInput = (label, value, onChange, icon, opts = {}) => (
+  const renderInput = (label, icon, placeholder, value, onChange, secure = false) => (
     <View style={styles.fieldWrap}>
       <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
       <View style={[
@@ -68,14 +68,19 @@ const RegisterScreen = ({ navigation }) => {
         <Ionicons name={icon} size={20} color={focusedField === label ? theme.primary : theme.textSecondary} />
         <TextInput
           style={[styles.input, { color: theme.text }]}
-          placeholder={label}
+          placeholder={placeholder}
           placeholderTextColor={theme.textSecondary}
           value={value}
           onChangeText={onChange}
+          secureTextEntry={secure && !showPassword}
           onFocus={() => setFocusedField(label)}
           onBlur={() => setFocusedField(null)}
-          {...opts}
         />
+        {secure && (
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -99,10 +104,10 @@ const RegisterScreen = ({ navigation }) => {
             entering={FadeInDown.delay(200).duration(600).springify()}
             style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.medium, borderColor: theme.border }]}
           >
-            {renderInput('Full Name', name, setName, 'person-outline')}
-            {renderInput('Email Address', email, setEmail, 'mail-outline', { keyboardType: 'email-address', autoCapitalize: 'none' })}
-            {renderInput('Password', password, setPassword, 'lock-closed-outline', { secureTextEntry: true })}
-            {renderInput('Confirm Password', confirmPassword, setConfirmPassword, 'shield-checkmark-outline', { secureTextEntry: true })}
+            {renderInput('Full Name', 'person', 'John Doe', name, setName)}
+            {renderInput('Email Address', 'mail', 'john@example.com', email, setEmail)}
+            {renderInput('Password', 'lock-closed', '••••••••', password, setPassword, true)}
+            {renderInput('Confirm Password', 'shield-checkmark', '••••••••', confirmPassword, setConfirmPassword, true)}
 
             <AnimatedPressable
               onPress={handleRegister}

@@ -11,7 +11,6 @@ import {
   StatusBar,
 } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
@@ -51,6 +50,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     try {
       addToCart(product, quantity);
       Toast.show({ type: 'success', text1: 'Added to cart! 🛍️' });
+      // Navigate to Cart after adding to mimic "Checkout Now" behavior
+      navigation.navigate('Cart');
     } finally {
       setAddingToCart(false);
     }
@@ -67,9 +68,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const { unitPrice, totalPrice, originalPrice, hasDiscount, discountPercent } = getQuantityDiscount(product, quantity);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
 
       {/* Back button */}
       <Animated.View entering={FadeInUp.delay(100)} style={[styles.backBtnWrap, { top: insets.top + 10 }]}>
@@ -92,10 +92,10 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         </Animated.View>
 
         {/* Info Area */}
-        <Animated.View entering={FadeInDown.delay(300).springify().damping(18)} style={styles.content}>
+        <Animated.View entering={FadeInDown.delay(300).springify().damping(18)} style={[styles.content, { backgroundColor: theme.background }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <View style={[styles.categoryPill, { backgroundColor: '#ede9fe' }]}>
-              <Ionicons name="pricetag-outline" size={13} color={theme.primary} />
+            <View style={[styles.categoryPill, { backgroundColor: theme.primary + '15' }]}>
+              <Ionicons name="pricetag" size={13} color={theme.primary} />
               <Text style={[styles.categoryPillText, { color: theme.primary }]}>{product.category}</Text>
             </View>
             <View style={[styles.stockPill, { backgroundColor: product.stock > 0 ? '#dcfce7' : '#fee2e2' }]}>
@@ -124,18 +124,18 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
           {/* Description */}
           <Text style={[styles.sectionHeader, { color: theme.text }]}>Description</Text>
-          <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small }]}>
+          <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
             <Text style={[styles.descriptionText, { color: theme.textSecondary }]}>{product.description}</Text>
           </View>
 
           {/* Quantity Selection */}
           <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
-          <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small }]}>
-            <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.border }]}>
+          <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
+            <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
               <Ionicons name="remove" size={24} color={theme.text} />
             </AnimatedPressable>
             <Text style={[styles.qtyText, { color: theme.text }]}>{quantity}</Text>
-            <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.border }]}>
+            <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
               <Ionicons name="add" size={24} color={theme.text} />
             </AnimatedPressable>
           </View>
@@ -144,7 +144,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
       {/* Floating Action Bar */}
       <Animated.View entering={FadeInUp.delay(500)} style={[styles.bottomBar, { paddingBottom: insets.bottom || 24, paddingHorizontal: 20 }]}>
-        <View style={[styles.bottomBarContent, { backgroundColor: theme.card, borderRadius: 24, ...theme.shadows.large }]}>
+        <View style={[styles.bottomBarContent, { backgroundColor: theme.card, borderRadius: 24, ...theme.shadows.large, borderColor: theme.border, borderWidth: 1 }]}>
           <View style={{ flex: 1 }}>
             <Text style={{ color: theme.textSecondary, fontSize: 12, fontWeight: '700', textTransform: 'uppercase' }}>Total</Text>
             <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900' }}>
@@ -156,26 +156,34 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             onPress={handleAddToCart}
             disabled={product.stock < 1 || addingToCart}
           >
-            <View
-              style={[
-                styles.addBtn,
-                { backgroundColor: product.stock < 1 ? theme.textSecondary : theme.primary }
-              ]}
-            >
-              {addingToCart ? (
-                <ActivityIndicator color="#ffffff" />
-              ) : (
-                <>
-                  <Ionicons name="cart" size={20} color="#ffffff" />
-                  <Text style={styles.addBtnText}>Checkout Now</Text>
-                </>
-              )}
-            </View>
+              <View
+                style={[
+                  styles.addBtn,
+                  { backgroundColor: product.stock < 1 ? theme.textSecondary : theme.primary }
+                ]}
+              >
+                {addingToCart ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <View style={styles.btnContent}>
+                    <Text style={styles.addBtnText}>Checkout Now</Text>
+                    <View style={styles.btnIconBox}>
+                      <Ionicons name="arrow-forward" size={18} color={theme.primary} />
+                    </View>
+                  </View>
+                )}
+              </View>
+
           </AnimatedPressable>
         </View>
       </Animated.View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
+
   loadingWrap: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   backBtnWrap: {
     position: 'absolute', left: 20, zIndex: 10,
@@ -193,7 +201,6 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 24,
     marginTop: -30,
-    backgroundColor: '#f8fafc',
     borderTopLeftRadius: 36,
     borderTopRightRadius: 36,
     paddingTop: 32,
@@ -244,10 +251,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, paddingVertical: 16,
   },
   addBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
+    paddingHorizontal: 12,
     height: 60, borderRadius: 20,
+    justifyContent: 'center',
+  },
+  btnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingLeft: 8,
+  },
+  btnIconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
 });
 
+
 export default ProductDetailsScreen;
+
