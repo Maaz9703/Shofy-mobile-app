@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Shofy",
+    "slug": "ecommerce-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.maaz9703.shofy"
+    },
+    "extra": {
+      "apiUrl": "https://backend-nine-ruby-74.vercel.app/api",
+      "eas": {
+        "projectId": "ae798c82-913c-4293-9b8b-f2e359dd1119"
+      }
+    },
+    "owner": "maaz5624"
+  }
+}
