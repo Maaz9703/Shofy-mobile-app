@@ -62,10 +62,10 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             <View
               style={[
                 styles.stockBadge,
-                { backgroundColor: product.stock > 0 ? '#0d3320' : '#3b1515' }
+                { backgroundColor: product.stock > 0 ? '#dcfce7' : '#fee2e2' }
               ]}
             >
-              <Text style={{ fontSize: 9, fontWeight: '700', color: product.stock > 0 ? theme.success : theme.error }}>
+              <Text style={{ fontSize: 9, fontWeight: '700', color: product.stock > 0 ? '#16a34a' : '#dc2626' }}>
                 {product.stock > 0 ? 'STOCK' : 'OUT'}
               </Text>
             </View>

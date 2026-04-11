@@ -100,7 +100,7 @@ const AddEditAddressScreen = ({ route, navigation }) => {
             <Switch
               value={isDefault}
               onValueChange={setIsDefault}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#0f172a' }}
+              trackColor={{ false: '#cbd5e1', true: '#7c3aed' }}
               thumbColor="#0f172a"
             />
           </View>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingTop: 16, marginTop: 8, borderTopWidth: 1, borderTopColor: '#e2e8f0',
   },
-  defaultLabel: { fontSize: 15, fontWeight: '600', color: '#e2e8f0' },
+  defaultLabel: { fontSize: 15, fontWeight: '600', color: '#0f172a' },
   saveBtn: { borderRadius: 16, height: 56, alignItems: 'center', justifyContent: 'center' },
   saveBtnText: { color: '#f8fafc', fontSize: 18, fontWeight: '800' },
 });

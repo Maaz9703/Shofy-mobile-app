@@ -157,7 +157,7 @@ const CheckoutScreen = ({ navigation }) => {
               onPress={() => setPaymentMethod(pm.key)}
             >
               <Ionicons name={pm.icon} size={22} color={paymentMethod === pm.key ? '#0f172a' : '#64748b'} />
-              <Text style={[styles.paymentText, paymentMethod === pm.key && { color: '#e2e8f0' }]}>{pm.label}</Text>
+              <Text style={[styles.paymentText, paymentMethod === pm.key && { color: '#0f172a' }]}>{pm.label}</Text>
               {paymentMethod === pm.key && <Ionicons name="checkmark-circle" size={22} color="#0f172a" />}
             </TouchableOpacity>
           ))}
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   addressCardSelected: { backgroundColor: '#e2e8f0', borderWidth: 1, borderColor: '#0f172a' },
-  addrName: { fontSize: 15, fontWeight: '600', color: '#e2e8f0' },
+  addrName: { fontSize: 15, fontWeight: '600', color: '#0f172a' },
   addrText: { fontSize: 13, color: '#64748b', marginLeft: 28 },
   addrPhone: { fontSize: 12, color: '#64748b', marginLeft: 28, marginTop: 2 },
   addAddrBtn: {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   paymentText: { flex: 1, fontSize: 15, fontWeight: '500', color: '#64748b' },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   summaryLabel: { fontSize: 15, color: '#64748b' },
-  summaryValue: { fontSize: 15, color: '#e2e8f0' },
+  summaryValue: { fontSize: 15, color: '#0f172a' },
   totalRow: {
     flexDirection: 'row', justifyContent: 'space-between',
     marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#e2e8f0',
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   successContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   successIconBg: {
     width: 120, height: 120, borderRadius: 60,
-    backgroundColor: '#0d3320',
+    backgroundColor: '#dcfce7',
     alignItems: 'center', justifyContent: 'center', marginBottom: 24,
   },
   successTitle: { fontSize: 28, fontWeight: '800', color: '#0f172a', marginBottom: 8 },
