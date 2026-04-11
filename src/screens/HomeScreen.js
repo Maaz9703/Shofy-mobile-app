@@ -25,9 +25,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 const { width } = Dimensions.get('window');
 const COLUMNS = 2;
 
+import { useAuth } from '../context/AuthContext';
+import AnimatedPressable from '../components/AnimatedPressable';
+
 const HomeScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const { user } = useAuth();
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -166,116 +170,68 @@ const HomeScreen = ({ navigation }) => {
   const keyExtractor = useCallback((item) => item._id, []);
 
   // Header background opacity based on scroll
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, 50],
-    outputRange: [0, 0.95],
-    extrapolate: 'clamp',
-  });
-
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient
-        colors={['#f8fafc', '#f8fafc']}
-        style={StyleSheet.absoluteFill}
-      />
+      <StatusBar barStyle="dark-content" />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
 
-      {/* Floating Header */}
-      <View style={[styles.headerWrap, { paddingTop: insets.top + 8 }]}>
-        <Animated.View style={[StyleSheet.absoluteFill, { opacity: headerOpacity }]}>
-          <LinearGradient
-            colors={['#f8fafc', '#f8fafc', '#f8fafc']}
-            style={StyleSheet.absoluteFill}
-          />
-        </Animated.View>
+      {/* Premium Floating Header */}
+      <View style={[styles.headerWrap, { paddingTop: insets.top + 12 }]}>
+        <Animated.View style={[StyleSheet.absoluteFill, { 
+          opacity: headerOpacity,
+          backgroundColor: theme.card,
+          ...theme.shadows.small 
+        }]} />
         
         <View style={styles.headerContent}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={[styles.logoText, { opacity: 0.95 }]}>
-              <Text style={{ color: '#7c3aed' }}>S</Text>
-              <Text style={{ color: '#0f172a' }}>h</Text>
-              <Text style={{ color: '#06b6d4' }}>o</Text>
-              <Text style={{ color: '#38bdf8' }}>f</Text>
-              <Text style={{ color: '#0f172a' }}>y</Text>
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
-              <View style={styles.bellBtn}>
-                <Ionicons name="notifications" size={22} color="#0f172a" />
-                <View style={styles.bellBadge} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <View>
+              <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: '600' }}>
+                Good Morning,
+              </Text>
+              <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.5 }}>
+                {user?.name?.split(' ')[0] || 'Maaz'} 👋
+              </Text>
+            </View>
+            <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
+              <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
+                <Ionicons name="notifications-outline" size={22} color={theme.text} />
+                <View style={[styles.bellBadge, { backgroundColor: theme.error }]} />
               </View>
-            </TouchableOpacity>
+            </AnimatedPressable>
           </View>
 
           <View style={styles.searchRow}>
             <View style={styles.searchContainer}>
-              <View style={[styles.searchBox, { backgroundColor: '#ffffff' }]}>
-                <Ionicons name="search" size={18} color="#64748b" />
+              <View style={[styles.searchBox, { backgroundColor: '#ffffff', ...theme.shadows.small, borderWidth: 1, borderColor: theme.border }]}>
+                <Ionicons name="search" size={18} color={theme.textSecondary} />
                 <TextInput
-                  style={[styles.searchInput, { color: '#0f172a' }]}
-                  placeholder="Search products..."
-                  placeholderTextColor="#64748b"
+                  style={[styles.searchInput, { color: theme.text }]}
+                  placeholder="What are you looking for?"
+                  placeholderTextColor={theme.textSecondary}
                   value={search}
                   onChangeText={handleSearchChange}
-                  onFocus={() => { if (search) setShowCategorySuggestions(true); }}
-                  onBlur={() => setTimeout(() => setShowCategorySuggestions(false), 200)}
                   returnKeyType="search"
                 />
-                {search ? (
-                  <TouchableOpacity onPress={() => { setSearch(''); setCategory(''); setShowCategorySuggestions(false); }}>
-                    <Ionicons name="close-circle" size={18} color="#64748b" />
-                  </TouchableOpacity>
-                ) : null}
               </View>
-              {showCategorySuggestions && getCategorySuggestions().length > 0 && (
-                <View style={[styles.suggestionsContainer, { backgroundColor: '#ffffff', borderColor: '#e2e8f0' }]}>
-                  {getCategorySuggestions().map((cat) => (
-                    <TouchableOpacity
-                      key={cat}
-                      style={[styles.suggestionItem, { borderBottomColor: '#e2e8f0' }]}
-                      onPress={() => handleCategorySuggestionPress(cat)}
-                    >
-                      <Ionicons name="pricetag" size={16} color="#0f172a" />
-                      <Text style={[styles.suggestionText, { color: '#0f172a' }]}>{cat}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
             </View>
 
-            <TouchableOpacity
+            <AnimatedPressable
               style={[
                 styles.iconBtn,
-                { backgroundColor: category ? theme.primary : '#ffffff' }
+                { backgroundColor: category ? theme.primary : theme.card, ...theme.shadows.small }
               ]}
               onPress={() => setCategoryModalVisible(true)}
             >
-              <Ionicons name="filter" size={20} color={category ? '#0f172a' : '#0f172a'} />
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={[styles.iconBtn, { backgroundColor: '#ede9fe' }]}
-              onPress={() => navigation.navigate('Home', { screen: 'AdvancedSearch' })}
-            >
-              <Ionicons name="options" size={20} color="#0f172a" />
-            </TouchableOpacity>
+              <Ionicons name="options-outline" size={20} color={category ? '#ffffff' : theme.text} />
+            </AnimatedPressable>
           </View>
-
-          {categories.length > 0 && category && (
-            <View style={styles.selectedCategoryContainer}>
-              <View style={[styles.selectedCategoryChip, { backgroundColor: '#ede9fe' }]}>
-                <Text style={{ color: '#0f172a', fontSize: 13, fontWeight: '600' }}>{category}</Text>
-                <TouchableOpacity onPress={() => setCategory('')}>
-                  <Ionicons name="close-circle" size={16} color="#0f172a" style={{ marginLeft: 6 }} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
         </View>
       </View>
 
       {/* Main List */}
       {loading ? (
-        <View style={{ paddingTop: insets.top + 130 }}>
+        <View style={{ paddingTop: insets.top + 140 }}>
           <LoadingShimmer />
         </View>
       ) : (
@@ -284,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
           numColumns={COLUMNS}
           keyExtractor={keyExtractor}
           renderItem={renderProduct}
-          contentContainerStyle={[styles.list, { paddingTop: insets.top + 130 }]}
+          contentContainerStyle={[styles.list, { paddingTop: insets.top + 140 }]}
           removeClippedSubviews={true}
           maxToRenderPerBatch={10}
           initialNumToRender={10}
@@ -292,18 +248,18 @@ const HomeScreen = ({ navigation }) => {
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
           scrollEventThrottle={16}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} progressViewOffset={insets.top + 130} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} colors={[theme.primary]} progressViewOffset={insets.top + 140} />
           }
           ListEmptyComponent={
             <View style={styles.empty}>
-              <Ionicons name="search" size={64} color="#94a3b8" style={{ marginBottom: 16 }} />
-              <Text style={[styles.emptyText, { color: '#64748b' }]}>
+              <Ionicons name="search" size={64} color={theme.textSecondary} style={{ marginBottom: 16 }} />
+              <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                 {search || category ? 'No products found matching your search' : 'No products found'}
               </Text>
               {(search || category) && (
-                <TouchableOpacity style={styles.clearFilterBtn} onPress={() => { setSearch(''); setCategory(''); }}>
-                  <Text style={{ color: '#0f172a', fontWeight: 'bold' }}>Clear Filters</Text>
-                </TouchableOpacity>
+                <AnimatedPressable style={[styles.clearFilterBtn, { backgroundColor: theme.primary }]} onPress={() => { setSearch(''); setCategory(''); }}>
+                  <Text style={{ color: '#ffffff', fontWeight: 'bold' }}>Clear Filters</Text>
+                </AnimatedPressable>
               )}
             </View>
           }
@@ -313,29 +269,29 @@ const HomeScreen = ({ navigation }) => {
       {/* Category Modal */}
       <Modal visible={categoryModalVisible} transparent animationType="slide" onRequestClose={() => setCategoryModalVisible(false)}>
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: '#ffffff' }]}>
+          <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
             <View style={styles.modalHeader}>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: '#0f172a' }}>Select Category</Text>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.text }}>Filter by Category</Text>
               <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
-                <Ionicons name="close" size={24} color="#64748b" />
+                <Ionicons name="close" size={24} color={theme.textSecondary} />
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.modalScroll}>
+            <ScrollView style={styles.modalScroll} showsVerticalScrollIndicator={false}>
               <TouchableOpacity
-                style={[styles.modalCategoryItem, !category ? styles.modalCategoryActive : null]}
+                style={[styles.modalCategoryItem, !category ? { backgroundColor: theme.border } : null]}
                 onPress={() => { setCategory(''); setCategoryModalVisible(false); }}
               >
-                <Text style={{ fontSize: 16, color: !category ? '#0f172a' : '#64748b', fontWeight: '500' }}>All Categories</Text>
-                {!category && <Ionicons name="checkmark" size={20} color="#0f172a" />}
+                <Text style={{ fontSize: 16, color: !category ? theme.primary : theme.text, fontWeight: '700' }}>All Categories</Text>
+                {!category && <Ionicons name="checkmark-circle" size={22} color={theme.primary} />}
               </TouchableOpacity>
               {categories.map((cat) => (
                 <TouchableOpacity
                   key={cat}
-                  style={[styles.modalCategoryItem, cat === category ? styles.modalCategoryActive : null]}
+                  style={[styles.modalCategoryItem, cat === category ? { backgroundColor: theme.border } : null]}
                   onPress={() => { setCategory(cat); setCategoryModalVisible(false); }}
                 >
-                  <Text style={{ fontSize: 16, color: cat === category ? '#0f172a' : '#64748b', fontWeight: '500' }}>{cat}</Text>
-                  {cat === category && <Ionicons name="checkmark" size={20} color="#0f172a" />}
+                  <Text style={{ fontSize: 16, color: cat === category ? theme.primary : theme.text, fontWeight: '700' }}>{cat}</Text>
+                  {cat === category && <Ionicons name="checkmark-circle" size={22} color={theme.primary} />}
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -347,87 +303,60 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1 },
   headerWrap: {
     position: 'absolute',
     top: 0, left: 0, right: 0,
     zIndex: 10,
   },
   headerContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  logoText: {
-    fontSize: 28,
-    fontWeight: '900',
-    letterSpacing: 0.5,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   bellBtn: {
-    width: 40, height: 40, borderRadius: 20,
+    width: 44, height: 44, borderRadius: 14,
     backgroundColor: '#ffffff',
     alignItems: 'center', justifyContent: 'center',
   },
   bellBadge: {
-    position: 'absolute', top: 10, right: 10,
+    position: 'absolute', top: 12, right: 12,
     width: 8, height: 8, borderRadius: 4,
-    backgroundColor: '#ef4444',
-    borderWidth: 1.5, borderColor: '#ffffff',
+    borderWidth: 2, borderColor: '#ffffff',
   },
   searchRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginTop: 16,
+    gap: 12,
   },
-  searchContainer: { flex: 1, position: 'relative' },
+  searchContainer: { flex: 1 },
   searchBox: {
     flexDirection: 'row', alignItems: 'center',
-    borderRadius: 14,
-    paddingHorizontal: 14, paddingVertical: 12,
-    gap: 10,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    height: 52,
+    gap: 12,
   },
-  searchInput: { flex: 1, fontSize: 15, padding: 0 },
+  searchInput: { flex: 1, fontSize: 15, fontWeight: '600' },
   iconBtn: {
-    width: 46, height: 46, borderRadius: 14,
+    width: 52, height: 52, borderRadius: 16,
     alignItems: 'center', justifyContent: 'center',
   },
-  suggestionsContainer: {
-    position: 'absolute', top: '100%', left: 0, right: 0,
-    marginTop: 4, borderRadius: 14, // Removed border
-    maxHeight: 200, zIndex: 1000,
-    elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8,
-  },
-  suggestionItem: {
-    flexDirection: 'row', alignItems: 'center',
-    padding: 14, gap: 10, // Removed borderBottom
-  },
-  suggestionText: { fontSize: 14, fontWeight: '500' },
-  selectedCategoryContainer: { marginTop: 12, flexDirection: 'row' },
-  selectedCategoryChip: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingHorizontal: 12, paddingVertical: 6,
-    borderRadius: 99,
-  },
-  list: { paddingHorizontal: 8, paddingBottom: 20 },
-  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 60, paddingHorizontal: 24 },
-  emptyText: { fontSize: 15, textAlign: 'center', marginBottom: 20 },
+  list: { paddingHorizontal: 10, paddingBottom: 100 },
+  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 100, paddingHorizontal: 40 },
+  emptyText: { fontSize: 16, textAlign: 'center', marginBottom: 24, fontWeight: '600' },
   clearFilterBtn: {
-    paddingHorizontal: 20, paddingVertical: 10,
-    borderRadius: 10, backgroundColor: '#ede9fe',
+    paddingHorizontal: 32, height: 50,
+    borderRadius: 16, justifyContent: 'center', alignItems: 'center',
   },
-  modalOverlay: { flex: 1, backgroundColor: '#e2e8f0', justifyContent: 'flex-end' },
-  modalContent: { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingBottom: 50, maxHeight: '75%' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(15, 23, 42, 0.4)', justifyContent: 'flex-end' },
+  modalContent: { borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingBottom: 40, maxHeight: '80%' },
   modalHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    padding: 24, // Removed borderBottom
+    padding: 24,
   },
-  modalScroll: { padding: 16 },
+  modalScroll: { paddingHorizontal: 20 },
   modalCategoryItem: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    padding: 16, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#ffffff',
-  },
-  modalCategoryActive: {
-    backgroundColor: '#ede9fe', // Highlight color instead of border
+    padding: 20, borderRadius: 18, marginBottom: 12,
   },
 });
 

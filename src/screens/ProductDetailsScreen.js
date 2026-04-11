@@ -22,6 +22,8 @@ import { getQuantityDiscount } from '../utils/price';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
+import AnimatedPressable from '../components/AnimatedPressable';
+
 const ProductDetailsScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -56,212 +58,196 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
   if (loading || !product) {
     return (
-      <View style={[styles.loadingWrap, { backgroundColor: '#f8fafc' }]}>
-        <ActivityIndicator size="large" color="#a855f7" />
+      <View style={[styles.loadingWrap, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
 
-  const { unitPrice, totalPrice, originalPrice, hasDiscount, discountPercent, tiers } = getQuantityDiscount(product, quantity);
+  const { unitPrice, totalPrice, originalPrice, hasDiscount, discountPercent } = getQuantityDiscount(product, quantity);
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
 
       {/* Back button */}
       <Animated.View entering={FadeInUp.delay(100)} style={[styles.backBtnWrap, { top: insets.top + 10 }]}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#0f172a" />
-        </TouchableOpacity>
+        <AnimatedPressable style={[styles.backBtn, { ...theme.shadows.small, backgroundColor: theme.card }]} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </AnimatedPressable>
       </Animated.View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 130 }}
+        contentContainerStyle={{ paddingBottom: 150 }}
       >
         {/* Full Image */}
-        <View style={styles.imageWrap}>
+        <Animated.View entering={FadeInUp.duration(600)} style={styles.imageWrap}>
           <Image
             source={{ uri: product.image || 'https://via.placeholder.com/400' }}
             style={styles.image}
             resizeMode="cover"
           />
-          <LinearGradient
-            colors={['#f8fafc', '#f8fafc']}
-            style={styles.imageBottomGradient}
-          />
-        </View>
+        </Animated.View>
 
         {/* Info Area */}
-        <Animated.View entering={FadeInDown.delay(150).springify()} style={styles.content}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <View style={styles.categoryPill}>
-              <Ionicons name="pricetag" size={13} color="#a855f7" />
-              <Text style={styles.categoryPillText}>{product.category}</Text>
+        <Animated.View entering={FadeInDown.delay(300).springify().damping(18)} style={styles.content}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <View style={[styles.categoryPill, { backgroundColor: '#ede9fe' }]}>
+              <Ionicons name="pricetag-outline" size={13} color={theme.primary} />
+              <Text style={[styles.categoryPillText, { color: theme.primary }]}>{product.category}</Text>
             </View>
-            <View style={[styles.stockPill, { backgroundColor: product.stock > 0 ? 'rgba(52,211,153,0.15)' : 'rgba(248,113,113,0.15)' }]}>
-              <Text style={{ color: product.stock > 0 ? '#34d399' : '#f87171', fontSize: 11, fontWeight: '700' }}>
-                {product.stock > 0 ? 'IN STOCK' : 'OUT_OF_STOCK'}
+            <View style={[styles.stockPill, { backgroundColor: product.stock > 0 ? '#dcfce7' : '#fee2e2' }]}>
+              <Text style={{ color: product.stock > 0 ? '#16a34a' : '#dc2626', fontSize: 11, fontWeight: '900' }}>
+                {product.stock > 0 ? 'AVAILABLE' : 'OUT_OF_STOCK'}
               </Text>
             </View>
           </View>
 
-          <Text style={styles.title}>{product.title}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{product.title}</Text>
 
           {/* Price Block */}
-          <View style={styles.priceBlock}>
+          <View style={[styles.priceBlock, { borderColor: theme.border }]}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-              <Text style={styles.price}>PKR {unitPrice.toLocaleString(undefined, { minimumFractionDigits: 0 })}</Text>
+              <Text style={[styles.price, { color: theme.text }]}>PKR {unitPrice.toLocaleString()}</Text>
               {hasDiscount && (
-                <Text style={styles.originalPrice}>PKR {originalPrice.toLocaleString()}</Text>
+                <Text style={[styles.originalPrice, { color: theme.textSecondary }]}>PKR {originalPrice.toLocaleString()}</Text>
               )}
             </View>
             {hasDiscount && (
-              <View style={styles.saveBadge}>
-                <Text style={styles.saveBadgeText}>{discountPercent}% OFF TODAY</Text>
+              <View style={[styles.saveBadge, { backgroundColor: theme.primary }]}>
+                <Text style={[styles.saveBadgeText, { color: '#ffffff' }]}>{discountPercent}% OFF</Text>
               </View>
             )}
           </View>
 
           {/* Description */}
-          <Text style={styles.sectionHeader}>About Product</Text>
-          <View style={styles.glassBox}>
-            <Text style={styles.descriptionText}>{product.description}</Text>
+          <Text style={[styles.sectionHeader, { color: theme.text }]}>Description</Text>
+          <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small }]}>
+            <Text style={[styles.descriptionText, { color: theme.textSecondary }]}>{product.description}</Text>
           </View>
 
-          {/* Quantity Controls */}
-          <Text style={styles.sectionHeader}>Quantity</Text>
-          <View style={styles.quantityWrap}>
-            <TouchableOpacity onPress={() => setQuantity(q => Math.max(1, q - 1))} style={styles.qtyBtn}>
-              <Ionicons name="remove" size={24} color="#0f172a" />
-            </TouchableOpacity>
-            <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={styles.qtyBtn}>
-              <Ionicons name="add" size={24} color="#0f172a" />
-            </TouchableOpacity>
+          {/* Quantity Selection */}
+          <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
+          <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small }]}>
+            <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.border }]}>
+              <Ionicons name="remove" size={24} color={theme.text} />
+            </AnimatedPressable>
+            <Text style={[styles.qtyText, { color: theme.text }]}>{quantity}</Text>
+            <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.border }]}>
+              <Ionicons name="add" size={24} color={theme.text} />
+            </AnimatedPressable>
           </View>
         </Animated.View>
       </ScrollView>
 
       {/* Floating Action Bar */}
-      <View style={[styles.bottomBar, { paddingBottom: insets.bottom || 24 }]}>
-        <LinearGradient
-          colors={['#f8fafc', '#f8fafc', '#f8fafc']}
-          style={StyleSheet.absoluteFill}
-        />
-        <View style={styles.bottomBarContent}>
+      <Animated.View entering={FadeInUp.delay(500)} style={[styles.bottomBar, { paddingBottom: insets.bottom || 24, paddingHorizontal: 20 }]}>
+        <View style={[styles.bottomBarContent, { backgroundColor: theme.card, borderRadius: 24, ...theme.shadows.large }]}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#64748b', fontSize: 12, fontWeight: '600' }}>Total Price</Text>
-            <Text style={{ color: '#0f172a', fontSize: 22, fontWeight: '800' }}>
-              PKR {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 0 })}
+            <Text style={{ color: theme.textSecondary, fontSize: 12, fontWeight: '700', textTransform: 'uppercase' }}>Total</Text>
+            <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900' }}>
+              PKR {totalPrice.toLocaleString()}
             </Text>
           </View>
-          <TouchableOpacity
-            style={{ flex: 1.2 }}
+          <AnimatedPressable
+            style={{ flex: 1.4 }}
             onPress={handleAddToCart}
             disabled={product.stock < 1 || addingToCart}
           >
-            <LinearGradient
-              colors={product.stock < 1 ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={styles.addBtn}
+            <View
+              style={[
+                styles.addBtn,
+                { backgroundColor: product.stock < 1 ? theme.textSecondary : theme.primary }
+              ]}
             >
               {addingToCart ? (
-                <ActivityIndicator color="#f8fafc" />
+                <ActivityIndicator color="#ffffff" />
               ) : (
                 <>
-                  <Ionicons name="cart" size={20} color="#f8fafc" />
-                  <Text style={styles.addBtnText}>Add To Cart</Text>
+                  <Ionicons name="cart" size={20} color="#ffffff" />
+                  <Text style={styles.addBtnText}>Checkout Now</Text>
                 </>
               )}
-            </LinearGradient>
-          </TouchableOpacity>
+            </View>
+          </AnimatedPressable>
         </View>
-      </View>
-    </View>
-  );
-};
-
+      </Animated.View>
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1 },
   loadingWrap: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   backBtnWrap: {
     position: 'absolute', left: 20, zIndex: 10,
   },
   backBtn: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#ffffff',
+    width: 44, height: 44, borderRadius: 14,
     justifyContent: 'center', alignItems: 'center',
-    borderWidth: 1, borderColor: '#2a2a3e',
   },
   imageWrap: {
     width: screenWidth,
-    height: screenHeight * 0.5,
-    backgroundColor: '#000',
+    height: screenHeight * 0.45,
+    backgroundColor: '#ffffff',
   },
   image: { width: '100%', height: '100%' },
-  imageBottomGradient: {
-    position: 'absolute', bottom: 0, left: 0, right: 0, height: 160,
-  },
   content: {
-    paddingHorizontal: 20,
-    marginTop: -40,
+    paddingHorizontal: 24,
+    marginTop: -30,
+    backgroundColor: '#f8fafc',
+    borderTopLeftRadius: 36,
+    borderTopRightRadius: 36,
+    paddingTop: 32,
   },
   categoryPill: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: '#e2e8f0',
-    paddingHorizontal: 12, paddingVertical: 6,
-    borderRadius: 8,
+    paddingHorizontal: 14, paddingVertical: 8,
+    borderRadius: 12,
   },
-  categoryPillText: { color: '#0f172a', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  categoryPillText: { fontSize: 11, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
   stockPill: {
-    paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8,
+    paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12,
   },
   title: {
-    color: '#0f172a', fontSize: 28, fontWeight: '900', letterSpacing: -0.5, lineHeight: 34, marginBottom: 16,
+    fontSize: 28, fontWeight: '900', letterSpacing: -0.8, lineHeight: 36, marginBottom: 20,
   },
   priceBlock: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingVertical: 16, borderTopWidth: 1, borderBottomWidth: 1,
-    borderColor: '#e2e8f0', marginBottom: 24,
+    paddingVertical: 20, borderTopWidth: 1, borderBottomWidth: 1,
+    marginBottom: 28,
   },
-  price: { color: '#0f172a', fontSize: 26, fontWeight: '800' },
-  originalPrice: { color: '#64748b', fontSize: 16, textDecorationLine: 'line-through', marginBottom: 4 },
+  price: { fontSize: 30, fontWeight: '900', letterSpacing: -1 },
+  originalPrice: { fontSize: 16, textDecorationLine: 'line-through', marginBottom: 4 },
   saveBadge: {
-    backgroundColor: '#e2e8f0',
-    paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8,
+    paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10,
   },
-  saveBadgeText: { color: '#0f172a', fontSize: 10, fontWeight: '800' },
+  saveBadgeText: { fontSize: 11, fontWeight: '900' },
   sectionHeader: {
-    color: '#0f172a', fontSize: 16, fontWeight: '700', marginBottom: 12,
+    fontSize: 18, fontWeight: '900', marginBottom: 16, letterSpacing: -0.5,
   },
   glassBox: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16, padding: 16, marginBottom: 24,
+    borderRadius: 24, padding: 20, marginBottom: 28,
   },
-  descriptionText: { color: '#64748b', fontSize: 14, lineHeight: 24 },
+  descriptionText: { fontSize: 15, lineHeight: 26, fontWeight: '500' },
   quantityWrap: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    paddingHorizontal: 16, paddingVertical: 8,
+    borderRadius: 24,
+    paddingHorizontal: 12, paddingVertical: 12,
   },
-  qtyBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#e2e8f0', justifyContent: 'center', alignItems: 'center' },
-  qtyText: { color: '#0f172a', fontSize: 20, fontWeight: '800' },
+  qtyBtn: { width: 52, height: 52, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
+  qtyText: { fontSize: 24, fontWeight: '900' },
   bottomBar: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     zIndex: 100,
   },
   bottomBarContent: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingTop: 16,
+    paddingHorizontal: 24, paddingVertical: 16,
   },
   addBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-    height: 54, borderRadius: 16,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
+    height: 60, borderRadius: 20,
   },
-  addBtnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
+  addBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
 });
 
 export default ProductDetailsScreen;

@@ -14,14 +14,44 @@ export const useTheme = () => {
 const lightTheme = {
   background: '#f8fafc',
   card: '#ffffff',
-  cardGlass: '#f1f5f9',
   text: '#0f172a',
   textSecondary: '#64748b',
-  primary: '#7c3aed',
-  primaryDark: '#6d28d9',
-  border: '#e2e8f0',
+  primary: '#4f46e5', // Indigo-600 for a more premium look
+  primaryDark: '#4338ca',
+  accent: '#06b6d4',
+  border: '#f1f5f9', // Lighter border for subtle separation
   error: '#ef4444',
   success: '#10b981',
+  radius: {
+    xs: 8,
+    sm: 12,
+    md: 16,
+    lg: 20,
+    xl: 24,
+  },
+  shadows: {
+    small: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    medium: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 10,
+      elevation: 4,
+    },
+    large: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.1,
+      shadowRadius: 20,
+      elevation: 10,
+    },
+  }
 };
 
 const darkTheme = {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,15 +9,21 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
-  Animated,
   StatusBar,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { 
+  FadeInDown, 
+  FadeInUp 
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const RegisterScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { register } = useAuth();
   const [name, setName] = useState('');
@@ -27,19 +33,9 @@ const RegisterScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 600, delay: 100, useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 500, delay: 150, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      Toast.show({ type: 'error', text1: 'Please fill all fields' });
+      Toast.show({ type: 'error', text1: 'Oops!', text2: 'Please fill all fields' });
       return;
     }
     if (password !== confirmPassword) {
@@ -53,7 +49,7 @@ const RegisterScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await register(name, email, password);
-      Toast.show({ type: 'success', text1: 'Registration successful! 🎉' });
+      Toast.show({ type: 'success', text1: 'Welcome to Shofy! 🎉' });
     } catch (error) {
       Toast.show({ type: 'error', text1: error.response?.data?.message || 'Registration failed' });
     } finally {
@@ -61,17 +57,22 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const renderInput = (placeholder, value, onChange, opts = {}) => (
+  const renderInput = (label, value, onChange, icon, opts = {}) => (
     <View style={styles.fieldWrap}>
-      <Text style={styles.label}>{placeholder}</Text>
-      <View style={[styles.inputWrap, focusedField === placeholder && styles.inputWrapFocused]}>
+      <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
+      <View style={[
+        styles.inputWrap, 
+        { borderColor: focusedField === label ? theme.primary : theme.border },
+        focusedField === label && { backgroundColor: '#fcfcff' }
+      ]}>
+        <Ionicons name={icon} size={20} color={focusedField === label ? theme.primary : theme.textSecondary} />
         <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor="#94a3b8"
+          style={[styles.input, { color: theme.text }]}
+          placeholder={label}
+          placeholderTextColor={theme.textSecondary}
           value={value}
           onChangeText={onChange}
-          onFocus={() => setFocusedField(placeholder)}
+          onFocus={() => setFocusedField(label)}
           onBlur={() => setFocusedField(null)}
           {...opts}
         />
@@ -80,44 +81,54 @@ const RegisterScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
-
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
+      
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
-          contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}
+          contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 40 }]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join us and start shopping</Text>
+          <Animated.View entering={FadeInDown.duration(600).springify()}>
+            <Text style={[styles.title, { color: theme.text }]}>Create Account</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Join our community and start your premium shopping experience</Text>
           </Animated.View>
 
-          <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-            {renderInput('Full Name', name, setName)}
-            {renderInput('Email', email, setEmail, { keyboardType: 'email-address', autoCapitalize: 'none' })}
-            {renderInput('Password (min 6 chars)', password, setPassword, { secureTextEntry: true })}
-            {renderInput('Confirm Password', confirmPassword, setConfirmPassword, { secureTextEntry: true })}
+          <Animated.View 
+            entering={FadeInDown.delay(200).duration(600).springify()}
+            style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.medium, borderColor: theme.border }]}
+          >
+            {renderInput('Full Name', name, setName, 'person-outline')}
+            {renderInput('Email Address', email, setEmail, 'mail-outline', { keyboardType: 'email-address', autoCapitalize: 'none' })}
+            {renderInput('Password', password, setPassword, 'lock-closed-outline', { secureTextEntry: true })}
+            {renderInput('Confirm Password', confirmPassword, setConfirmPassword, 'shield-checkmark-outline', { secureTextEntry: true })}
 
-            <TouchableOpacity onPress={handleRegister} disabled={loading}>
-              <LinearGradient
-                colors={loading ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
-                style={styles.btn}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+            <AnimatedPressable
+              onPress={handleRegister}
+              disabled={loading}
+              style={{ marginTop: 10 }}
+            >
+              <View style={[styles.btn, { backgroundColor: loading ? theme.textSecondary : theme.primary }]}>
+                {loading ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.btnText}>Join Now</Text>}
+              </View>
+            </AnimatedPressable>
+          </Animated.View>
+
+          <Animated.View 
+            entering={FadeInUp.delay(400).duration(600)}
+            style={styles.footer}
+          >
+            <Text style={[styles.footerText, { color: theme.textSecondary }]}>
+              Already have an account?{' '}
+              <Text 
+                onPress={() => navigation.goBack()}
+                style={[styles.footerLink, { color: theme.primary }]}
               >
-                {loading ? <ActivityIndicator color="#f8fafc" /> : <Text style={styles.btnText}>Create Account →</Text>}
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animated.View>
-
-          <TouchableOpacity style={styles.link} onPress={() => navigation.goBack()}>
-            <Text style={styles.linkText}>
-              Already have an account? <Text style={{ color: '#0f172a', fontWeight: '700' }}>Login</Text>
+                Sign In
+              </Text>
             </Text>
-          </TouchableOpacity>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -125,30 +136,29 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
-  scroll: { flexGrow: 1, justifyContent: 'center', padding: 24 },
-  title: { color: '#0f172a', fontSize: 30, fontWeight: '800', letterSpacing: -0.5, marginBottom: 6 },
-  subtitle: { color: '#64748b', fontSize: 15, marginBottom: 32 },
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24, borderWidth: 1, borderColor: '#e2e8f0',
-    padding: 24, gap: 16, marginBottom: 20,
-  },
-  fieldWrap: { gap: 7 },
-  label: { color: '#64748b', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' },
+  container: { flex: 1 },
+  scroll: { flexGrow: 1, paddingHorizontal: 24 },
+  
+  title: { fontSize: 32, fontWeight: '900', letterSpacing: -1, marginBottom: 8 },
+  subtitle: { fontSize: 16, marginBottom: 32, paddingRight: 40 },
+  
+  card: { borderRadius: 32, padding: 28, borderWidth: 1 },
+  
+  fieldWrap: { marginBottom: 18 },
+  label: { fontSize: 13, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
   inputWrap: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12, borderWidth: 1.5, borderColor: '#e2e8f0',
+    flexDirection: 'row', alignItems: 'center',
+    height: 56, borderRadius: 16, borderWidth: 1.5,
+    paddingHorizontal: 16, gap: 12,
   },
-  inputWrapFocused: { borderColor: '#0f172a', backgroundColor: '#ffffff' },
-  input: { color: '#0f172a', fontSize: 15, paddingHorizontal: 16, paddingVertical: 14 },
-  btn: {
-    borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginTop: 4,
-    shadowColor: '#0f172a', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 16, elevation: 10,
-  },
-  btnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
-  link: { alignItems: 'center', paddingVertical: 8 },
-  linkText: { color: '#64748b', fontSize: 14 },
+  input: { flex: 1, fontSize: 15, fontWeight: '600' },
+  
+  btn: { height: 60, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  btnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
+  
+  footer: { marginTop: 32, alignItems: 'center' },
+  footerText: { fontSize: 15, fontWeight: '500' },
+  footerLink: { fontWeight: '800' },
 });
 
 export default RegisterScreen;

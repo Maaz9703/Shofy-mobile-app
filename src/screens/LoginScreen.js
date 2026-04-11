@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,18 +9,22 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
-  Animated,
-  Dimensions,
   StatusBar,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { 
+  FadeInDown, 
+  FadeInUp, 
+  Layout 
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import Toast from 'react-native-toast-message';
-
-const { width, height } = Dimensions.get('window');
+import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '../components/AnimatedPressable';
 
 const LoginScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
@@ -28,60 +32,6 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
-  // Animations
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const logoScale = useRef(new Animated.Value(0.5)).current;
-  const orb1 = useRef(new Animated.Value(0)).current;
-  const orb2 = useRef(new Animated.Value(0)).current;
-  const buttonScale = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    // Entrance animations
-    Animated.parallel([
-      Animated.spring(logoScale, {
-        toValue: 1,
-        tension: 60,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 700,
-        delay: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        delay: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    // Floating orb animations
-    const loopOrb = (anim, delay) => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(anim, { toValue: 1, duration: 3000 + delay, useNativeDriver: true }),
-          Animated.timing(anim, { toValue: 0, duration: 3000 + delay, useNativeDriver: true }),
-        ])
-      ).start();
-    };
-    loopOrb(orb1, 0);
-    loopOrb(orb2, 800);
-  }, []);
-
-  const orb1Translate = orb1.interpolate({ inputRange: [0, 1], outputRange: [0, -20] });
-  const orb2Translate = orb2.interpolate({ inputRange: [0, 1], outputRange: [0, 15] });
-
-  const handlePressIn = () => {
-    Animated.spring(buttonScale, { toValue: 0.96, useNativeDriver: true, speed: 30 }).start();
-  };
-  const handlePressOut = () => {
-    Animated.spring(buttonScale, { toValue: 1, useNativeDriver: true, speed: 30 }).start();
-  };
 
   const handleLogin = async () => {
     if (!email.trim() || !password) {
@@ -104,126 +54,113 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient
-        colors={['#f8fafc', '#f8fafc']}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {/* Background Orbs */}
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="dark-content" />
       
-      
-
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView
-          contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}
+          contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 60, paddingBottom: insets.bottom + 40 }]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo */}
-          <Animated.View style={[styles.logoWrap, { transform: [{ scale: logoScale }] }]}>
-            <LinearGradient
-              colors={['#0f172a', '#0f172a']}
-              style={styles.logo}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
+          {/* Brand Identity */}
+          <Animated.View entering={FadeInDown.duration(600).springify()}>
+            <View style={[styles.logoIcon, { backgroundColor: theme.primary, ...theme.shadows.medium }]}>
               <Text style={styles.logoText}>S</Text>
-            </LinearGradient>
+            </View>
+            <Text style={[styles.title, { color: theme.text }]}>Welcome Back</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Enter your credentials to continue shopping</Text>
           </Animated.View>
 
-          {/* Heading */}
-          <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-            <Text style={styles.title}>Welcome back</Text>
-            <Text style={styles.subtitle}>Sign in to your account</Text>
-          </Animated.View>
-
-          {/* Form */}
-          <Animated.View style={[styles.form, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-            {/* Glass card */}
-            <View style={styles.card}>
-              {/* Email */}
-              <View style={styles.fieldWrap}>
-                <Text style={styles.label}>Email Address</Text>
-                <View style={[styles.inputWrap, focusedField === 'email' && styles.inputWrapFocused]}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="you@example.com"
-                    placeholderTextColor="#94a3b8"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField(null)}
-                  />
-                </View>
+          {/* Login Card */}
+          <Animated.View 
+            entering={FadeInDown.delay(200).duration(600).springify()}
+            style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.medium, borderColor: theme.border }]}
+          >
+            {/* Email Field */}
+            <View style={styles.fieldWrap}>
+              <Text style={[styles.label, { color: theme.textSecondary }]}>Email Address</Text>
+              <View style={[
+                styles.inputWrap, 
+                { borderColor: focusedField === 'email' ? theme.primary : theme.border },
+                focusedField === 'email' && { backgroundColor: '#fcfcff' }
+              ]}>
+                <Ionicons name="mail-outline" size={20} color={focusedField === 'email' ? theme.primary : theme.textSecondary} />
+                <TextInput
+                  style={[styles.input, { color: theme.text }]}
+                  placeholder="name@example.com"
+                  placeholderTextColor={theme.textSecondary}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
+                />
               </View>
-
-              {/* Password */}
-              <View style={styles.fieldWrap}>
-                <Text style={styles.label}>Password</Text>
-                <View style={[styles.inputWrap, focusedField === 'pass' && styles.inputWrapFocused]}>
-                  <TextInput
-                    style={[styles.input, { flex: 1 }]}
-                    placeholder="••••••••"
-                    placeholderTextColor="#94a3b8"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
-                    onFocus={() => setFocusedField('pass')}
-                    onBlur={() => setFocusedField(null)}
-                  />
-                  <TouchableOpacity
-                    onPress={() => setShowPassword(p => !p)}
-                    style={styles.eyeBtn}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  >
-                    <Text style={{ fontSize: 16 }}>{showPassword ? '🙈' : '👁️'}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* Login Button */}
-              <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
-                <TouchableOpacity
-                  onPress={handleLogin}
-                  onPressIn={handlePressIn}
-                  onPressOut={handlePressOut}
-                  disabled={loading}
-                  activeOpacity={0.9}
-                >
-                  <LinearGradient
-                    colors={loading ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
-                    style={styles.btn}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                  >
-                    {loading ? (
-                      <ActivityIndicator color="#f8fafc" size="small" />
-                    ) : (
-                      <Text style={styles.btnText}>Sign In →</Text>
-                    )}
-                  </LinearGradient>
-                </TouchableOpacity>
-              </Animated.View>
             </View>
 
-            {/* Register link */}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
-              style={styles.registerLink}
-            >
-              <Text style={styles.registerText}>
-                Don't have an account?{' '}
-                <Text style={styles.registerBold}>Create one</Text>
-              </Text>
+            {/* Password Field */}
+            <View style={styles.fieldWrap}>
+              <Text style={[styles.label, { color: theme.textSecondary }]}>Passcode</Text>
+              <View style={[
+                styles.inputWrap, 
+                { borderColor: focusedField === 'pass' ? theme.primary : theme.border },
+                focusedField === 'pass' && { backgroundColor: '#fcfcff' }
+              ]}>
+                <Ionicons name="lock-closed-outline" size={20} color={focusedField === 'pass' ? theme.primary : theme.textSecondary} />
+                <TextInput
+                  style={[styles.input, { color: theme.text }]}
+                  placeholder="••••••••"
+                  placeholderTextColor={theme.textSecondary}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                  onFocus={() => setFocusedField('pass')}
+                  onBlur={() => setFocusedField(null)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={theme.textSecondary} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.forgotBtn}>
+              <Text style={[styles.forgotText, { color: theme.primary }]}>Forgot Password?</Text>
             </TouchableOpacity>
+
+            <AnimatedPressable
+              onPress={handleLogin}
+              disabled={loading}
+              style={{ marginTop: 10 }}
+            >
+              <View style={[styles.btn, { backgroundColor: loading ? theme.textSecondary : theme.primary }]}>
+                {loading ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <Text style={styles.btnText}>Login to Account</Text>
+                )}
+              </View>
+            </AnimatedPressable>
+          </Animated.View>
+
+          {/* Footer */}
+          <Animated.View 
+            entering={FadeInUp.delay(400).duration(600)}
+            style={styles.footer}
+          >
+            <Text style={[styles.footerText, { color: theme.textSecondary }]}>
+              New to Shofy?{' '}
+              <Text 
+                onPress={() => navigation.navigate('Register')}
+                style={[styles.footerLink, { color: theme.primary }]}
+              >
+                Create Account
+              </Text>
+            </Text>
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -232,87 +169,39 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
-  scroll: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24 },
-
-  orb: { position: 'absolute', borderRadius: 999, overflow: 'hidden' },
-  orb1: { width: width * 0.9, height: width * 0.9, top: -width * 0.3, left: -width * 0.2 },
-  orb2: { width: width * 0.7, height: width * 0.7, bottom: -width * 0.1, right: -width * 0.2 },
-
-  logoWrap: { alignItems: 'center', marginBottom: 28 },
-  logo: {
-    width: 72, height: 72, borderRadius: 22,
+  container: { flex: 1 },
+  scroll: { flexGrow: 1, paddingHorizontal: 24 },
+  
+  logoIcon: {
+    width: 64, height: 64, borderRadius: 18,
     alignItems: 'center', justifyContent: 'center',
-    shadowColor: '#0f172a', shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2, shadowRadius: 20, elevation: 12,
+    alignSelf: 'center', marginBottom: 28,
   },
-  logoText: { color: '#f8fafc', fontSize: 34, fontWeight: '900', letterSpacing: -1 },
-
-  title: {
-    color: '#0f172a', fontSize: 30, fontWeight: '800',
-    textAlign: 'center', letterSpacing: -0.5, marginBottom: 6,
-  },
-  subtitle: {
-    color: '#64748b', fontSize: 15,
-    textAlign: 'center', marginBottom: 32,
-  },
-
-  form: { gap: 0 },
-
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    padding: 24,
-    gap: 18,
-    marginBottom: 20,
-  },
-
-  fieldWrap: { gap: 7 },
-  label: {
-    color: '#64748b', fontSize: 11,
-    fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase',
-  },
+  logoText: { color: '#ffffff', fontSize: 32, fontWeight: '900' },
+  
+  title: { fontSize: 32, fontWeight: '900', textAlign: 'center', letterSpacing: -1, marginBottom: 8 },
+  subtitle: { fontSize: 16, textAlign: 'center', marginBottom: 40, paddingHorizontal: 20 },
+  
+  card: { borderRadius: 32, padding: 32, borderWidth: 1 },
+  
+  fieldWrap: { marginBottom: 22 },
+  label: { fontSize: 13, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
   inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#e2e8f0',
-    overflow: 'hidden',
+    flexDirection: 'row', alignItems: 'center',
+    height: 60, borderRadius: 18, borderWidth: 1.5,
+    paddingHorizontal: 16, gap: 12,
   },
-  inputWrapFocused: {
-    borderColor: '#0f172a',
-    backgroundColor: '#e2e8f0',
-  },
-  input: {
-    flex: 1,
-    color: '#0f172a',
-    fontSize: 15,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    letterSpacing: 0.1,
-  },
-  eyeBtn: { paddingHorizontal: 14 },
-
-  btn: {
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#0f172a',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 10,
-  },
-  btnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700', letterSpacing: 0.3 },
-
-  registerLink: { alignItems: 'center', paddingVertical: 8 },
-  registerText: { color: '#64748b', fontSize: 14 },
-  registerBold: { color: '#0f172a', fontWeight: '700' },
+  input: { flex: 1, fontSize: 16, fontWeight: '600' },
+  
+  forgotBtn: { alignSelf: 'flex-end', marginBottom: 24 },
+  forgotText: { fontSize: 14, fontWeight: '700' },
+  
+  btn: { height: 60, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  btnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
+  
+  footer: { marginTop: 32, alignItems: 'center' },
+  footerText: { fontSize: 15, fontWeight: '500' },
+  footerLink: { fontWeight: '800' },
 });
 
 export default LoginScreen;
