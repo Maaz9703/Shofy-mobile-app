@@ -14,6 +14,7 @@ export const useTheme = () => {
 const lightTheme = {
   background: '#f8fafc',
   card: '#ffffff',
+  cardGlass: 'rgba(0,0,0,0.03)',
   text: '#0f172a',
   textSecondary: '#64748b',
   primary: '#7c3aed',
@@ -37,10 +38,10 @@ const darkTheme = {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const isDark = true; // Forced to true for premium dark glassmorphism feel
-  const theme = darkTheme;
+  const isDark = false; // Forced to false for premium light mode feel
+  const theme = lightTheme;
 
-  // No-op for toggleTheme since we force dark mode
+  // No-op for toggleTheme since we force light mode
   const toggleTheme = () => {};
 
   const value = {

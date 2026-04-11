@@ -56,7 +56,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
   if (loading || !product) {
     return (
-      <View style={[styles.loadingWrap, { backgroundColor: '#09090b' }]}>
+      <View style={[styles.loadingWrap, { backgroundColor: '#f8fafc' }]}>
         <ActivityIndicator size="large" color="#a855f7" />
       </View>
     );
@@ -67,12 +67,12 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       {/* Back button */}
       <Animated.View entering={FadeInUp.delay(100)} style={[styles.backBtnWrap, { top: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </TouchableOpacity>
       </Animated.View>
 
@@ -88,7 +88,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             resizeMode="cover"
           />
           <LinearGradient
-            colors={['rgba(9,9,11,0)', '#09090b']}
+            colors={['rgba(248,250,252,0)', '#f8fafc']}
             style={styles.imageBottomGradient}
           />
         </View>
@@ -134,11 +134,11 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           <Text style={styles.sectionHeader}>Quantity</Text>
           <View style={styles.quantityWrap}>
             <TouchableOpacity onPress={() => setQuantity(q => Math.max(1, q - 1))} style={styles.qtyBtn}>
-              <Ionicons name="remove" size={24} color="#f8fafc" />
+              <Ionicons name="remove" size={24} color="#0f172a" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={styles.qtyBtn}>
-              <Ionicons name="add" size={24} color="#f8fafc" />
+              <Ionicons name="add" size={24} color="#0f172a" />
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -147,13 +147,13 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       {/* Floating Action Bar */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom || 24 }]}>
         <LinearGradient
-          colors={['rgba(9,9,11,0)', 'rgba(9,9,11,0.95)', '#09090b']}
+          colors={['rgba(248,250,252,0)', 'rgba(248,250,252,0.95)', '#f8fafc']}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.bottomBarContent}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#94a3b8', fontSize: 12, fontWeight: '600' }}>Total Price</Text>
-            <Text style={{ color: '#f8fafc', fontSize: 22, fontWeight: '800' }}>
+            <Text style={{ color: '#64748b', fontSize: 12, fontWeight: '600' }}>Total Price</Text>
+            <Text style={{ color: '#0f172a', fontSize: 22, fontWeight: '800' }}>
               PKR {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 0 })}
             </Text>
           </View>
@@ -163,15 +163,15 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             disabled={product.stock < 1 || addingToCart}
           >
             <LinearGradient
-              colors={product.stock < 1 ? ['#3f3f46', '#3f3f46'] : ['#fafafa', '#fafafa']}
+              colors={product.stock < 1 ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
               start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
               style={styles.addBtn}
             >
               {addingToCart ? (
-                <ActivityIndicator color="#09090b" />
+                <ActivityIndicator color="#f8fafc" />
               ) : (
                 <>
-                  <Ionicons name="cart" size={20} color="#09090b" />
+                  <Ionicons name="cart" size={20} color="#f8fafc" />
                   <Text style={styles.addBtnText}>Add To Cart</Text>
                 </>
               )}
@@ -184,14 +184,14 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   loadingWrap: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   backBtnWrap: {
     position: 'absolute', left: 20, zIndex: 10,
   },
   backBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     justifyContent: 'center', alignItems: 'center',
     borderWidth: 1, borderColor: '#2a2a3e',
   },
@@ -210,45 +210,45 @@ const styles = StyleSheet.create({
   },
   categoryPill: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
     paddingHorizontal: 12, paddingVertical: 6,
     borderRadius: 8,
   },
-  categoryPillText: { color: '#fafafa', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  categoryPillText: { color: '#0f172a', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
   stockPill: {
     paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8,
   },
   title: {
-    color: '#f8fafc', fontSize: 28, fontWeight: '900', letterSpacing: -0.5, lineHeight: 34, marginBottom: 16,
+    color: '#0f172a', fontSize: 28, fontWeight: '900', letterSpacing: -0.5, lineHeight: 34, marginBottom: 16,
   },
   priceBlock: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingVertical: 16, borderTopWidth: 1, borderBottomWidth: 1,
-    borderColor: '#3f3f46', marginBottom: 24,
+    borderColor: '#e2e8f0', marginBottom: 24,
   },
-  price: { color: '#fafafa', fontSize: 26, fontWeight: '800' },
+  price: { color: '#0f172a', fontSize: 26, fontWeight: '800' },
   originalPrice: { color: '#64748b', fontSize: 16, textDecorationLine: 'line-through', marginBottom: 4 },
   saveBadge: {
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
     paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8,
   },
-  saveBadgeText: { color: '#fafafa', fontSize: 10, fontWeight: '800' },
+  saveBadgeText: { color: '#0f172a', fontSize: 10, fontWeight: '800' },
   sectionHeader: {
-    color: '#f8fafc', fontSize: 16, fontWeight: '700', marginBottom: 12,
+    color: '#0f172a', fontSize: 16, fontWeight: '700', marginBottom: 12,
   },
   glassBox: {
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     borderRadius: 16, padding: 16, marginBottom: 24,
   },
-  descriptionText: { color: '#cbd5e1', fontSize: 14, lineHeight: 24 },
+  descriptionText: { color: '#64748b', fontSize: 14, lineHeight: 24 },
   quantityWrap: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     borderRadius: 16,
     paddingHorizontal: 16, paddingVertical: 8,
   },
-  qtyBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#3f3f46', justifyContent: 'center', alignItems: 'center' },
-  qtyText: { color: '#f8fafc', fontSize: 20, fontWeight: '800' },
+  qtyBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#e2e8f0', justifyContent: 'center', alignItems: 'center' },
+  qtyText: { color: '#0f172a', fontSize: 20, fontWeight: '800' },
   bottomBar: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     zIndex: 100,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     height: 54, borderRadius: 16,
   },
-  addBtnText: { color: '#09090b', fontSize: 16, fontWeight: '700' },
+  addBtnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
 });
 
 export default ProductDetailsScreen;

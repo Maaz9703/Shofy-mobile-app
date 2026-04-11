@@ -78,9 +78,9 @@ const ProfileStack = () => (
 );
 
 const CustomTabBarBackground = () => (
-  <View style={[StyleSheet.absoluteFill, { backgroundColor: '#09090b' }]}>
+  <View style={[StyleSheet.absoluteFill, { backgroundColor: '#f8fafc' }]}>
     <View style={{
-      position: 'absolute', top: 0, left: 0, right: 0, height: 1, backgroundColor: '#3f3f46'
+      position: 'absolute', top: 0, left: 0, right: 0, height: 1, backgroundColor: '#e2e8f0'
     }} />
   </View>
 );
@@ -107,7 +107,7 @@ const MainNavigator = () => {
               {focused && (
                 <View style={{
                   position: 'absolute', width: 36, height: 36, borderRadius: 18,
-                  backgroundColor: '#2a1a5e',
+                  backgroundColor: '#f1f5f9',
                 }} />
               )}
               <Ionicons name={iconName} size={size} color={color} />
@@ -120,7 +120,7 @@ const MainNavigator = () => {
           borderTopWidth: 0,
           elevation: 0,
           height: 80,
-          backgroundColor: '#09090b',
+          backgroundColor: '#f8fafc',
         },
         tabBarBackground: () => <CustomTabBarBackground />,
         tabBarShowLabel: false,
@@ -134,7 +134,7 @@ const MainNavigator = () => {
             borderTopWidth: 0,
             elevation: 0,
             height: 80,
-            backgroundColor: '#09090b',
+            backgroundColor: '#f8fafc',
             ...getTabBarVisibility(route),
           },
         })}
@@ -144,12 +144,12 @@ const MainNavigator = () => {
         component={CartStack}
         options={({ route }) => ({
           tabBarBadge: cartCount > 0 ? cartCount : undefined,
-          tabBarBadgeStyle: { backgroundColor: '#ef4444', color: '#fff' },
+          tabBarBadgeStyle: { backgroundColor: '#ef4444', color: '#0f172a' },
           tabBarStyle: {
             borderTopWidth: 0,
             elevation: 0,
             height: 80,
-            backgroundColor: '#09090b',
+            backgroundColor: '#f8fafc',
             ...getTabBarVisibility(route),
           },
         })}
@@ -162,7 +162,7 @@ const MainNavigator = () => {
             borderTopWidth: 0,
             elevation: 0,
             height: 80,
-            backgroundColor: '#09090b',
+            backgroundColor: '#f8fafc',
             ...getTabBarVisibility(route),
           },
         })}
@@ -175,7 +175,7 @@ const MainNavigator = () => {
             borderTopWidth: 0,
             elevation: 0,
             height: 80,
-            backgroundColor: '#09090b',
+            backgroundColor: '#f8fafc',
             ...getTabBarVisibility(route),
           },
         })}

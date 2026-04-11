@@ -60,7 +60,7 @@ const AddEditAddressScreen = ({ route, navigation }) => {
         <TextInput
           style={styles.input}
           placeholder={label}
-          placeholderTextColor="#475569"
+          placeholderTextColor="#94a3b8"
           value={value}
           onChangeText={onChange}
           onFocus={() => setFocusedField(label)}
@@ -74,11 +74,11 @@ const AddEditAddressScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+          <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEdit ? 'Edit Address' : 'New Address'}</Text>
         <View style={{ width: 44 }} />
@@ -100,18 +100,18 @@ const AddEditAddressScreen = ({ route, navigation }) => {
             <Switch
               value={isDefault}
               onValueChange={setIsDefault}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#fafafa' }}
-              thumbColor="#fff"
+              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#0f172a' }}
+              thumbColor="#0f172a"
             />
           </View>
         </View>
 
         <TouchableOpacity onPress={handleSave} disabled={loading}>
           <LinearGradient
-            colors={loading ? ['#3f3f46', '#3f3f46'] : ['#fafafa', '#fafafa']}
+            colors={loading ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
             style={styles.saveBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
           >
-            {loading ? <ActivityIndicator color="#09090b" /> : (
+            {loading ? <ActivityIndicator color="#f8fafc" /> : (
               <Text style={styles.saveBtnText}>{isEdit ? 'Update' : 'Save'} Address</Text>
             )}
           </LinearGradient>
@@ -122,37 +122,37 @@ const AddEditAddressScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingBottom: 16,
   },
   backBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a', borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e2e8f0',
     justifyContent: 'center', alignItems: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#f8fafc' },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
   scroll: { padding: 16, paddingBottom: 40 },
   card: {
     padding: 20, borderRadius: 20, marginBottom: 20,
-    backgroundColor: '#18181b',
-    borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff',
+    borderWidth: 1, borderColor: '#e2e8f0',
   },
-  label: { color: '#94a3b8', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 7 },
+  label: { color: '#64748b', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 7 },
   inputWrap: {
-    backgroundColor: '#27272a',
-    borderRadius: 12, borderWidth: 1.5, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff',
+    borderRadius: 12, borderWidth: 1.5, borderColor: '#e2e8f0',
   },
-  inputWrapFocused: { borderColor: '#fafafa', backgroundColor: '#27272a' },
-  input: { color: '#f1f5f9', fontSize: 15, paddingHorizontal: 16, paddingVertical: 14 },
+  inputWrapFocused: { borderColor: '#0f172a', backgroundColor: '#ffffff' },
+  input: { color: '#0f172a', fontSize: 15, paddingHorizontal: 16, paddingVertical: 14 },
   defaultRow: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingTop: 16, marginTop: 8, borderTopWidth: 1, borderTopColor: '#3f3f46',
+    paddingTop: 16, marginTop: 8, borderTopWidth: 1, borderTopColor: '#e2e8f0',
   },
   defaultLabel: { fontSize: 15, fontWeight: '600', color: '#e2e8f0' },
   saveBtn: { borderRadius: 16, height: 56, alignItems: 'center', justifyContent: 'center' },
-  saveBtnText: { color: '#09090b', fontSize: 18, fontWeight: '800' },
+  saveBtnText: { color: '#f8fafc', fontSize: 18, fontWeight: '800' },
 });
 
 export default AddEditAddressScreen;

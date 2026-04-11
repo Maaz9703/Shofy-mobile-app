@@ -31,7 +31,7 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <Text style={styles.headerTitle}>Profile</Text>
@@ -39,12 +39,12 @@ const ProfileScreen = ({ navigation }) => {
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <LinearGradient
-          colors={['#18181b', '#18181b']}
+          colors={['#ffffff', '#ffffff']}
           start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
           style={styles.profileCard}
         >
           <View style={styles.avatar}>
-            <LinearGradient colors={['#fafafa', '#fafafa']} style={StyleSheet.absoluteFill} />
+            <LinearGradient colors={['#0f172a', '#0f172a']} style={StyleSheet.absoluteFill} />
             <Text style={styles.avatarText}>{user?.name?.charAt(0)?.toUpperCase() || 'U'}</Text>
           </View>
           <Text style={styles.name}>{user?.name || 'User'}</Text>
@@ -63,7 +63,7 @@ const ProfileScreen = ({ navigation }) => {
               activeOpacity={0.7}
             >
               <View style={styles.menuIconBg}>
-                <Ionicons name={item.icon} size={20} color="#fafafa" />
+                <Ionicons name={item.icon} size={20} color="#0f172a" />
               </View>
               <Text style={styles.menuLabel}>{item.label}</Text>
               <Ionicons name="chevron-forward" size={18} color="#64748b" />
@@ -81,9 +81,9 @@ const ProfileScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: { paddingHorizontal: 20, paddingBottom: 16 },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: '#f8fafc', letterSpacing: 0.5 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: '#0f172a', letterSpacing: 0.5 },
   scroll: { padding: 16, paddingBottom: 20 },
   
   profileCard: {
@@ -97,14 +97,14 @@ const styles = StyleSheet.create({
     width: 90, height: 90, borderRadius: 45,
     justifyContent: 'center', alignItems: 'center',
     marginBottom: 16, overflow: 'hidden',
-    borderWidth: 2, borderColor: '#3f3f46',
+    borderWidth: 2, borderColor: '#e2e8f0',
   },
-  avatarText: { color: '#09090b', fontSize: 36, fontWeight: '800' },
-  name: { fontSize: 24, fontWeight: '800', color: '#f8fafc', marginBottom: 6, letterSpacing: -0.5 },
-  email: { fontSize: 15, color: '#94a3b8' },
+  avatarText: { color: '#f8fafc', fontSize: 36, fontWeight: '800' },
+  name: { fontSize: 24, fontWeight: '800', color: '#0f172a', marginBottom: 6, letterSpacing: -0.5 },
+  email: { fontSize: 15, color: '#64748b' },
 
   menuBox: {
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 20,
@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
     padding: 16, gap: 14,
   },
   menuItemBorder: {
-    borderBottomWidth: 1, borderBottomColor: '#3f3f46',
+    borderBottomWidth: 1, borderBottomColor: '#e2e8f0',
   },
   menuIconBg: {
     width: 36, height: 36, borderRadius: 12,
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
     alignItems: 'center', justifyContent: 'center',
   },
   menuLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: '#e2e8f0' },
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   logoutBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     padding: 18, borderRadius: 18,
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
     gap: 10, marginTop: 10,
   },
   logoutText: { fontSize: 17, fontWeight: '700', color: '#f87171' },

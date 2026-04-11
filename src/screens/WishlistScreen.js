@@ -60,8 +60,8 @@ const WishlistScreen = ({ navigation }) => {
       </TouchableOpacity>
       <View style={styles.actions}>
         <TouchableOpacity onPress={() => { addToCart(item); Toast.show({ type: 'success', text1: 'Added to cart! 🛒' }); }}>
-          <LinearGradient colors={['#7c3aed', '#fafafa']} style={styles.addBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-            <Ionicons name="cart" size={18} color="#fff" />
+          <LinearGradient colors={['#7c3aed', '#0f172a']} style={styles.addBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <Ionicons name="cart" size={18} color="#0f172a" />
           </LinearGradient>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => removeFromWishlist(item)}>
@@ -74,11 +74,11 @@ const WishlistScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+          <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Wishlist</Text>
         <View style={{ width: 44 }} />
@@ -86,7 +86,7 @@ const WishlistScreen = ({ navigation }) => {
 
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#fafafa" />
+          <ActivityIndicator size="large" color="#0f172a" />
         </View>
       ) : (
         <FlatList
@@ -97,7 +97,7 @@ const WishlistScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={styles.emptyIconBg}>
-                <Ionicons name="heart" size={50} color="#fafafa" />
+                <Ionicons name="heart" size={50} color="#0f172a" />
               </View>
               <Text style={styles.emptyTitle}>No items in wishlist</Text>
               <Text style={styles.emptySubtitle}>Items you save will show up here</Text>
@@ -110,29 +110,29 @@ const WishlistScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingBottom: 16,
   },
   backBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#161628',
+    backgroundColor: '#ffffff',
     justifyContent: 'center', alignItems: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#f8fafc' },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
   list: { padding: 16, paddingBottom: 100 },
   card: {
     flexDirection: 'row', alignItems: 'center',
     padding: 12, borderRadius: 16, marginBottom: 12,
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
   cardContent: { flex: 1, flexDirection: 'row', alignItems: 'center' },
-  image: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#0f0f1e' },
+  image: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#f1f5f9' },
   info: { flex: 1 },
   productTitle: { fontSize: 15, fontWeight: '600', marginBottom: 6, color: '#e2e8f0' },
-  price: { fontSize: 17, fontWeight: '800', color: '#fafafa' },
+  price: { fontSize: 17, fontWeight: '800', color: '#0f172a' },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   addBtn: {
     width: 40, height: 40, borderRadius: 12,
@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
   empty: { alignItems: 'center', paddingTop: 80 },
   emptyIconBg: {
     width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#1f1245',
+    backgroundColor: '#ede9fe',
     alignItems: 'center', justifyContent: 'center', marginBottom: 20,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#f8fafc' },
+  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
   emptySubtitle: { fontSize: 14, color: '#64748b', marginTop: 6 },
 });
 

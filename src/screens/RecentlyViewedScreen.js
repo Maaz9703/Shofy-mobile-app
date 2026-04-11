@@ -20,11 +20,11 @@ const RecentlyViewedScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+          <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Recently Viewed</Text>
         {recentlyViewed.length > 0 ? (
@@ -39,7 +39,7 @@ const RecentlyViewedScreen = ({ navigation }) => {
       {recentlyViewed.length === 0 ? (
         <View style={styles.emptyState}>
           <View style={styles.emptyIconBg}>
-            <Ionicons name="eye" size={50} color="#fafafa" />
+            <Ionicons name="eye" size={50} color="#0f172a" />
           </View>
           <Text style={styles.emptyText}>No recently viewed products</Text>
           <Text style={styles.emptySubtext}>Start browsing to see your recently viewed items here</Text>
@@ -65,17 +65,17 @@ const RecentlyViewedScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingBottom: 16,
   },
   backBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     justifyContent: 'center', alignItems: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#f8fafc' },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
   clearBtn: {
     width: 44, height: 44, borderRadius: 22,
     backgroundColor: '#2a1020',
@@ -84,10 +84,10 @@ const styles = StyleSheet.create({
   emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },
   emptyIconBg: {
     width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#1f1245',
+    backgroundColor: '#ede9fe',
     alignItems: 'center', justifyContent: 'center', marginBottom: 20,
   },
-  emptyText: { fontSize: 20, fontWeight: '800', color: '#f8fafc' },
+  emptyText: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
   emptySubtext: { fontSize: 14, marginTop: 8, textAlign: 'center', color: '#64748b' },
   productsList: { padding: 8, paddingBottom: 100 },
 });

@@ -48,7 +48,7 @@ const OrdersScreen = ({ navigation }) => {
     switch (status) {
       case 'Delivered': return '#34d399';
       case 'Shipped': return '#06b6d4';
-      case 'Processing': return '#fafafa';
+      case 'Processing': return '#0f172a';
       case 'Cancelled': return '#f87171';
       default: return '#64748b';
     }
@@ -75,7 +75,7 @@ const OrdersScreen = ({ navigation }) => {
         </Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
           <Text style={styles.total}>PKR {item.total?.toLocaleString()}</Text>
-          <Ionicons name="chevron-forward" size={18} color="#475569" />
+          <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -84,9 +84,9 @@ const OrdersScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#fafafa" />
+          <ActivityIndicator size="large" color="#0f172a" />
         </View>
       </View>
     );
@@ -95,7 +95,7 @@ const OrdersScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <Text style={styles.headerTitle}>My Orders</Text>
@@ -103,7 +103,7 @@ const OrdersScreen = ({ navigation }) => {
           style={styles.quickReorderBtn}
           onPress={() => navigation.navigate('QuickReorder')}
         >
-          <Ionicons name="repeat" size={18} color="#fafafa" />
+          <Ionicons name="repeat" size={18} color="#0f172a" />
           <Text style={styles.quickReorderText}>Reorder</Text>
         </TouchableOpacity>
       </View>
@@ -114,12 +114,12 @@ const OrdersScreen = ({ navigation }) => {
         renderItem={renderOrder}
         contentContainerStyle={styles.list}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fafafa" colors={['#fafafa']} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} />
         }
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconBg}>
-              <Ionicons name="receipt" size={50} color="#fafafa" />
+              <Ionicons name="receipt" size={50} color="#0f172a" />
             </View>
             <Text style={styles.emptyTitle}>No orders yet</Text>
             <Text style={styles.emptySubtitle}>Your orders will appear here</Text>
@@ -131,23 +131,23 @@ const OrdersScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: {
     paddingHorizontal: 20, paddingBottom: 16,
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   },
-  headerTitle: { fontSize: 26, fontWeight: '900', color: '#f8fafc' },
+  headerTitle: { fontSize: 26, fontWeight: '900', color: '#0f172a' },
   quickReorderBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
     paddingHorizontal: 14, paddingVertical: 8,
-    borderRadius: 10, backgroundColor: '#1f1245',
+    borderRadius: 10, backgroundColor: '#ede9fe',
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
-  quickReorderText: { color: '#fafafa', fontSize: 13, fontWeight: '700' },
+  quickReorderText: { color: '#0f172a', fontSize: 13, fontWeight: '700' },
   list: { padding: 16, paddingBottom: 20 },
   card: {
     padding: 18, borderRadius: 16, marginBottom: 12,
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
@@ -159,14 +159,14 @@ const styles = StyleSheet.create({
   statusDot: { width: 6, height: 6, borderRadius: 3 },
   statusText: { fontSize: 12, fontWeight: '700' },
   date: { fontSize: 13, color: '#64748b' },
-  total: { fontSize: 20, fontWeight: '800', color: '#fafafa' },
+  total: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
   empty: { alignItems: 'center', justifyContent: 'center', paddingTop: 80 },
   emptyIconBg: {
     width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#1f1245',
+    backgroundColor: '#ede9fe',
     alignItems: 'center', justifyContent: 'center', marginBottom: 20,
   },
-  emptyTitle: { fontSize: 22, fontWeight: '800', color: '#f8fafc' },
+  emptyTitle: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
   emptySubtitle: { fontSize: 14, color: '#64748b', marginTop: 6 },
 });
 

@@ -185,7 +185,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
                 <Text
                   style={[
                     styles.filterChipText,
-                    { color: !selectedCategory ? '#fff' : theme.text },
+                    { color: !selectedCategory ? '#0f172a' : theme.text },
                   ]}
                 >
                   All
@@ -206,7 +206,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
                   <Text
                     style={[
                       styles.filterChipText,
-                      { color: selectedCategory === cat ? '#fff' : theme.text },
+                      { color: selectedCategory === cat ? '#0f172a' : theme.text },
                     ]}
                   >
                     {cat}
@@ -279,7 +279,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
                   <Text
                     style={[
                       styles.filterChipText,
-                      { color: sortBy === option.value ? '#fff' : theme.text },
+                      { color: sortBy === option.value ? '#0f172a' : theme.text },
                     ]}
                   >
                     {option.label}
@@ -294,7 +294,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
               style={[styles.clearButton, { backgroundColor: theme.error }]}
               onPress={clearFilters}
             >
-              <Ionicons name="close" size={16} color="#fff" />
+              <Ionicons name="close" size={16} color="#0f172a" />
               <Text style={styles.clearButtonText}>Clear All</Text>
             </TouchableOpacity>
           )}
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     borderRadius: 12,
     paddingHorizontal: 12,
     height: 44,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   clearButtonText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 14,
     fontWeight: '600',
   },

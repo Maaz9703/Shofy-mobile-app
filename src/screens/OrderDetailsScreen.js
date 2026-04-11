@@ -18,9 +18,9 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   if (!order) {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: '#f8fafc', fontSize: 18 }}>Order not found</Text>
+          <Text style={{ color: '#0f172a', fontSize: 18 }}>Order not found</Text>
         </View>
       </View>
     );
@@ -32,7 +32,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Delivered': return '#34d399';
-      case 'Shipped': case 'Processing': return '#fafafa';
+      case 'Shipped': case 'Processing': return '#0f172a';
       case 'Cancelled': return '#f87171';
       default: return '#64748b';
     }
@@ -41,13 +41,13 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <TouchableOpacity
         style={[styles.backBtn, { top: insets.top + 10 }]}
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+        <Ionicons name="arrow-back" size={24} color="#0f172a" />
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 64 }]} showsVerticalScrollIndicator={false}>
@@ -138,20 +138,20 @@ const OrderDetailsScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   backBtn: {
     position: 'absolute', left: 20, zIndex: 10,
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a', borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e2e8f0',
     justifyContent: 'center', alignItems: 'center',
   },
   scroll: { padding: 16, paddingBottom: 40 },
   section: {
     padding: 18, borderRadius: 18, marginBottom: 16,
-    backgroundColor: '#18181b',
-    borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff',
+    borderWidth: 1, borderColor: '#e2e8f0',
   },
-  sectionTitle: { fontSize: 17, fontWeight: '700', marginBottom: 14, color: '#f8fafc' },
+  sectionTitle: { fontSize: 17, fontWeight: '700', marginBottom: 14, color: '#0f172a' },
   badge: {
     alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8,
     paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10,
@@ -163,24 +163,24 @@ const styles = StyleSheet.create({
   timelineContent: { flex: 1 },
   timelineStatus: { fontSize: 15, fontWeight: '600', marginBottom: 2, color: '#e2e8f0' },
   timelineDate: { fontSize: 12, color: '#64748b' },
-  timelineNote: { fontSize: 12, marginTop: 4, color: '#94a3b8' },
+  timelineNote: { fontSize: 12, marginTop: 4, color: '#64748b' },
   itemRow: {
     flexDirection: 'row', justifyContent: 'space-between',
-    paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#3f3f46',
+    paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#e2e8f0',
   },
   itemTitle: { flex: 1, fontSize: 15, color: '#e2e8f0' },
-  itemQty: { fontSize: 14, color: '#94a3b8' },
-  addrName: { fontSize: 16, fontWeight: '600', color: '#f8fafc', marginBottom: 4 },
-  addrText: { fontSize: 14, marginBottom: 4, color: '#94a3b8' },
+  itemQty: { fontSize: 14, color: '#64748b' },
+  addrName: { fontSize: 16, fontWeight: '600', color: '#0f172a', marginBottom: 4 },
+  addrText: { fontSize: 14, marginBottom: 4, color: '#64748b' },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  summaryLabel: { fontSize: 15, color: '#94a3b8' },
+  summaryLabel: { fontSize: 15, color: '#64748b' },
   summaryValue: { fontSize: 15, color: '#e2e8f0' },
   totalRow: {
     flexDirection: 'row', justifyContent: 'space-between',
-    marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#3f3f46',
+    marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#e2e8f0',
   },
-  totalLabel: { fontSize: 17, fontWeight: '700', color: '#f8fafc' },
-  totalValue: { fontSize: 22, fontWeight: '800', color: '#fafafa' },
+  totalLabel: { fontSize: 17, fontWeight: '700', color: '#0f172a' },
+  totalValue: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
   paymentMethod: { fontSize: 13, color: '#64748b', marginTop: 12 },
 });
 

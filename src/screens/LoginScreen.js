@@ -107,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient
-        colors={['#09090b', '#09090b']}
+        colors={['#f8fafc', '#f8fafc']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -135,7 +135,7 @@ const LoginScreen = ({ navigation }) => {
           {/* Logo */}
           <Animated.View style={[styles.logoWrap, { transform: [{ scale: logoScale }] }]}>
             <LinearGradient
-              colors={['#fafafa', '#fafafa']}
+              colors={['#0f172a', '#0f172a']}
               style={styles.logo}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -161,7 +161,7 @@ const LoginScreen = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="you@example.com"
-                    placeholderTextColor="#475569"
+                    placeholderTextColor="#94a3b8"
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -180,7 +180,7 @@ const LoginScreen = ({ navigation }) => {
                   <TextInput
                     style={[styles.input, { flex: 1 }]}
                     placeholder="••••••••"
-                    placeholderTextColor="#475569"
+                    placeholderTextColor="#94a3b8"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -207,13 +207,13 @@ const LoginScreen = ({ navigation }) => {
                   activeOpacity={0.9}
                 >
                   <LinearGradient
-                    colors={loading ? ['#3f3f46', '#3f3f46'] : ['#fafafa', '#fafafa']}
+                    colors={loading ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
                     style={styles.btn}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                   >
                     {loading ? (
-                      <ActivityIndicator color="#09090b" size="small" />
+                      <ActivityIndicator color="#f8fafc" size="small" />
                     ) : (
                       <Text style={styles.btnText}>Sign In →</Text>
                     )}
@@ -240,7 +240,7 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   scroll: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24 },
 
   orb: { position: 'absolute', borderRadius: 999, overflow: 'hidden' },
@@ -251,13 +251,13 @@ const styles = StyleSheet.create({
   logo: {
     width: 72, height: 72, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
-    shadowColor: '#fafafa', shadowOffset: { width: 0, height: 8 },
+    shadowColor: '#0f172a', shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2, shadowRadius: 20, elevation: 12,
   },
-  logoText: { color: '#09090b', fontSize: 34, fontWeight: '900', letterSpacing: -1 },
+  logoText: { color: '#f8fafc', fontSize: 34, fontWeight: '900', letterSpacing: -1 },
 
   title: {
-    color: '#f1f5f9', fontSize: 30, fontWeight: '800',
+    color: '#0f172a', fontSize: 30, fontWeight: '800',
     textAlign: 'center', letterSpacing: -0.5, marginBottom: 6,
   },
   subtitle: {
@@ -268,10 +268,10 @@ const styles = StyleSheet.create({
   form: { gap: 0 },
 
   card: {
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#3f3f46',
+    borderColor: '#e2e8f0',
     padding: 24,
     gap: 18,
     marginBottom: 20,
@@ -279,25 +279,25 @@ const styles = StyleSheet.create({
 
   fieldWrap: { gap: 7 },
   label: {
-    color: '#94a3b8', fontSize: 11,
+    color: '#64748b', fontSize: 11,
     fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase',
   },
   inputWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#3f3f46',
+    borderColor: '#e2e8f0',
     overflow: 'hidden',
   },
   inputWrapFocused: {
-    borderColor: '#fafafa',
-    backgroundColor: '#3f3f46',
+    borderColor: '#0f172a',
+    backgroundColor: '#e2e8f0',
   },
   input: {
     flex: 1,
-    color: '#f1f5f9',
+    color: '#0f172a',
     fontSize: 15,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -310,17 +310,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#fafafa',
+    shadowColor: '#0f172a',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 16,
     elevation: 10,
   },
-  btnText: { color: '#09090b', fontSize: 16, fontWeight: '700', letterSpacing: 0.3 },
+  btnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700', letterSpacing: 0.3 },
 
   registerLink: { alignItems: 'center', paddingVertical: 8 },
   registerText: { color: '#64748b', fontSize: 14 },
-  registerBold: { color: '#fafafa', fontWeight: '700' },
+  registerBold: { color: '#0f172a', fontWeight: '700' },
 });
 
 export default LoginScreen;

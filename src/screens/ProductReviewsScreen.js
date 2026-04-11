@@ -223,7 +223,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
             style={[styles.writeReviewBtn, { backgroundColor: theme.primary }]}
             onPress={() => setShowReviewForm(!showReviewForm)}
           >
-            <Ionicons name={showReviewForm ? 'close' : 'create'} size={20} color="#fff" />
+            <Ionicons name={showReviewForm ? 'close' : 'create'} size={20} color="#0f172a" />
             <Text style={styles.writeReviewText}>
               {showReviewForm ? 'Cancel' : userReview ? 'Edit Review' : 'Write a Review'}
             </Text>
@@ -269,7 +269,7 @@ const ProductReviewsScreen = ({ route, navigation }) => {
                 disabled={submitting || !rating}
               >
                 {submitting ? (
-                  <ActivityIndicator color="#fff" />
+                  <ActivityIndicator color="#0f172a" />
                 ) : (
                   <Text style={styles.submitBtnText}>Submit</Text>
                 )}
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   writeReviewText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitBtnText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   avatarText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '700',
   },

@@ -68,7 +68,7 @@ const RegisterScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor="#475569"
+          placeholderTextColor="#94a3b8"
           value={value}
           onChangeText={onChange}
           onFocus={() => setFocusedField(placeholder)}
@@ -82,7 +82,7 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
@@ -103,19 +103,19 @@ const RegisterScreen = ({ navigation }) => {
 
             <TouchableOpacity onPress={handleRegister} disabled={loading}>
               <LinearGradient
-                colors={loading ? ['#3f3f46', '#3f3f46'] : ['#fafafa', '#fafafa']}
+                colors={loading ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
                 style={styles.btn}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               >
-                {loading ? <ActivityIndicator color="#09090b" /> : <Text style={styles.btnText}>Create Account →</Text>}
+                {loading ? <ActivityIndicator color="#f8fafc" /> : <Text style={styles.btnText}>Create Account →</Text>}
               </LinearGradient>
             </TouchableOpacity>
           </Animated.View>
 
           <TouchableOpacity style={styles.link} onPress={() => navigation.goBack()}>
             <Text style={styles.linkText}>
-              Already have an account? <Text style={{ color: '#fafafa', fontWeight: '700' }}>Login</Text>
+              Already have an account? <Text style={{ color: '#0f172a', fontWeight: '700' }}>Login</Text>
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -125,28 +125,28 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   scroll: { flexGrow: 1, justifyContent: 'center', padding: 24 },
-  title: { color: '#f1f5f9', fontSize: 30, fontWeight: '800', letterSpacing: -0.5, marginBottom: 6 },
+  title: { color: '#0f172a', fontSize: 30, fontWeight: '800', letterSpacing: -0.5, marginBottom: 6 },
   subtitle: { color: '#64748b', fontSize: 15, marginBottom: 32 },
   card: {
-    backgroundColor: '#18181b',
-    borderRadius: 24, borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff',
+    borderRadius: 24, borderWidth: 1, borderColor: '#e2e8f0',
     padding: 24, gap: 16, marginBottom: 20,
   },
   fieldWrap: { gap: 7 },
-  label: { color: '#94a3b8', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' },
+  label: { color: '#64748b', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' },
   inputWrap: {
-    backgroundColor: '#27272a',
-    borderRadius: 12, borderWidth: 1.5, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff',
+    borderRadius: 12, borderWidth: 1.5, borderColor: '#e2e8f0',
   },
-  inputWrapFocused: { borderColor: '#fafafa', backgroundColor: '#27272a' },
-  input: { color: '#f1f5f9', fontSize: 15, paddingHorizontal: 16, paddingVertical: 14 },
+  inputWrapFocused: { borderColor: '#0f172a', backgroundColor: '#ffffff' },
+  input: { color: '#0f172a', fontSize: 15, paddingHorizontal: 16, paddingVertical: 14 },
   btn: {
     borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginTop: 4,
-    shadowColor: '#fafafa', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 16, elevation: 10,
+    shadowColor: '#0f172a', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 16, elevation: 10,
   },
-  btnText: { color: '#09090b', fontSize: 16, fontWeight: '700' },
+  btnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
   link: { alignItems: 'center', paddingVertical: 8 },
   linkText: { color: '#64748b', fontSize: 14 },
 });

@@ -160,7 +160,7 @@ const QuickReorderScreen = ({ navigation }) => {
                 style={[styles.reorderButton, { backgroundColor: theme.primary }]}
                 onPress={() => handleReorder(item)}
               >
-                <Ionicons name="repeat" size={20} color="#fff" />
+                <Ionicons name="repeat" size={20} color="#0f172a" />
                 <Text style={styles.reorderButtonText}>Reorder All Items</Text>
               </TouchableOpacity>
             </View>
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   reorderButtonText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '600',
   },

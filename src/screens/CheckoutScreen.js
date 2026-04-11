@@ -78,7 +78,7 @@ const CheckoutScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
         <View style={styles.successContainer}>
           <View style={styles.successIconBg}>
             <Ionicons name="checkmark-circle" size={80} color="#34d399" />
@@ -88,7 +88,7 @@ const CheckoutScreen = ({ navigation }) => {
             {paymentMethod === 'COD' ? 'Cash on Delivery — Pay when you receive' : 'Payment processing'}
           </Text>
           <TouchableOpacity onPress={() => { setSuccess(false); navigation.navigate('OrdersMain'); }}>
-            <LinearGradient colors={['#fafafa', '#fafafa']} style={styles.successBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.successBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
               <Text style={styles.successBtnText}>View Orders</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -100,10 +100,10 @@ const CheckoutScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <TouchableOpacity style={[styles.backBtn, { top: insets.top + 10 }]} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+        <Ionicons name="arrow-back" size={24} color="#0f172a" />
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 64 }]} showsVerticalScrollIndicator={false}>
@@ -113,11 +113,11 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Shipping Address</Text>
           {loading ? (
-            <ActivityIndicator color="#fafafa" />
+            <ActivityIndicator color="#0f172a" />
           ) : addresses.length === 0 ? (
             <TouchableOpacity style={styles.addAddrBtn} onPress={() => navigation.navigate('ProfileMain')}>
-              <Ionicons name="add" size={24} color="#fafafa" />
-              <Text style={{ color: '#fafafa', fontSize: 15, fontWeight: '600' }}>Add Address</Text>
+              <Ionicons name="add" size={24} color="#0f172a" />
+              <Text style={{ color: '#0f172a', fontSize: 15, fontWeight: '600' }}>Add Address</Text>
             </TouchableOpacity>
           ) : (
             addresses.map((addr) => (
@@ -133,7 +133,7 @@ const CheckoutScreen = ({ navigation }) => {
                   <Ionicons
                     name={selectedAddress?._id === addr._id ? 'radio-button-on' : 'radio-button-off'}
                     size={20}
-                    color={selectedAddress?._id === addr._id ? '#fafafa' : '#475569'}
+                    color={selectedAddress?._id === addr._id ? '#0f172a' : '#94a3b8'}
                   />
                   <Text style={styles.addrName}>{addr.fullName}</Text>
                 </View>
@@ -156,9 +156,9 @@ const CheckoutScreen = ({ navigation }) => {
               style={[styles.paymentOption, paymentMethod === pm.key && styles.paymentOptionSelected]}
               onPress={() => setPaymentMethod(pm.key)}
             >
-              <Ionicons name={pm.icon} size={22} color={paymentMethod === pm.key ? '#fafafa' : '#64748b'} />
+              <Ionicons name={pm.icon} size={22} color={paymentMethod === pm.key ? '#0f172a' : '#64748b'} />
               <Text style={[styles.paymentText, paymentMethod === pm.key && { color: '#e2e8f0' }]}>{pm.label}</Text>
-              {paymentMethod === pm.key && <Ionicons name="checkmark-circle" size={22} color="#fafafa" />}
+              {paymentMethod === pm.key && <Ionicons name="checkmark-circle" size={22} color="#0f172a" />}
             </TouchableOpacity>
           ))}
         </View>
@@ -187,10 +187,10 @@ const CheckoutScreen = ({ navigation }) => {
         {/* Place Order */}
         <TouchableOpacity onPress={handlePlaceOrder} disabled={placing || addresses.length === 0}>
           <LinearGradient
-            colors={placing || addresses.length === 0 ? ['#3f3f46', '#3f3f46'] : ['#fafafa', '#fafafa']}
+            colors={placing || addresses.length === 0 ? ['#e2e8f0', '#e2e8f0'] : ['#0f172a', '#0f172a']}
             style={styles.placeBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
           >
-            {placing ? <ActivityIndicator color="#09090b" /> : <Text style={styles.placeBtnText}>Place Order</Text>}
+            {placing ? <ActivityIndicator color="#f8fafc" /> : <Text style={styles.placeBtnText}>Place Order</Text>}
           </LinearGradient>
         </TouchableOpacity>
       </ScrollView>
@@ -199,62 +199,62 @@ const CheckoutScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   backBtn: {
     position: 'absolute', left: 20, zIndex: 10,
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a', borderWidth: 1, borderColor: '#3f3f46',
+    backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e2e8f0',
     justifyContent: 'center', alignItems: 'center',
   },
   scroll: { padding: 16, paddingBottom: 40 },
-  pageTitle: { fontSize: 28, fontWeight: '900', color: '#f8fafc', marginBottom: 20 },
+  pageTitle: { fontSize: 28, fontWeight: '900', color: '#0f172a', marginBottom: 20 },
   section: {
     padding: 18, borderRadius: 18, marginBottom: 16,
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
-  sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 14, color: '#f8fafc' },
+  sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 14, color: '#0f172a' },
   addressCard: {
     padding: 14, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
   },
-  addressCardSelected: { backgroundColor: '#3f3f46', borderWidth: 1, borderColor: '#fafafa' },
+  addressCardSelected: { backgroundColor: '#e2e8f0', borderWidth: 1, borderColor: '#0f172a' },
   addrName: { fontSize: 15, fontWeight: '600', color: '#e2e8f0' },
-  addrText: { fontSize: 13, color: '#94a3b8', marginLeft: 28 },
+  addrText: { fontSize: 13, color: '#64748b', marginLeft: 28 },
   addrPhone: { fontSize: 12, color: '#64748b', marginLeft: 28, marginTop: 2 },
   addAddrBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     padding: 20, borderWidth: 1.5, borderRadius: 14,
-    borderColor: '#fafafa', borderStyle: 'dashed',
+    borderColor: '#0f172a', borderStyle: 'dashed',
   },
   paymentOption: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
     padding: 16, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
   },
-  paymentOptionSelected: { backgroundColor: '#3f3f46', borderWidth: 1, borderColor: '#fafafa' },
-  paymentText: { flex: 1, fontSize: 15, fontWeight: '500', color: '#94a3b8' },
+  paymentOptionSelected: { backgroundColor: '#e2e8f0', borderWidth: 1, borderColor: '#0f172a' },
+  paymentText: { flex: 1, fontSize: 15, fontWeight: '500', color: '#64748b' },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  summaryLabel: { fontSize: 15, color: '#94a3b8' },
+  summaryLabel: { fontSize: 15, color: '#64748b' },
   summaryValue: { fontSize: 15, color: '#e2e8f0' },
   totalRow: {
     flexDirection: 'row', justifyContent: 'space-between',
-    marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#3f3f46',
+    marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#e2e8f0',
   },
-  totalLabel: { fontSize: 17, fontWeight: '700', color: '#f8fafc' },
-  totalValue: { fontSize: 22, fontWeight: '800', color: '#fafafa' },
+  totalLabel: { fontSize: 17, fontWeight: '700', color: '#0f172a' },
+  totalValue: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
   placeBtn: { borderRadius: 16, height: 56, alignItems: 'center', justifyContent: 'center' },
-  placeBtnText: { color: '#09090b', fontSize: 18, fontWeight: '800' },
+  placeBtnText: { color: '#f8fafc', fontSize: 18, fontWeight: '800' },
   successContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   successIconBg: {
     width: 120, height: 120, borderRadius: 60,
     backgroundColor: '#0d3320',
     alignItems: 'center', justifyContent: 'center', marginBottom: 24,
   },
-  successTitle: { fontSize: 28, fontWeight: '800', color: '#f8fafc', marginBottom: 8 },
+  successTitle: { fontSize: 28, fontWeight: '800', color: '#0f172a', marginBottom: 8 },
   successSubtitle: { fontSize: 15, color: '#64748b', textAlign: 'center', marginBottom: 32 },
   successBtn: { paddingHorizontal: 36, height: 50, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  successBtnText: { color: '#09090b', fontSize: 16, fontWeight: '700' },
+  successBtnText: { color: '#f8fafc', fontSize: 16, fontWeight: '700' },
 });
 
 export default CheckoutScreen;

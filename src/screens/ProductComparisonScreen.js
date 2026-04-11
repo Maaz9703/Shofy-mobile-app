@@ -92,7 +92,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
             style={[styles.addButton, { backgroundColor: theme.primary }]}
             onPress={addProduct}
           >
-            <Ionicons name="add" size={20} color="#fff" />
+            <Ionicons name="add" size={20} color="#0f172a" />
             <Text style={styles.addButtonText}>Add Products to Compare</Text>
           </TouchableOpacity>
         </View>
@@ -199,7 +199,7 @@ const ProductComparisonScreen = ({ route, navigation }) => {
                     Toast.show({ type: 'success', text1: 'Added to cart' });
                   }}
                 >
-                  <Ionicons name="cart" size={16} color="#fff" />
+                  <Ionicons name="cart" size={16} color="#0f172a" />
                   <Text style={styles.addToCartText}>Add to Cart</Text>
                 </TouchableOpacity>
               </View>
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   viewButtonText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   addToCartText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   addButtonText: {
-    color: '#fff',
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '600',
   },

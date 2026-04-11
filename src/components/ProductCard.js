@@ -13,7 +13,7 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
   return (
     <Animated.View
       entering={FadeInDown.delay(index * 100).springify().damping(12)}
-      style={[styles.card, { backgroundColor: '#18181b' }]}
+      style={[styles.card, { backgroundColor: '#ffffff' }]}
     >
       <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={{ flex: 1 }}>
         <View style={styles.imageContainer}>
@@ -33,11 +33,11 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             onPress={() => onWishlist?.(product)}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <View style={[styles.wishlistIconBg, { backgroundColor: '#1a1a2e' }]}>
+            <View style={[styles.wishlistIconBg, { backgroundColor: '#ede9fe' }]}>
               <Ionicons
                 name={isInWishlist ? 'heart' : 'heart'}
                 size={18}
-                color={isInWishlist ? '#ef4444' : '#fff'}
+                color={isInWishlist ? '#ef4444' : '#0f172a'}
               />
             </View>
           </TouchableOpacity>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
     aspectRatio: 1,
-    backgroundColor: '#0f0f1e',
+    backgroundColor: '#f1f5f9',
   },
   image: {
     width: '100%',

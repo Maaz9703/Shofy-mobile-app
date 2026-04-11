@@ -176,7 +176,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient
-        colors={['#09090b', '#09090b']}
+        colors={['#f8fafc', '#f8fafc']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -184,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={[styles.headerWrap, { paddingTop: insets.top + 8 }]}>
         <Animated.View style={[StyleSheet.absoluteFill, { opacity: headerOpacity }]}>
           <LinearGradient
-            colors={['rgba(9,9,11,0.95)', 'rgba(9,9,11,0.9)', 'rgba(9,9,11,0)']}
+            colors={['rgba(248,250,252,0.95)', 'rgba(248,250,252,0.9)', 'rgba(248,250,252,0)']}
             style={StyleSheet.absoluteFill}
           />
         </Animated.View>
@@ -193,14 +193,14 @@ const HomeScreen = ({ navigation }) => {
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text style={[styles.logoText, { opacity: 0.95 }]}>
               <Text style={{ color: '#7c3aed' }}>S</Text>
-              <Text style={{ color: '#fafafa' }}>h</Text>
+              <Text style={{ color: '#0f172a' }}>h</Text>
               <Text style={{ color: '#06b6d4' }}>o</Text>
               <Text style={{ color: '#38bdf8' }}>f</Text>
-              <Text style={{ color: '#f8fafc' }}>y</Text>
+              <Text style={{ color: '#0f172a' }}>y</Text>
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
               <View style={styles.bellBtn}>
-                <Ionicons name="notifications" size={22} color="#f8fafc" />
+                <Ionicons name="notifications" size={22} color="#0f172a" />
                 <View style={styles.bellBadge} />
               </View>
             </TouchableOpacity>
@@ -208,10 +208,10 @@ const HomeScreen = ({ navigation }) => {
 
           <View style={styles.searchRow}>
             <View style={styles.searchContainer}>
-              <View style={[styles.searchBox, { backgroundColor: '#27272a' }]}>
-                <Ionicons name="search" size={18} color="#94a3b8" />
+              <View style={[styles.searchBox, { backgroundColor: '#ffffff' }]}>
+                <Ionicons name="search" size={18} color="#64748b" />
                 <TextInput
-                  style={[styles.searchInput, { color: '#f8fafc' }]}
+                  style={[styles.searchInput, { color: '#0f172a' }]}
                   placeholder="Search products..."
                   placeholderTextColor="#64748b"
                   value={search}
@@ -222,20 +222,20 @@ const HomeScreen = ({ navigation }) => {
                 />
                 {search ? (
                   <TouchableOpacity onPress={() => { setSearch(''); setCategory(''); setShowCategorySuggestions(false); }}>
-                    <Ionicons name="close-circle" size={18} color="#94a3b8" />
+                    <Ionicons name="close-circle" size={18} color="#64748b" />
                   </TouchableOpacity>
                 ) : null}
               </View>
               {showCategorySuggestions && getCategorySuggestions().length > 0 && (
-                <View style={[styles.suggestionsContainer, { backgroundColor: '#1e293b', borderColor: '#2d3a4e' }]}>
+                <View style={[styles.suggestionsContainer, { backgroundColor: '#ffffff', borderColor: '#e2e8f0' }]}>
                   {getCategorySuggestions().map((cat) => (
                     <TouchableOpacity
                       key={cat}
-                      style={[styles.suggestionItem, { borderBottomColor: '#2d3a4e' }]}
+                      style={[styles.suggestionItem, { borderBottomColor: '#e2e8f0' }]}
                       onPress={() => handleCategorySuggestionPress(cat)}
                     >
-                      <Ionicons name="pricetag" size={16} color="#fafafa" />
-                      <Text style={[styles.suggestionText, { color: '#f8fafc' }]}>{cat}</Text>
+                      <Ionicons name="pricetag" size={16} color="#0f172a" />
+                      <Text style={[styles.suggestionText, { color: '#0f172a' }]}>{cat}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -245,27 +245,27 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.iconBtn,
-                { backgroundColor: category ? theme.primary : '#27272a' }
+                { backgroundColor: category ? theme.primary : '#ffffff' }
               ]}
               onPress={() => setCategoryModalVisible(true)}
             >
-              <Ionicons name="filter" size={20} color={category ? '#fff' : '#f8fafc'} />
+              <Ionicons name="filter" size={20} color={category ? '#0f172a' : '#0f172a'} />
             </TouchableOpacity>
             
             <TouchableOpacity
-              style={[styles.iconBtn, { backgroundColor: '#1f1245' }]}
+              style={[styles.iconBtn, { backgroundColor: '#ede9fe' }]}
               onPress={() => navigation.navigate('Home', { screen: 'AdvancedSearch' })}
             >
-              <Ionicons name="options" size={20} color="#fafafa" />
+              <Ionicons name="options" size={20} color="#0f172a" />
             </TouchableOpacity>
           </View>
 
           {categories.length > 0 && category && (
             <View style={styles.selectedCategoryContainer}>
-              <View style={[styles.selectedCategoryChip, { backgroundColor: '#1f1245' }]}>
-                <Text style={{ color: '#fafafa', fontSize: 13, fontWeight: '600' }}>{category}</Text>
+              <View style={[styles.selectedCategoryChip, { backgroundColor: '#ede9fe' }]}>
+                <Text style={{ color: '#0f172a', fontSize: 13, fontWeight: '600' }}>{category}</Text>
                 <TouchableOpacity onPress={() => setCategory('')}>
-                  <Ionicons name="close-circle" size={16} color="#fafafa" style={{ marginLeft: 6 }} />
+                  <Ionicons name="close-circle" size={16} color="#0f172a" style={{ marginLeft: 6 }} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -292,17 +292,17 @@ const HomeScreen = ({ navigation }) => {
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
           scrollEventThrottle={16}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fafafa" colors={['#fafafa']} progressViewOffset={insets.top + 130} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} progressViewOffset={insets.top + 130} />
           }
           ListEmptyComponent={
             <View style={styles.empty}>
-              <Ionicons name="search" size={64} color="#475569" style={{ marginBottom: 16 }} />
-              <Text style={[styles.emptyText, { color: '#94a3b8' }]}>
+              <Ionicons name="search" size={64} color="#94a3b8" style={{ marginBottom: 16 }} />
+              <Text style={[styles.emptyText, { color: '#64748b' }]}>
                 {search || category ? 'No products found matching your search' : 'No products found'}
               </Text>
               {(search || category) && (
                 <TouchableOpacity style={styles.clearFilterBtn} onPress={() => { setSearch(''); setCategory(''); }}>
-                  <Text style={{ color: '#fafafa', fontWeight: 'bold' }}>Clear Filters</Text>
+                  <Text style={{ color: '#0f172a', fontWeight: 'bold' }}>Clear Filters</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -313,11 +313,11 @@ const HomeScreen = ({ navigation }) => {
       {/* Category Modal */}
       <Modal visible={categoryModalVisible} transparent animationType="slide" onRequestClose={() => setCategoryModalVisible(false)}>
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: '#0f172a' }]}>
+          <View style={[styles.modalContent, { backgroundColor: '#ffffff' }]}>
             <View style={styles.modalHeader}>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: '#f8fafc' }}>Select Category</Text>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: '#0f172a' }}>Select Category</Text>
               <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
-                <Ionicons name="close" size={24} color="#94a3b8" />
+                <Ionicons name="close" size={24} color="#64748b" />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll}>
@@ -325,8 +325,8 @@ const HomeScreen = ({ navigation }) => {
                 style={[styles.modalCategoryItem, !category ? styles.modalCategoryActive : null]}
                 onPress={() => { setCategory(''); setCategoryModalVisible(false); }}
               >
-                <Text style={{ fontSize: 16, color: !category ? '#fff' : '#cbd5e1', fontWeight: '500' }}>All Categories</Text>
-                {!category && <Ionicons name="checkmark" size={20} color="#fff" />}
+                <Text style={{ fontSize: 16, color: !category ? '#0f172a' : '#64748b', fontWeight: '500' }}>All Categories</Text>
+                {!category && <Ionicons name="checkmark" size={20} color="#0f172a" />}
               </TouchableOpacity>
               {categories.map((cat) => (
                 <TouchableOpacity
@@ -334,8 +334,8 @@ const HomeScreen = ({ navigation }) => {
                   style={[styles.modalCategoryItem, cat === category ? styles.modalCategoryActive : null]}
                   onPress={() => { setCategory(cat); setCategoryModalVisible(false); }}
                 >
-                  <Text style={{ fontSize: 16, color: cat === category ? '#fff' : '#cbd5e1', fontWeight: '500' }}>{cat}</Text>
-                  {cat === category && <Ionicons name="checkmark" size={20} color="#fff" />}
+                  <Text style={{ fontSize: 16, color: cat === category ? '#0f172a' : '#64748b', fontWeight: '500' }}>{cat}</Text>
+                  {cat === category && <Ionicons name="checkmark" size={20} color="#0f172a" />}
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -347,7 +347,7 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   headerWrap: {
     position: 'absolute',
     top: 0, left: 0, right: 0,
@@ -364,14 +364,14 @@ const styles = StyleSheet.create({
   },
   bellBtn: {
     width: 40, height: 40, borderRadius: 20,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     alignItems: 'center', justifyContent: 'center',
   },
   bellBadge: {
     position: 'absolute', top: 10, right: 10,
     width: 8, height: 8, borderRadius: 4,
     backgroundColor: '#ef4444',
-    borderWidth: 1.5, borderColor: '#0f172a',
+    borderWidth: 1.5, borderColor: '#ffffff',
   },
   searchRow: {
     flexDirection: 'row',
@@ -412,9 +412,9 @@ const styles = StyleSheet.create({
   emptyText: { fontSize: 15, textAlign: 'center', marginBottom: 20 },
   clearFilterBtn: {
     paddingHorizontal: 20, paddingVertical: 10,
-    borderRadius: 10, backgroundColor: '#1f1245',
+    borderRadius: 10, backgroundColor: '#ede9fe',
   },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'flex-end' },
   modalContent: { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingBottom: 50, maxHeight: '75%' },
   modalHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
@@ -424,10 +424,10 @@ const styles = StyleSheet.create({
   modalCategoryItem: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     padding: 16, borderRadius: 14, marginBottom: 8,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
   },
   modalCategoryActive: {
-    backgroundColor: '#1f1245', // Highlight color instead of border
+    backgroundColor: '#ede9fe', // Highlight color instead of border
   },
 });
 

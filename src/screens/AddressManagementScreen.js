@@ -93,23 +93,23 @@ const AddressManagementScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={['#09090b', '#09090b']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#f8fafc', '#f8fafc']} style={StyleSheet.absoluteFill} />
 
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+          <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Addresses</Text>
         <TouchableOpacity onPress={() => navigation.navigate('AddEditAddress')}>
-          <LinearGradient colors={['#fafafa', '#fafafa']} style={styles.addBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-            <Ionicons name="add" size={22} color="#09090b" />
+          <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.addBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <Ionicons name="add" size={22} color="#f8fafc" />
           </LinearGradient>
         </TouchableOpacity>
       </View>
 
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#fafafa" />
+          <ActivityIndicator size="large" color="#0f172a" />
         </View>
       ) : (
         <FlatList
@@ -117,15 +117,15 @@ const AddressManagementScreen = ({ navigation }) => {
           keyExtractor={(item) => item._id}
           renderItem={renderItem}
           contentContainerStyle={styles.list}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fafafa" colors={['#fafafa']} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f172a" colors={['#0f172a']} />}
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={styles.emptyIconBg}>
-                <Ionicons name="location" size={50} color="#fafafa" />
+                <Ionicons name="location" size={50} color="#0f172a" />
               </View>
               <Text style={styles.emptyTitle}>No addresses yet</Text>
               <TouchableOpacity onPress={() => navigation.navigate('AddEditAddress')}>
-                <LinearGradient colors={['#fafafa', '#fafafa']} style={styles.emptyBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+                <LinearGradient colors={['#0f172a', '#0f172a']} style={styles.emptyBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
                   <Text style={styles.emptyBtnText}>Add your first address</Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -138,48 +138,48 @@ const AddressManagementScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090b' },
+  container: { flex: 1, backgroundColor: '#f8fafc' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingBottom: 16,
   },
   backBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     justifyContent: 'center', alignItems: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#f8fafc' },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: '#0f172a' },
   addBtn: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   list: { padding: 16, paddingBottom: 100 },
   card: {
     padding: 18, borderRadius: 18, marginBottom: 12, position: 'relative',
-    backgroundColor: '#18181b',
+    backgroundColor: '#ffffff',
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
   },
   defaultBadge: {
     position: 'absolute', top: 14, right: 14,
     paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8,
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
   },
-  defaultText: { color: '#fafafa', fontSize: 11, fontWeight: '700' },
-  name: { fontSize: 17, fontWeight: '700', marginBottom: 6, color: '#f8fafc' },
-  addrText: { fontSize: 14, marginBottom: 4, color: '#94a3b8' },
+  defaultText: { color: '#0f172a', fontSize: 11, fontWeight: '700' },
+  name: { fontSize: 17, fontWeight: '700', marginBottom: 6, color: '#0f172a' },
+  addrText: { fontSize: 14, marginBottom: 4, color: '#64748b' },
   phone: { fontSize: 13, marginBottom: 14, color: '#64748b' },
   actions: { flexDirection: 'row', gap: 12, alignItems: 'center' },
   actionBtn: {
     paddingHorizontal: 14, paddingVertical: 7, borderRadius: 8,
-    backgroundColor: '#3f3f46',
+    backgroundColor: '#e2e8f0',
   },
-  actionText: { fontSize: 13, fontWeight: '600', color: '#fafafa' },
+  actionText: { fontSize: 13, fontWeight: '600', color: '#0f172a' },
   empty: { alignItems: 'center', paddingTop: 80 },
   emptyIconBg: {
     width: 100, height: 100, borderRadius: 50,
-    backgroundColor: '#27272a',
+    backgroundColor: '#ffffff',
     alignItems: 'center', justifyContent: 'center', marginBottom: 20,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#f8fafc', marginBottom: 24 },
+  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#0f172a', marginBottom: 24 },
   emptyBtn: { paddingHorizontal: 28, height: 48, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  emptyBtnText: { color: '#09090b', fontSize: 15, fontWeight: '700' },
+  emptyBtnText: { color: '#f8fafc', fontSize: 15, fontWeight: '700' },
 });
 
 export default AddressManagementScreen;

@@ -90,7 +90,7 @@ const SplashScreen = () => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient
-        colors={['#09090b', '#09090b']}
+        colors={['#f8fafc', '#f8fafc']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -118,7 +118,7 @@ const SplashScreen = () => {
         alignItems: 'center',
       }}>
         <LinearGradient
-          colors={['#fafafa', '#fafafa']}
+          colors={['#0f172a', '#0f172a']}
           style={styles.logo}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -166,14 +166,14 @@ const BounceDot = ({ delay }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#09090b',
+    backgroundColor: '#f8fafc',
     alignItems: 'center',
     justifyContent: 'center',
   },
   ring: {
     position: 'absolute',
     borderWidth: 1.5,
-    borderColor: 'rgba(250,250,250,0.2)',
+    borderColor: 'rgba(0,0,0,0.1)',
   },
   logo: {
     width: 90,
@@ -181,26 +181,26 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#fafafa',
+    shadowColor: '#0f172a',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.8,
     shadowRadius: 30,
     elevation: 20,
   },
   logoLetter: {
-    color: '#09090b',
+    color: '#f8fafc',
     fontSize: 44,
     fontWeight: '900',
     letterSpacing: -1,
   },
   appName: {
-    color: '#f1f5f9',
+    color: '#0f172a',
     fontSize: 36,
     fontWeight: '900',
     letterSpacing: -1.5,
   },
   tagline: {
-    color: '#475569',
+    color: '#94a3b8',
     fontSize: 13,
     marginTop: 6,
     letterSpacing: 1.5,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#0f172a',
     opacity: 0.8,
   },
 });
