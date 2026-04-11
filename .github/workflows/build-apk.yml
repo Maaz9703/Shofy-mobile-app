@@ -37,22 +37,35 @@ jobs:
       - name: Prebuild Android (Expo Managed → Bare)
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: Patch Grade for Release Build (Debug Signing)
+        run: |
+          # Use Node to replace the signing config in the generated build.gradle
+          node -e "
+          const fs = require('fs');
+          const path = 'android/app/build.gradle';
+          let content = fs.readFileSync(path, 'utf8');
+          // Replace signingConfig signingConfigs.release with signingConfig signingConfigs.debug
+          content = content.replace(/signingConfig signingConfigs\.release/g, 'signingConfig signingConfigs.debug');
+          fs.writeFileSync(path, content);
+          console.log('Patched build.gradle to use debug signing for release build');
+          "
+
       - name: Make Gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build Debug APK (no signing needed)
+      - name: Build Release APK
         working-directory: ./android
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleRelease --no-daemon
 
-      - name: Upload APK to GitHub Release
+      - name: Create / Update Release and Upload APK
         uses: softprops/action-gh-release@v2
         with:
-          name: "Shofy App - Latest Build"
+          name: "Shofy App - Release Build"
           tag_name: latest
           make_latest: true
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: android/app/build/outputs/apk/release/app-release.apk
           body: |
-            🚀 Latest Shofy mobile app build (Light Mode, Flat Design)
-            Built automatically from the latest commit.
+            🚀 Official Shofy mobile app Release build
+            Optimized, clean, and professional.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
