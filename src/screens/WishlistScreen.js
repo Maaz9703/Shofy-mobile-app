@@ -54,24 +54,29 @@ const WishlistScreen = ({ navigation }) => {
       layout={Layout.springify()}
       style={[styles.card, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border }]}
     >
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.navigate('ProductDetails', { product: item })}
-        style={styles.imageContainer}
-      >
-        <Image source={{ uri: item.image || 'https://via.placeholder.com/150' }} style={styles.image} />
+      <View style={styles.imageContainer}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => navigation.navigate('ProductDetails', { product: item })}
+          style={StyleSheet.absoluteFill}
+        >
+          <Image source={{ uri: item.image || 'https://via.placeholder.com/150' }} style={styles.image} />
+        </TouchableOpacity>
+        
         <TouchableOpacity 
-          style={[styles.removeBadge, { backgroundColor: '#ffffff', ...theme.shadows.small }]} 
+          style={[styles.removeBadge, { backgroundColor: '#ffffff', ...theme.shadows.small, zIndex: 10 }]} 
           onPress={() => removeFromWishlist(item)}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <X size={16} color={theme.error} />
         </TouchableOpacity>
+
         {item.discount > 0 && (
           <View style={[styles.discountBadge, { backgroundColor: theme.error }]}>
             <Text style={styles.discountText}>-{item.discount}%</Text>
           </View>
         )}
-      </TouchableOpacity>
+      </View>
 
       <View style={styles.info}>
         <Text style={[styles.productTitle, { color: theme.text }]} numberOfLines={1}>{item.title}</Text>

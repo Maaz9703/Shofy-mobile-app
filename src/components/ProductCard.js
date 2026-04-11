@@ -35,20 +35,6 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             style={styles.image}
             resizeMode="cover"
           />
-          
-          <TouchableOpacity
-            style={styles.wishlistBtn}
-            onPress={() => onWishlist?.(product)}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <View style={[styles.wishlistIconBg, { backgroundColor: '#ffffff', ...theme.shadows.small }]}>
-              <Heart
-                size={20}
-                color={isInWishlist ? theme.error : theme.textSecondary}
-                fill={isInWishlist ? theme.error : 'transparent'}
-              />
-            </View>
-          </TouchableOpacity>
         </View>
         
         <View style={styles.info}>
@@ -85,6 +71,20 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
           </View>
         </View>
       </AnimatedPressable>
+
+      <TouchableOpacity
+        style={styles.wishlistBtn}
+        onPress={() => onWishlist?.(product)}
+        hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+      >
+        <View style={[styles.wishlistIconBg, { backgroundColor: '#ffffff', ...theme.shadows.small }]}>
+          <Heart
+            size={20}
+            color={isInWishlist ? theme.error : theme.textSecondary}
+            fill={isInWishlist ? theme.error : 'transparent'}
+          />
+        </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
