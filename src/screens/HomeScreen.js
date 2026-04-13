@@ -20,7 +20,7 @@ import { useSettings } from '../context/SettingsContext';
 import ProductCard from '../components/ProductCard';
 import LoadingShimmer from '../components/LoadingShimmer';
 import api from '../config/api';
-import { Bell, Search, SlidersHorizontal, X, CheckCircle2 } from 'lucide-react-native';
+import { Bell, Search, SlidersHorizontal, X, CheckCircle2, User } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
@@ -204,20 +204,31 @@ const HomeScreen = ({ navigation }) => {
         
         <View style={styles.headerContent}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <View>
-              <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: '600' }}>
-                Good Morning,
-              </Text>
-              <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.5 }}>
-                {user?.name?.split(' ')[0] || 'Trader'} 👋
-              </Text>
-            </View>
-            <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
-              <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
-                <Bell size={22} color={theme.text} />
-                <View style={[styles.bellBadge, { backgroundColor: theme.error }]} />
+            <AnimatedPressable onPress={() => navigation.navigate('Profile')}>
+              <View>
+                <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: '600' }}>
+                  Good Morning,
+                </Text>
+                <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.5 }}>
+                  {user?.name?.split(' ')[0] || 'Trader'} 👋
+                </Text>
               </View>
             </AnimatedPressable>
+
+            <View style={{ flexDirection: 'row', gap: 12 }}>
+              <AnimatedPressable onPress={() => navigation.navigate('Profile')}>
+                <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
+                  <User size={22} color={theme.text} />
+                </View>
+              </AnimatedPressable>
+
+              <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
+                <View style={[styles.bellBtn, { ...theme.shadows.small }]}>
+                  <Bell size={22} color={theme.text} />
+                  <View style={[styles.bellBadge, { backgroundColor: theme.error }]} />
+                </View>
+              </AnimatedPressable>
+            </View>
           </View>
 
           <View style={styles.searchRow}>
