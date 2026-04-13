@@ -130,9 +130,8 @@ const SplashScreen = () => {
       </Animated.View>
 
       {/* Text */}
+      {/* Text removed as requested */}
       <Animated.View style={{ opacity: textOpacity, alignItems: 'center', marginTop: 20 }}>
-        <Text style={styles.appName}>{settings.mobileAppName || 'Shofy'}</Text>
-        <Text style={styles.tagline}>Premium Shopping Experience</Text>
       </Animated.View>
 
       {/* Bottom dots loader */}

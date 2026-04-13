@@ -5,7 +5,7 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
-    mobileAppName: 'Shofy Mobile',
+    mobileAppName: 'Trader',
     promoBannerText: 'Welcome to our store!',
     showPromoBanner: false,
     maintenanceMode: false,

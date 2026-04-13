@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Heart } from 'lucide-react-native';
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductCard;
+export default memo(ProductCard);

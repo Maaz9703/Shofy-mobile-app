@@ -138,6 +138,7 @@ const AdvancedSearchScreen = ({ route, navigation }) => {
             value={searchQuery}
             onChangeText={setSearchQuery}
             autoFocus
+            autoCapitalize="none"
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>

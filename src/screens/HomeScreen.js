@@ -209,7 +209,7 @@ const HomeScreen = ({ navigation }) => {
                 Good Morning,
               </Text>
               <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.5 }}>
-                {user?.name?.split(' ')[0] || 'Maaz'} 👋
+                {user?.name?.split(' ')[0] || 'Trader'} 👋
               </Text>
             </View>
             <AnimatedPressable onPress={() => navigation.navigate('Profile', { screen: 'Notifications' })}>
@@ -231,6 +231,7 @@ const HomeScreen = ({ navigation }) => {
                   value={search}
                   onChangeText={handleSearchChange}
                   returnKeyType="search"
+                  autoCapitalize="none"
                 />
               </View>
             </View>

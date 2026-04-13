@@ -70,8 +70,8 @@ const ProfileScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             
-            <Text style={[styles.name, { color: theme.text }]}>{user?.name || 'Maaz'}</Text>
-            <Text style={[styles.email, { color: theme.textSecondary }]}>{user?.email || 'maaz@example.com'}</Text>
+            <Text style={[styles.name, { color: theme.text }]}>{user?.name || 'Trader'}</Text>
+            <Text style={[styles.email, { color: theme.textSecondary }]}>{user?.email || 'trader@example.com'}</Text>
             
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
