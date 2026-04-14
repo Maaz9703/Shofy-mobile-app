@@ -49,11 +49,25 @@ const CartScreen = ({ navigation }) => {
             {item.product.title}
           </Text>
           <TouchableOpacity 
-            onPress={() => removeFromCart(item.product._id)}
+            onPress={() => removeFromCart(item.product._id, item.color, item.note)}
             style={styles.removeBtn}
           >
             <X size={20} color={theme.textSecondary} />
           </TouchableOpacity>
+        </View>
+        
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 8 }}>
+          {item.color && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: item.color, borderAdaptiveColor: theme.border, borderWidth: 1 }} />
+              <Text style={{ fontSize: 13, fontWeight: '700', color: theme.textSecondary }}>{item.color}</Text>
+            </View>
+          )}
+          {item.note && (
+            <View style={{ backgroundColor: theme.background, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, borderLeftWidth: 3, borderLeftColor: theme.primary }}>
+              <Text style={{ fontSize: 11, color: theme.textSecondary }} numberOfLines={1}>Note: {item.note}</Text>
+            </View>
+          )}
         </View>
         
         <Text style={[styles.price, { color: theme.primary }]}>
@@ -63,7 +77,7 @@ const CartScreen = ({ navigation }) => {
         <View style={styles.actions}>
           <View style={[styles.quantityRow, { backgroundColor: theme.background, borderColor: theme.border }]}>
             <TouchableOpacity 
-              onPress={() => updateQuantity(item.product._id, item.quantity - 1)} 
+              onPress={() => updateQuantity(item.product._id, item.color, item.note, item.quantity - 1)} 
               style={styles.qtyBtn}
               disabled={item.quantity <= 1}
             >
@@ -71,7 +85,7 @@ const CartScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={[styles.qtyText, { color: theme.text }]}>{item.quantity}</Text>
             <TouchableOpacity 
-              onPress={() => updateQuantity(item.product._id, item.quantity + 1)} 
+              onPress={() => updateQuantity(item.product._id, item.color, item.note, item.quantity + 1)} 
               style={styles.qtyBtn}
             >
               <Plus size={18} color={theme.text} />
@@ -127,7 +141,7 @@ const CartScreen = ({ navigation }) => {
 
       <FlatList
         data={cartItems}
-        keyExtractor={(item) => item.product._id}
+        keyExtractor={(item) => `${item.product._id}-${item.color}-${item.note}`}
         renderItem={renderItem}
         contentContainerStyle={[styles.list, { paddingBottom: 160 + insets.bottom }]}
         showsVerticalScrollIndicator={false}

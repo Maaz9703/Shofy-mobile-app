@@ -13,32 +13,35 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, color = null, note = '') => {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.product._id === product._id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product._id === product._id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      const existingIndex = prev.findIndex(
+        (item) => item.product._id === product._id && item.color === color && item.note === note
+      );
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + quantity
+        };
+        return updated;
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity, color, note }];
     });
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems((prev) => prev.filter((item) => item.product._id !== productId));
+  const removeFromCart = (productId, color, note) => {
+    setCartItems((prev) => prev.filter((item) => !(item.product._id === productId && item.color === color && item.note === note)));
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = (productId, color, note, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, color, note);
       return;
     }
     setCartItems((prev) =>
       prev.map((item) =>
-        item.product._id === productId ? { ...item, quantity } : item
+        (item.product._id === productId && item.color === color && item.note === note) ? { ...item, quantity } : item
       )
     );
   };

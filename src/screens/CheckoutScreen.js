@@ -61,7 +61,7 @@ const CheckoutScreen = ({ navigation }) => {
     setPlacing(true);
     try {
       await api.post('/orders', {
-        items: cartItems.map((item) => ({ product: item.product._id, quantity: item.quantity })),
+        items: cartItems.map((item) => ({ product: item.product._id, quantity: item.quantity, color: item.color, note: item.note })),
         shippingAddress: {
           fullName: selectedAddress.fullName, address: selectedAddress.address,
           city: selectedAddress.city, state: selectedAddress.state,

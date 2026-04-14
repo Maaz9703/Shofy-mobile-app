@@ -9,6 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
   StatusBar,
+  TextInput,
 } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -31,11 +32,17 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const [product, setProduct] = useState(initialProduct);
   const [loading, setLoading] = useState(!initialProduct);
   const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [note, setNote] = useState('');
   const [addingToCart, setAddingToCart] = useState(false);
 
   useEffect(() => {
-    if (initialProduct?._id && !initialProduct.description) {
-      api.get(`/products/${initialProduct._id}`).then((res) => setProduct(res.data.data)).finally(() => setLoading(false));
+    if (initialProduct?._id) {
+      api.get(`/products/${initialProduct._id}`).then((res) => {
+        const p = res.data.data;
+        setProduct(p);
+        if (p?.colors?.length > 0) setSelectedColor(p.colors[0]);
+      }).finally(() => setLoading(false));
     } else if (!initialProduct) {
       setLoading(false);
     }
@@ -46,10 +53,15 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       Toast.show({ type: 'error', text1: 'Oops!', text2: 'Insufficient stock available.' });
       return;
     }
+    if (product.colors?.length > 0 && !selectedColor) {
+      Toast.show({ type: 'error', text1: 'Wait!', text2: 'Please select a color.' });
+      return;
+    }
     setAddingToCart(true);
     try {
-      addToCart(product, quantity);
+      addToCart(product, quantity, selectedColor, note);
       Toast.show({ type: 'success', text1: 'Added to cart! 🛍️' });
+      setNote('');
       // Navigate to Cart after adding to mimic "Checkout Now" behavior
       navigation.navigate('Cart');
     } finally {
@@ -127,6 +139,53 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
             <Text style={[styles.descriptionText, { color: theme.textSecondary }]}>{product.description}</Text>
           </View>
+
+          {/* Details */}
+          {product.details && (
+            <Animated.View entering={FadeInDown.delay(350)}>
+              <Text style={[styles.sectionHeader, { color: theme.text }]}>Additional Details</Text>
+              <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
+                <Text style={[styles.descriptionText, { color: theme.textSecondary }]}>{product.details}</Text>
+              </View>
+            </Animated.View>
+          )}
+
+          {/* Custom Note */}
+          <Animated.View entering={FadeInDown.delay(380)}>
+            <Text style={[styles.sectionHeader, { color: theme.text }]}>Order Detail / Note (Optional)</Text>
+            <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1, padding: 12 }]}>
+              <TextInput
+                placeholder="e.g. Size, gift note, special instruction..."
+                placeholderTextColor={theme.textSecondary + '80'}
+                value={note}
+                onChangeText={setNote}
+                multiline
+                style={{ color: theme.text, fontSize: 14, minHeight: 60, textAlignVertical: 'top' }}
+              />
+            </View>
+          </Animated.View>
+
+          {/* Color Selection */}
+          {product.colors && product.colors.length > 0 && (
+            <Animated.View entering={FadeInDown.delay(400)}>
+              <Text style={[styles.sectionHeader, { color: theme.text }]}>
+                Select Color: <Text style={{ color: theme.primary }}>{selectedColor}</Text>
+              </Text>
+              <View style={[styles.glassBox, { backgroundColor: theme.card, flexDirection: 'row', gap: 15, flexWrap: 'wrap', ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
+                {product.colors.map((color, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={() => setSelectedColor(color)}
+                    style={[
+                      styles.colorDot,
+                      { backgroundColor: color, borderColor: theme.border, borderWidth: 1 },
+                      selectedColor === color && { borderColor: theme.primary, borderWidth: 3, transform: [{ scale: 1.1 }] }
+                    ]}
+                  />
+                ))}
+              </View>
+            </Animated.View>
+          )}
 
           {/* Quantity Selection */}
           <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
@@ -271,6 +330,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '800' },
+  colorDot: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
 });
 
 

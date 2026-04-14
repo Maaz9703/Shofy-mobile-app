@@ -100,6 +100,17 @@ const OrderDetailsScreen = ({ route, navigation }) => {
                 <Text style={[styles.itemTitle, { color: theme.text }]} numberOfLines={1}>
                   {item.title || item.product?.title}
                 </Text>
+                {item.color && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                    <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: item.color, borderColor: theme.border, borderWidth: 1 }} />
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: theme.textSecondary }}>{item.color}</Text>
+                  </View>
+                )}
+                {item.note && (
+                  <View style={{ backgroundColor: theme.background, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, marginTop: 6, borderLeftWidth: 3, borderLeftColor: theme.primary }}>
+                    <Text style={{ fontSize: 11, color: theme.textSecondary }}>Note: {item.note}</Text>
+                  </View>
+                )}
                 <Text style={[styles.itemQty, { color: theme.textSecondary }]}>Quantity: {item.quantity}</Text>
               </View>
               <Text style={[styles.itemPrice, { color: theme.primary }]}>
