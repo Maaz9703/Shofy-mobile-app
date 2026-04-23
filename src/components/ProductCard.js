@@ -14,7 +14,7 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(index * 100).springify().damping(15).stiffness(120)}
+      entering={FadeInDown.delay(Math.min(index * 100, 500)).springify().damping(15).stiffness(120)}
       style={[
         styles.card, 
         { 

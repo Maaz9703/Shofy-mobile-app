@@ -26,9 +26,17 @@ const NotificationsScreen = ({ navigation }) => {
   const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await api.get('/orders');
-      const orders = res.data.data || [];
-      const orderNotifications = orders.map((order) => ({
+      
+      // Fetch both Orders and real Notifications
+      const [ordersRes, notificationsRes] = await Promise.all([
+        api.get('/orders'),
+        api.get('/notifications').catch(() => ({ data: { data: [] } }))
+      ]);
+
+      const orders = ordersRes.data.data || [];
+      const realNotifications = notificationsRes.data.data || [];
+
+      const orderAlerts = orders.map((order) => ({
         id: order._id,
         type: 'order',
         title: getOrderNotificationTitle(order.status),
@@ -38,8 +46,22 @@ const NotificationsScreen = ({ navigation }) => {
         orderId: order._id,
         status: order.status,
       }));
-      orderNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
-      setNotifications(orderNotifications);
+
+      const offerAlerts = realNotifications.map((notif) => ({
+        id: notif._id,
+        type: notif.type || 'offer',
+        title: notif.title,
+        message: notif.message,
+        date: notif.createdAt,
+        read: notif.isRead,
+        image: notif.image,
+        status: 'General'
+      }));
+
+      const allNotifications = [...orderAlerts, ...offerAlerts];
+      allNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      setNotifications(allNotifications);
     } catch (error) {
       console.error('Fetch notifications:', error);
     } finally {

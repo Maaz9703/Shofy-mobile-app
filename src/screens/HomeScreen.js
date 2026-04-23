@@ -12,6 +12,7 @@ import {
   ScrollView,
   Animated,
   StatusBar,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
@@ -28,6 +29,7 @@ const COLUMNS = 2;
 
 import { useAuth } from '../context/AuthContext';
 import AnimatedPressable from '../components/AnimatedPressable';
+import { FadeInDown } from 'react-native-reanimated';
 
 const HomeScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -45,6 +47,10 @@ const HomeScreen = ({ navigation }) => {
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [showCategorySuggestions, setShowCategorySuggestions] = useState(false);
   const [searchDebounce, setSearchDebounce] = useState('');
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offerModalVisible, setOfferModalVisible] = useState(false);
 
   // Scroll animations for header
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -56,9 +62,16 @@ const HomeScreen = ({ navigation }) => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const fetchProducts = useCallback(async (searchText = '', categoryFilter = '') => {
+  const fetchProducts = useCallback(async (searchText = '', categoryFilter = '', pageNum = 1, shouldRefresh = false) => {
     try {
-      const params = {};
+      if (pageNum === 1 && !shouldRefresh) setLoading(true);
+      if (pageNum > 1) setLoadingMore(true);
+
+      const params = {
+        page: pageNum,
+        limit: 20
+      };
+      
       const trimmedSearch = searchText && searchText.trim() ? searchText.trim() : '';
       const trimmedCategory = categoryFilter && categoryFilter.trim() ? categoryFilter.trim() : '';
       
@@ -76,14 +89,24 @@ const HomeScreen = ({ navigation }) => {
         params.category = trimmedCategory;
       }
       
-      // Request all products by using a high limit
-      params.limit = 1000;
-      
       const res = await api.get('/products', { params });
-      setProducts(res.data.data || []);
+      const newData = res.data.data || [];
+      
+      if (pageNum === 1) {
+        setProducts(newData);
+      } else {
+        setProducts(prev => [...prev, ...newData]);
+      }
+      
+      setHasMore(pageNum < res.data.pages);
+      setPage(pageNum);
     } catch (error) {
       console.error('Fetch products:', error);
-      setProducts([]);
+      if (pageNum === 1) setProducts([]);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+      setRefreshing(false);
     }
   }, [categories]);
 
@@ -108,23 +131,42 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const initialLoad = async () => {
-      setLoading(true);
       await Promise.all([fetchCategories(), fetchWishlist()]);
-      await fetchProducts('', '');
+      await fetchProducts('', '', 1);
+      
+      // Check for Daily Offer
+      if (settings?.dailyOffer?.isActive) {
+        setOfferModalVisible(true);
+      }
       setLoading(false);
     };
     initialLoad();
   }, []);
 
   useEffect(() => {
-    if (!loading) fetchProducts(searchDebounce, category);
-  }, [searchDebounce, category, fetchProducts, loading]);
+    if (!loading) fetchProducts(searchDebounce, category, 1);
+  }, [searchDebounce, category, fetchProducts]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await Promise.all([fetchProducts(searchDebounce, category), fetchCategories(), fetchWishlist()]);
-    setRefreshing(false);
+    await Promise.all([fetchCategories(), fetchWishlist()]);
+    await fetchProducts(searchDebounce, category, 1, true);
   }, [searchDebounce, category, fetchProducts]);
+
+  const handleLoadMore = () => {
+    if (!loading && !loadingMore && hasMore) {
+      fetchProducts(searchDebounce, category, page + 1);
+    }
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return <View style={{ height: 100 }} />;
+    return (
+      <View style={{ paddingVertical: 20, alignItems: 'center', justifyContent: 'center' }}>
+        <LoadingShimmer height={150} />
+      </View>
+    );
+  };
 
   const toggleWishlist = async (product) => {
     const isIn = wishlistIds.has(product._id);
@@ -276,6 +318,9 @@ const HomeScreen = ({ navigation }) => {
           maxToRenderPerBatch={10}
           initialNumToRender={10}
           windowSize={10}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
           scrollEventThrottle={16}
           refreshControl={
@@ -327,6 +372,37 @@ const HomeScreen = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
+        </View>
+      </Modal>
+
+      {/* Daily Offer Modal */}
+      <Modal visible={offerModalVisible} transparent animationType="fade">
+        <View style={styles.offerOverlay}>
+          <Animated.View entering={FadeInDown.springify()} style={[styles.offerContent, { backgroundColor: theme.card }]}>
+            {settings?.dailyOffer?.image ? (
+              <Image source={{ uri: settings.dailyOffer.image }} style={styles.offerImage} />
+            ) : (
+              <LinearGradient colors={[theme.primary, theme.secondary]} style={styles.offerGradient}>
+                <Bell size={60} color="#fff" />
+              </LinearGradient>
+            )}
+            
+            <View style={styles.offerTextContent}>
+              <Text style={[styles.offerTitle, { color: theme.text }]}>{settings?.dailyOffer?.title || 'Special Offer!'}</Text>
+              <Text style={[styles.offerMessage, { color: theme.textSecondary }]}>{settings?.dailyOffer?.message || 'Check out our latest deals today.'}</Text>
+              
+              <TouchableOpacity 
+                style={[styles.offerBtn, { backgroundColor: theme.primary }]}
+                onPress={() => setOfferModalVisible(false)}
+              >
+                <Text style={styles.offerBtnText}>Claim Now</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={() => setOfferModalVisible(false)} style={styles.offerCloseBtn}>
+                <Text style={{ color: theme.textSecondary, fontWeight: '600' }}>Maybe Later</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
         </View>
       </Modal>
     </View>
@@ -389,6 +465,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     padding: 20, borderRadius: 18, marginBottom: 12,
   },
+  offerOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', padding: 30 },
+  offerContent: { width: '100%', borderRadius: 30, overflow: 'hidden', alignItems: 'center' },
+  offerImage: { width: '100%', height: 250, resizeMode: 'cover' },
+  offerGradient: { width: '100%', height: 200, justifyContent: 'center', alignItems: 'center' },
+  offerTextContent: { padding: 24, alignItems: 'center', width: '100%' },
+  offerTitle: { fontSize: 24, fontWeight: '900', textAlign: 'center', marginBottom: 8 },
+  offerMessage: { fontSize: 16, textAlign: 'center', color: '#64748b', marginBottom: 24, lineHeight: 22 },
+  offerBtn: { width: '100%', height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  offerBtnText: { color: '#fff', fontSize: 18, fontWeight: '800' },
+  offerCloseBtn: { marginTop: 16 },
 });
 
 export default HomeScreen;
