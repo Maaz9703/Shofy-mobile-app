@@ -18,6 +18,10 @@
         "projectId": "ae798c82-913c-4293-9b8b-f2e359dd1119"
       }
     },
-    "owner": "maaz5624"
+    "owner": "maaz5624",
+    "updates": {
+      "url": "https://u.expo.dev/ae798c82-913c-4293-9b8b-f2e359dd1119"
+    },
+    "runtimeVersion": "1.0.0"
   }
 }
