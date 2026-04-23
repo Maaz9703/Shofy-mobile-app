@@ -71,10 +71,10 @@ const HomeScreen = ({ navigation }) => {
         page: pageNum,
         limit: 20
       };
-      
+
       const trimmedSearch = searchText && searchText.trim() ? searchText.trim() : '';
       const trimmedCategory = categoryFilter && categoryFilter.trim() ? categoryFilter.trim() : '';
-      
+
       if (trimmedSearch) {
         const exactCategoryMatch = categories.find(
           (cat) => cat.toLowerCase() === trimmedSearch.toLowerCase()
@@ -88,16 +88,16 @@ const HomeScreen = ({ navigation }) => {
       } else if (trimmedCategory) {
         params.category = trimmedCategory;
       }
-      
+
       const res = await api.get('/products', { params });
       const newData = res.data.data || [];
-      
+
       if (pageNum === 1) {
         setProducts(newData);
       } else {
         setProducts(prev => [...prev, ...newData]);
       }
-      
+
       setHasMore(pageNum < res.data.pages);
       setPage(pageNum);
     } catch (error) {
@@ -133,7 +133,7 @@ const HomeScreen = ({ navigation }) => {
     const initialLoad = async () => {
       await Promise.all([fetchCategories(), fetchWishlist()]);
       await fetchProducts('', '', 1);
-      
+
       // Check for Daily Offer
       if (settings?.dailyOffer?.isActive) {
         setOfferModalVisible(true);
@@ -238,12 +238,12 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Premium Floating Header */}
       <View style={[styles.headerWrap, { paddingTop: insets.top + 12 }]}>
-        <Animated.View style={[StyleSheet.absoluteFill, { 
+        <Animated.View style={[StyleSheet.absoluteFill, {
           opacity: headerOpacity,
           backgroundColor: theme.card,
-          ...theme.shadows.small 
+          ...theme.shadows.small
         }]} />
-        
+
         <View style={styles.headerContent}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <AnimatedPressable onPress={() => navigation.navigate('Profile')}>
@@ -386,18 +386,18 @@ const HomeScreen = ({ navigation }) => {
                 <Bell size={60} color="#fff" />
               </LinearGradient>
             )}
-            
+
             <View style={styles.offerTextContent}>
               <Text style={[styles.offerTitle, { color: theme.text }]}>{settings?.dailyOffer?.title || 'Special Offer!'}</Text>
               <Text style={[styles.offerMessage, { color: theme.textSecondary }]}>{settings?.dailyOffer?.message || 'Check out our latest deals today.'}</Text>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[styles.offerBtn, { backgroundColor: theme.primary }]}
                 onPress={() => setOfferModalVisible(false)}
               >
                 <Text style={styles.offerBtnText}>Claim Now</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity onPress={() => setOfferModalVisible(false)} style={styles.offerCloseBtn}>
                 <Text style={{ color: theme.textSecondary, fontWeight: '600' }}>Maybe Later</Text>
               </TouchableOpacity>

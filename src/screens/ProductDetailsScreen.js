@@ -121,10 +121,17 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
           {/* Price Block */}
           <View style={[styles.priceBlock, { borderColor: theme.border }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-              <Text style={[styles.price, { color: theme.text }]}>PKR {unitPrice.toLocaleString()}</Text>
-              {hasDiscount && (
-                <Text style={[styles.originalPrice, { color: theme.textSecondary }]}>PKR {originalPrice.toLocaleString()}</Text>
+            <View style={{ flexDirection: 'column', gap: 4 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
+                <Text style={[styles.price, { color: theme.text }]}>PKR {unitPrice.toLocaleString()}</Text>
+                {hasDiscount && (
+                  <Text style={[styles.originalPrice, { color: theme.textSecondary }]}>PKR {originalPrice.toLocaleString()}</Text>
+                )}
+              </View>
+              {product.isWholesale && (
+                <View style={{ backgroundColor: theme.success + '15', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start' }}>
+                  <Text style={{ color: theme.success, fontSize: 10, fontWeight: '900', letterSpacing: 1 }}>WHOLESALE RATE APPLIED</Text>
+                </View>
               )}
             </View>
             {hasDiscount && (

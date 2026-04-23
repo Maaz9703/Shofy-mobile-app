@@ -3,7 +3,7 @@
  * For a given quantity, the highest applicable tier (max minQty where quantity >= minQty) is used.
  */
 export function getQuantityDiscount(product, quantity = 1) {
-  const originalPrice = Number(product?.price ?? 0);
+  const originalPrice = Number(product?.displayPrice ?? product?.price ?? 0);
   const qty = Math.max(0, quantity);
   const tiers = product?.quantityDiscounts || [];
   const applicable = tiers

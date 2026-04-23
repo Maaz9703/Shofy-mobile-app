@@ -49,9 +49,16 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
           
           <View style={styles.footer}>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.price, { color: theme.primary }]}>
-                PKR {unitPrice.toLocaleString()}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Text style={[styles.price, { color: theme.primary }]}>
+                  PKR {unitPrice.toLocaleString()}
+                </Text>
+                {product.isWholesale && (
+                  <View style={{ backgroundColor: theme.success + '22', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 }}>
+                    <Text style={{ fontSize: 8, color: theme.success, fontWeight: '900' }}>WHOLESALE</Text>
+                  </View>
+                )}
+              </View>
               {hasDiscount && (
                 <Text style={{ fontSize: 10, color: theme.success, fontWeight: '700' }}>
                   {discountPercent}% OFF
