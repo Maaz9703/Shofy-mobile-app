@@ -1,5 +1,4 @@
 name: Build Android APK
-
 on:
   push:
     branches:
@@ -11,61 +10,36 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Node dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Prebuild Android (Expo Managed → Bare)
-        run: npx expo prebuild --platform android --clean --no-install
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --clean
 
-      - name: Patch Grade for Release Build (Debug Signing)
-        run: |
-          # Use Node to replace the signing config in the generated build.gradle
-          node -e "
-          const fs = require('fs');
-          const path = 'android/app/build.gradle';
-          let content = fs.readFileSync(path, 'utf8');
-          // Replace signingConfig signingConfigs.release with signingConfig signingConfigs.debug
-          content = content.replace(/signingConfig signingConfigs\.release/g, 'signingConfig signingConfigs.debug');
-          fs.writeFileSync(path, content);
-          console.log('Patched build.gradle to use debug signing for release build');
-          "
-
-      - name: Make Gradlew executable
-        run: chmod +x android/gradlew
-
-      - name: Build Release APK
+      - name: Build APK (Gradle)
         working-directory: ./android
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease
 
-      - name: Create / Update Release and Upload APK
-        uses: softprops/action-gh-release@v2
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v1
         with:
-          name: "Shofy App - Release Build"
+          name: Latest Release
           tag_name: latest
-          make_latest: true
           files: android/app/build/outputs/apk/release/app-release.apk
-          body: |
-            🚀 Official Shofy mobile app Release build
-            Optimized, clean, and professional.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
