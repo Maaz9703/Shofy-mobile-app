@@ -10,7 +10,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.maaz9703.trader"
+      "package": "com.maaz9703.shofy"
     },
     "extra": {
       "apiUrl": "https://backend-nine-ruby-74.vercel.app/api",
