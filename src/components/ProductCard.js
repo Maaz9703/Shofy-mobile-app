@@ -45,12 +45,6 @@ const ProductCard = ({ product, index, onPress, onWishlist, isInWishlist }) => {
             {product.title}
           </Text>
           
-          {product.flavors && product.flavors.length > 0 && (
-            <Text style={{ fontSize: 9, fontWeight: '800', color: theme.primary, marginTop: 4, letterSpacing: 0.5 }}>
-              {product.flavors.length} FLAVOR{product.flavors.length > 1 ? 'S' : ''} AVAILABLE
-            </Text>
-          )}
-          
           <View style={{ flex: 1, minHeight: 8 }} />
           
           <View style={styles.footer}>
