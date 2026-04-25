@@ -32,6 +32,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const [product, setProduct] = useState(initialProduct);
   const [loading, setLoading] = useState(!initialProduct);
   const [quantity, setQuantity] = useState(1);
+  const [flavorQuantities, setFlavorQuantities] = useState({});
   const [selectedColor, setSelectedColor] = useState(null);
   const [note, setNote] = useState('');
   const [addingToCart, setAddingToCart] = useState(false);
@@ -49,8 +50,17 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   }, [initialProduct?._id]);
 
   const handleAddToCart = async () => {
-    if (!product || product.stock < quantity) {
+    const hasFlavors = product?.flavors?.length > 0;
+    const totalSelectedQty = hasFlavors 
+      ? Object.values(flavorQuantities).reduce((a, b) => a + b, 0)
+      : quantity;
+
+    if (!product || product.stock < totalSelectedQty) {
       Toast.show({ type: 'error', text1: 'Oops!', text2: 'Insufficient stock available.' });
+      return;
+    }
+    if (totalSelectedQty === 0) {
+      Toast.show({ type: 'error', text1: 'Wait!', text2: 'Please select a quantity.' });
       return;
     }
     if (product.colors?.length > 0 && !selectedColor) {
@@ -59,7 +69,15 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     }
     setAddingToCart(true);
     try {
-      addToCart(product, quantity, selectedColor, note);
+      if (hasFlavors) {
+        Object.entries(flavorQuantities).forEach(([flavor, qty]) => {
+          if (qty > 0) {
+            addToCart(product, qty, selectedColor, flavor, note);
+          }
+        });
+      } else {
+        addToCart(product, quantity, selectedColor, null, note);
+      }
       Toast.show({ type: 'success', text1: 'Added to cart! 🛍️' });
       setNote('');
       // Navigate to Cart after adding to mimic "Checkout Now" behavior
@@ -77,7 +95,12 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     );
   }
 
-  const { unitPrice, totalPrice, originalPrice, hasDiscount, discountPercent } = getQuantityDiscount(product, quantity);
+  const hasFlavors = product.flavors?.length > 0;
+  const totalSelectedQty = hasFlavors 
+    ? Object.values(flavorQuantities).reduce((a, b) => a + b, 0)
+    : quantity;
+
+  const { unitPrice, totalPrice, originalPrice, hasDiscount, discountPercent } = getQuantityDiscount(product, Math.max(1, totalSelectedQty));
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -194,17 +217,52 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             </Animated.View>
           )}
 
-          {/* Quantity Selection */}
-          <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
-          <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
-            <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
-              <Minus size={24} color={theme.text} />
-            </AnimatedPressable>
-            <Text style={[styles.qtyText, { color: theme.text }]}>{quantity}</Text>
-            <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
-              <Plus size={24} color={theme.text} />
-            </AnimatedPressable>
-          </View>
+          {/* Quantity / Flavors Selection */}
+          {hasFlavors ? (
+            <Animated.View entering={FadeInDown.delay(420)}>
+              <Text style={[styles.sectionHeader, { color: theme.text }]}>Select Flavors</Text>
+              <View style={[styles.glassBox, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1, padding: 12 }]}>
+                {product.flavors.map((fl, idx) => (
+                  <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: idx === product.flavors.length - 1 ? 0 : 16 }}>
+                    <View>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: theme.text }}>{fl.name}</Text>
+                      <Text style={{ fontSize: 12, color: theme.textSecondary }}>Stock: {fl.stock}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.background, borderRadius: 12, borderWidth: 1, borderColor: theme.border }}>
+                      <AnimatedPressable 
+                        onPress={() => setFlavorQuantities(prev => ({ ...prev, [fl.name]: Math.max(0, (prev[fl.name] || 0) - 1) }))} 
+                        style={{ width: 36, height: 36, justifyContent: 'center', alignItems: 'center' }}
+                      >
+                        <Minus size={18} color={theme.text} />
+                      </AnimatedPressable>
+                      <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text, minWidth: 24, textAlign: 'center' }}>
+                        {flavorQuantities[fl.name] || 0}
+                      </Text>
+                      <AnimatedPressable 
+                        onPress={() => setFlavorQuantities(prev => ({ ...prev, [fl.name]: Math.min(fl.stock, (prev[fl.name] || 0) + 1) }))} 
+                        style={{ width: 36, height: 36, justifyContent: 'center', alignItems: 'center' }}
+                      >
+                        <Plus size={18} color={theme.text} />
+                      </AnimatedPressable>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </Animated.View>
+          ) : (
+            <Animated.View entering={FadeInDown.delay(420)}>
+              <Text style={[styles.sectionHeader, { color: theme.text }]}>Quantity Selection</Text>
+              <View style={[styles.quantityWrap, { backgroundColor: theme.card, ...theme.shadows.small, borderColor: theme.border, borderWidth: 1 }]}>
+                <AnimatedPressable onPress={() => setQuantity(q => Math.max(1, q - 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
+                  <Minus size={24} color={theme.text} />
+                </AnimatedPressable>
+                <Text style={[styles.qtyText, { color: theme.text }]}>{quantity}</Text>
+                <AnimatedPressable onPress={() => setQuantity(q => Math.min(product.stock, q + 1))} style={[styles.qtyBtn, { backgroundColor: theme.background, borderColor: theme.border, borderWidth: 1 }]}>
+                  <Plus size={24} color={theme.text} />
+                </AnimatedPressable>
+              </View>
+            </Animated.View>
+          )}
         </Animated.View>
       </ScrollView>
 
@@ -214,7 +272,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           <View style={{ flex: 1 }}>
             <Text style={{ color: theme.textSecondary, fontSize: 12, fontWeight: '700', textTransform: 'uppercase' }}>Total</Text>
             <Text style={{ color: theme.text, fontSize: 22, fontWeight: '900' }}>
-              PKR {totalPrice.toLocaleString()}
+              PKR {(unitPrice * Math.max(1, totalSelectedQty)).toLocaleString()}
             </Text>
           </View>
           <AnimatedPressable

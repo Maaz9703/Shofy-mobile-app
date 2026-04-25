@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
+import { getQuantityDiscount } from './utils/price';
 
 const CartContext = createContext();
 
@@ -13,10 +14,10 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product, quantity = 1, color = null, note = '') => {
+  const addToCart = (product, quantity = 1, color = null, flavor = null, note = '') => {
     setCartItems((prev) => {
       const existingIndex = prev.findIndex(
-        (item) => item.product._id === product._id && item.color === color && item.note === note
+        (item) => item.product._id === product._id && item.color === color && item.flavor === flavor && item.note === note
       );
       if (existingIndex > -1) {
         const updated = [...prev];
@@ -26,32 +27,47 @@ export const CartProvider = ({ children }) => {
         };
         return updated;
       }
-      return [...prev, { product, quantity, color, note }];
+      return [...prev, { product, quantity, color, flavor, note }];
     });
   };
 
-  const removeFromCart = (productId, color, note) => {
-    setCartItems((prev) => prev.filter((item) => !(item.product._id === productId && item.color === color && item.note === note)));
+  const removeFromCart = (productId, color, flavor, note) => {
+    setCartItems((prev) => prev.filter((item) => !(item.product._id === productId && item.color === color && item.flavor === flavor && item.note === note)));
   };
 
-  const updateQuantity = (productId, color, note, quantity) => {
+  const updateQuantity = (productId, color, flavor, note, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(productId, color, note);
+      removeFromCart(productId, color, flavor, note);
       return;
     }
     setCartItems((prev) =>
       prev.map((item) =>
-        (item.product._id === productId && item.color === color && item.note === note) ? { ...item, quantity } : item
+        (item.product._id === productId && item.color === color && item.flavor === flavor && item.note === note) ? { ...item, quantity } : item
       )
     );
   };
 
   const clearCart = () => setCartItems([]);
 
-  const cartTotal = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
+  const cartTotal = useMemo(() => {
+    const productQuantities = {};
+    cartItems.forEach(item => {
+      const pid = item.product._id;
+      if (!productQuantities[pid]) {
+        productQuantities[pid] = 0;
+      }
+      productQuantities[pid] += item.quantity;
+    });
+
+    let total = 0;
+    cartItems.forEach(item => {
+      const pid = item.product._id;
+      const totalProductQty = productQuantities[pid];
+      const { unitPrice } = getQuantityDiscount(item.product, totalProductQty);
+      total += unitPrice * item.quantity;
+    });
+    return total;
+  }, [cartItems]);
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 

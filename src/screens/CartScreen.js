@@ -16,6 +16,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { X, Minus, Plus, ShoppingBag, ArrowRight, Heart } from 'lucide-react-native';
 import AnimatedPressable from '../components/AnimatedPressable';
+import { getQuantityDiscount } from '../utils/price';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -24,7 +25,12 @@ const CartScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const { cartItems, removeFromCart, updateQuantity, cartTotal, cartCount } = useCart();
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item, index }) => {
+    // Calculate total quantity of this product across all flavors/colors
+    const totalProductQty = cartItems.filter(ci => ci.product._id === item.product._id).reduce((sum, ci) => sum + ci.quantity, 0);
+    const { unitPrice } = getQuantityDiscount(item.product, totalProductQty);
+
+    return (
     <Animated.View
       entering={FadeInRight.delay(index * 100).springify().damping(15)}
       layout={Layout.springify()}
@@ -49,7 +55,7 @@ const CartScreen = ({ navigation }) => {
             {item.product.title}
           </Text>
           <TouchableOpacity 
-            onPress={() => removeFromCart(item.product._id, item.color, item.note)}
+            onPress={() => removeFromCart(item.product._id, item.color, item.flavor, item.note)}
             style={styles.removeBtn}
           >
             <X size={20} color={theme.textSecondary} />
@@ -63,6 +69,11 @@ const CartScreen = ({ navigation }) => {
               <Text style={{ fontSize: 13, fontWeight: '700', color: theme.textSecondary }}>{item.color}</Text>
             </View>
           )}
+          {item.flavor && (
+            <View style={{ backgroundColor: theme.primary + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary }} numberOfLines={1}>{item.flavor}</Text>
+            </View>
+          )}
           {item.note && (
             <View style={{ backgroundColor: theme.background, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, borderLeftWidth: 3, borderLeftColor: theme.primary }}>
               <Text style={{ fontSize: 11, color: theme.textSecondary }} numberOfLines={1}>Note: {item.note}</Text>
@@ -71,13 +82,13 @@ const CartScreen = ({ navigation }) => {
         </View>
         
         <Text style={[styles.price, { color: theme.primary }]}>
-          PKR {item.product.price?.toLocaleString()}
+          PKR {unitPrice.toLocaleString()}
         </Text>
         
         <View style={styles.actions}>
           <View style={[styles.quantityRow, { backgroundColor: theme.background, borderColor: theme.border }]}>
             <TouchableOpacity 
-              onPress={() => updateQuantity(item.product._id, item.color, item.note, item.quantity - 1)} 
+              onPress={() => updateQuantity(item.product._id, item.color, item.flavor, item.note, item.quantity - 1)} 
               style={styles.qtyBtn}
               disabled={item.quantity <= 1}
             >
@@ -85,7 +96,7 @@ const CartScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={[styles.qtyText, { color: theme.text }]}>{item.quantity}</Text>
             <TouchableOpacity 
-              onPress={() => updateQuantity(item.product._id, item.color, item.note, item.quantity + 1)} 
+              onPress={() => updateQuantity(item.product._id, item.color, item.flavor, item.note, item.quantity + 1)} 
               style={styles.qtyBtn}
             >
               <Plus size={18} color={theme.text} />
@@ -93,12 +104,13 @@ const CartScreen = ({ navigation }) => {
           </View>
           
           <Text style={[styles.itemSubtotal, { color: theme.textSecondary }]}>
-            Total: <Text style={{ color: theme.text, fontWeight: '700' }}>PKR {(item.product.price * item.quantity).toLocaleString()}</Text>
+            Total: <Text style={{ color: theme.text, fontWeight: '700' }}>PKR {(unitPrice * item.quantity).toLocaleString()}</Text>
           </Text>
         </View>
       </View>
     </Animated.View>
   );
+  };
 
   if (cartCount === 0) {
     return (
@@ -141,7 +153,7 @@ const CartScreen = ({ navigation }) => {
 
       <FlatList
         data={cartItems}
-        keyExtractor={(item) => `${item.product._id}-${item.color}-${item.note}`}
+        keyExtractor={(item) => `${item.product._id}-${item.color}-${item.flavor}-${item.note}`}
         renderItem={renderItem}
         contentContainerStyle={[styles.list, { paddingBottom: 160 + insets.bottom }]}
         showsVerticalScrollIndicator={false}

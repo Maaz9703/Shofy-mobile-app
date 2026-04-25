@@ -101,9 +101,14 @@ const OrderDetailsScreen = ({ route, navigation }) => {
                   {item.title || item.product?.title}
                 </Text>
                 {item.color && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                     <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: item.color, borderColor: theme.border, borderWidth: 1 }} />
                     <Text style={{ fontSize: 12, fontWeight: '700', color: theme.textSecondary }}>{item.color}</Text>
+                  </View>
+                )}
+                {item.flavor && (
+                  <View style={{ backgroundColor: theme.primary + '15', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, alignSelf: 'flex-start', marginTop: 4 }}>
+                    <Text style={{ fontSize: 10, fontWeight: '700', color: theme.primary }} numberOfLines={1}>{item.flavor}</Text>
                   </View>
                 )}
                 {item.note && (
