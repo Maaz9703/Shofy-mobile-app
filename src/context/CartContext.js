@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from 'react';
-import { getQuantityDiscount } from './utils/price';
+import { getQuantityDiscount } from '../utils/price';
 
 const CartContext = createContext();
 
